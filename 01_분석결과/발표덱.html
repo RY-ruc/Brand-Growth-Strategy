@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이니스프리 2023 리브랜딩 — 발표덱</title>
+<style>
+  :root{
+    --bg:#fff; --fg:#14161a; --mut:#6b7280; --line:#e5e7eb; --card:#f7f8fa; --grid:#eef0f3;
+    --hot:#c2410c; --brand:#b91c1c; --ctrl:#9aa3af; --ok:#0f766e; --hl:#fff7ed; --hlb:#f59e0b;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0c0e12; --fg:#eceef2; --mut:#9aa3af; --line:#242932; --card:#141821; --grid:#1b202a;
+      --hot:#fb923c; --brand:#f87171; --ctrl:#616b7a; --ok:#2dd4bf; --hl:#1e1710; --hlb:#d97706; }
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);overflow:hidden;
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased}
+
+  .deck{position:relative;height:100vh;width:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+    padding:5vh 6vw 9vh;overflow:auto}
+  .slide.on{display:flex}
+  .kicker{font-size:clamp(.7rem,1.1vw,.86rem);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--mut);margin-bottom:1.4vh}
+  h1{font-size:clamp(1.8rem,4.4vw,3.2rem);line-height:1.28;letter-spacing:-.035em;margin:0;font-weight:800}
+  h2{font-size:clamp(1.25rem,2.7vw,2rem);line-height:1.32;letter-spacing:-.028em;margin:0 0 2.4vh;font-weight:800}
+  .sub{font-size:clamp(.86rem,1.5vw,1.1rem);color:var(--mut);margin-top:2vh;max-width:44em;line-height:1.6}
+  .sub b{color:var(--fg)}
+  .big{font-size:clamp(2.4rem,7vw,5rem);font-weight:800;letter-spacing:-.045em;
+    font-variant-numeric:tabular-nums;line-height:1}
+  .hot{color:var(--hot)} .brandc{color:var(--brand)} .okc{color:var(--ok)} .mutc{color:var(--mut)}
+
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:2vw;margin-top:3.4vh}
+  .cell{border-top:3px solid var(--fg);padding-top:1.8vh}
+  .cell .n{font-size:clamp(1.7rem,4.2vw,3.1rem);font-weight:800;letter-spacing:-.04em;
+    font-variant-numeric:tabular-nums;line-height:1.05}
+  .cell .t{font-size:clamp(.76rem,1.15vw,.92rem);color:var(--mut);margin-top:1.1vh;line-height:1.5}
+  .cell.acc{border-top-color:var(--hot)}
+
+  .quote{font-size:clamp(1.1rem,2.3vw,1.7rem);font-weight:700;line-height:1.5;letter-spacing:-.02em;
+    border-left:5px solid var(--hot);padding-left:1.2em;max-width:24em}
+
+  table{border-collapse:collapse;width:100%;max-width:60em;font-size:clamp(.76rem,1.25vw,1rem)}
+  th,td{padding:1.1vh .8em;border-bottom:1px solid var(--line);text-align:left;
+    font-variant-numeric:tabular-nums}
+  th{color:var(--mut);font-weight:600;font-size:.86em}
+  td.r,th.r{text-align:right}
+  tr.mark td{background:var(--hl);font-weight:700}
+
+  svg{display:block;width:100%;max-width:min(58em,86vw);height:auto;margin:1vh auto 0}
+  .ax{stroke:var(--line);stroke-width:1.4}
+  .grd{stroke:var(--line);stroke-width:1;stroke-dasharray:4 3}
+  .gr{stroke:var(--grid);stroke-width:1}
+  .tk{fill:var(--mut);font-size:13px}
+  .lb{fill:var(--fg);font-size:15px;font-weight:800}
+  .lbm{fill:var(--mut);font-size:12px}
+  .vl{font-size:15px;font-weight:800}
+
+  .hb{display:grid;grid-template-columns:9em 1fr 5em;gap:1em;align-items:center;margin-bottom:1.5vh;
+    font-size:clamp(.8rem,1.3vw,1rem)}
+  .hbt{height:2.4vh;min-height:16px;background:var(--grid);border-radius:4px;overflow:hidden}
+  .hbf{height:100%;border-radius:4px}
+  .hbv{text-align:right;font-variant-numeric:tabular-nums;color:var(--mut)}
+
+  .flow{display:flex;flex-direction:column;gap:.5vh;max-width:36em}
+  .fn{border:1px solid var(--line);border-radius:8px;padding:1.1vh 1em;font-size:clamp(.78rem,1.2vw,.95rem)}
+  .fn.key{border-color:var(--hot);border-width:2px;background:var(--hl);font-weight:700}
+  .fn.dim{color:var(--mut)}
+  .fa{text-align:center;color:var(--mut);font-size:.9em;line-height:1}
+
+  ul.pl{margin:0;padding-left:1.2em;max-width:44em}
+  ul.pl li{margin-bottom:1.6vh;font-size:clamp(.84rem,1.4vw,1.05rem);line-height:1.6}
+  ul.pl li b{color:var(--hot)}
+
+  /* chrome */
+  .bar{position:fixed;left:0;right:0;bottom:0;height:4px;background:var(--grid);z-index:20}
+  .bar i{display:block;height:100%;background:var(--hot);transition:width .25s}
+  .hud{position:fixed;right:14px;bottom:14px;font-size:.72rem;color:var(--mut);z-index:21;
+    font-variant-numeric:tabular-nums;background:var(--bg);padding:2px 8px;border-radius:12px}
+  .help{position:fixed;left:14px;bottom:14px;font-size:.68rem;color:var(--mut);z-index:21}
+  .notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:var(--card);
+    border-top:2px solid var(--hot);padding:16px 22px 26px;font-size:.85rem;line-height:1.7;display:none;z-index:22}
+  .notes.on{display:block}
+  .notes h4{margin:0 0 6px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hot)}
+  .notes .time{float:right;color:var(--mut);font-weight:700}
+  @media print{ .slide{display:flex!important;position:static;height:auto;page-break-after:always;
+    min-height:92vh} .bar,.hud,.help,.notes{display:none!important} body{overflow:visible} }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- 1 표지 -->
+<section class="slide on" data-t="0:00–0:15" data-note="인사 후 바로 제목만 읽고 넘긴다. 여기서 시간 쓰지 말 것. 팀명·이름은 말로만.">
+  <div class="kicker">캡스톤 팀 프로젝트 · 브랜드 마케팅 진단</div>
+  <h1>이니스프리 2023 리브랜딩은<br>왜 실패했는가</h1>
+  <p class="sub">감사보고서 6건(DART) × 공정거래위원회 정보공개서 × 네이버 데이터랩<br>
+  — 서로 다른 세 기관의 1차 자료로 검증했다</p>
+</section>
+
+<!-- 2 결론 먼저 -->
+<section class="slide" data-t="0:15–1:00" data-note="결론을 먼저 던진다. 심사위원은 첫 1분에 이 팀이 뭘 아는지 판단한다. 숫자 3개만 짚고 넘어간다. '자세한 건 뒤에서'라고 말하고 바로 다음 장.">
+  <div class="kicker">결론</div>
+  <h2>바꾼 것 자체보다,<br>바꾼 뒤에 아무것도 하지 않은 것이 실패의 구조다</h2>
+  <div class="row3">
+    <div class="cell acc"><div class="n hot">+41.6%</div>
+      <div class="t">2023 광고선전비<br>7년 중 늘어난 유일한 해</div></div>
+    <div class="cell"><div class="n mutc">+0.1%</div>
+      <div class="t">같은 해 판관비 총액<br>새 예산이 아니라 재배치였다</div></div>
+    <div class="cell acc"><div class="n hot">−20.6%</div>
+      <div class="t">이듬해 광고선전비<br>1년 만에 거뒀다</div></div>
+  </div>
+</section>
+
+<!-- 3 무엇을 바꿨나 -->
+<section class="slide" data-t="1:00–1:40" data-note="맥락. 이 장이 없으면 뒤의 데이터가 안 읽힌다. '제주도라는 실재하는 섬을 버리고 THE NEW ISLE이라는 가상의 섬으로 갈아탔다'는 한 문장이 핵심. 표는 훑기만.">
+  <div class="kicker">2023년 2월 · 무엇을 바꿨나</div>
+  <h2>실재하는 섬을 버리고<br>가상의 섬으로 갈아탔다</h2>
+  <table>
+    <tr><th></th><th>이전</th><th>이후</th></tr>
+    <tr class="mark"><td><b>세계관</b></td><td><b>제주도</b> — 실재하는 섬</td><td><b>THE NEW ISLE</b> — 가상의 섬</td></tr>
+    <tr><td>슬로건</td><td>자연주의 · 제주 원료</td><td><i>Nature-Powered Skincare<br>Discovered from the Island</i></td></tr>
+    <tr><td>로고</td><td>소문자 innisfree</td><td>대문자 INNISFREE</td></tr>
+    <tr><td>그 외</td><td>—</td><td>키 컬러 · 용기 · 라인업 · 모델 · 매장 인테리어</td></tr>
+  </table>
+  <p class="sub">브랜드 이름과 '자연주의'라는 단어를 빼면 <b>거의 전부를 바꿨다.</b></p>
+</section>
+
+<!-- 4 핵심 발견 -->
+<section class="slide" data-t="1:40–2:50" data-note="★ 이 발표의 심장. 여기서 가장 오래 머문다. 말할 것: '광고비를 41.6% 늘린 바로 그 해, 브랜드 검색은 24% 줄고 제품 검색은 두 배가 됐습니다. 브랜드를 새로 세운다며 쓴 돈이 제품 한 줄만 올린 겁니다.' 손으로 갈라지는 지점을 가리킬 것.">
+  <div class="kicker">핵심 발견 ★</div>
+  <h2>그 돈은 브랜드가 아니라<br>제품으로 갔다</h2>
+  <svg viewBox="0 0 760 300" role="img" aria-label="브랜드와 제품 검색 다이버징">
+    <line class="gr" x1="60" y1="70" x2="640" y2="70"/>
+    <line class="gr" x1="60" y1="220" x2="640" y2="220"/>
+    <line class="ax" x1="60" y1="30" x2="60" y2="265"/>
+    <line class="grd" x1="60" y1="145" x2="640" y2="145"/>
+    <text class="tk" x="52" y="149" text-anchor="end">100</text>
+    <text class="tk" x="52" y="74" text-anchor="end">200</text>
+    <text class="tk" x="52" y="224" text-anchor="end">50</text>
+    <line class="grd" x1="350" y1="30" x2="350" y2="265" stroke="var(--hlb)" stroke-width="2"/>
+    <text class="lbm" x="357" y="44" fill="var(--hlb)">리브랜딩 2023</text>
+    <polyline fill="none" stroke="var(--hot)" stroke-width="3.4"
+      points="60,206 205,145 350,68 495,80 640,124"/>
+    <polyline fill="none" stroke="var(--brand)" stroke-width="3.4"
+      points="60,116 205,145 350,181 495,214 640,231"/>
+    <circle cx="350" cy="68" r="8" fill="var(--hot)"/>
+    <circle cx="350" cy="181" r="8" fill="var(--brand)"/>
+    <text class="vl" x="350" y="56" text-anchor="middle" fill="var(--hot)">+118.5%</text>
+    <text class="vl" x="350" y="202" text-anchor="middle" fill="var(--brand)">−23.9%</text>
+    <text class="lb" x="652" y="128" fill="var(--hot)">제품 검색</text>
+    <text class="lbm" x="652" y="144">레티놀·앰플</text>
+    <text class="lb" x="652" y="235" fill="var(--brand)">브랜드 검색</text>
+    <text class="lbm" x="652" y="251">이니스프리</text>
+    <text class="tk" x="60" y="285" text-anchor="middle">2021</text>
+    <text class="tk" x="205" y="285" text-anchor="middle">2022</text>
+    <text class="tk" x="350" y="285" text-anchor="middle">2023</text>
+    <text class="tk" x="495" y="285" text-anchor="middle">2024</text>
+    <text class="tk" x="640" y="285" text-anchor="middle">2025</text>
+  </svg>
+  <p class="sub">2022년 = 100 · 광고선전비를 <b>41.6% 늘린 바로 그 해</b>에 두 선이 갈라진다</p>
+</section>
+
+<!-- 5 워터폴 -->
+<section class="slide" data-t="2:50–3:30" data-note="'게다가 그 101억은 새 돈도 아니었습니다.' 지급수수료 63억, 운반비 44억을 깎아서 만들었다. 총액은 +0.1%. 한 문장으로: '조직이 이 리브랜딩에 베팅하지 않았다는 뜻입니다.'">
+  <div class="kicker">근거 1</div>
+  <h2>그 101억은 새 돈도 아니었다</h2>
+  <svg viewBox="0 0 760 270" role="img" aria-label="판관비 재배치 워터폴">
+    <line class="grd" x1="70" y1="185" x2="700" y2="185"/>
+    <text class="tk" x="62" y="189" text-anchor="end">1,600</text>
+    <rect x="80"  y="185" width="70" height="55" fill="var(--ctrl)" rx="3"/>
+    <text class="vl" x="115" y="176" text-anchor="middle">1,600.3</text>
+    <rect x="185" y="100" width="70" height="85" fill="var(--hot)" rx="3"/>
+    <text class="vl" x="220" y="91" text-anchor="middle" fill="var(--hot)">+101.4</text>
+    <rect x="290" y="55" width="70" height="45" fill="var(--hot)" opacity=".5" rx="3"/>
+    <text class="vl" x="325" y="46" text-anchor="middle" fill="var(--hot)">+54.0</text>
+    <rect x="395" y="55" width="70" height="39" fill="var(--ok)" opacity=".5" rx="3"/>
+    <text class="vl" x="430" y="46" text-anchor="middle" fill="var(--ok)">−46.9</text>
+    <rect x="500" y="94" width="70" height="36" fill="var(--ok)" opacity=".72" rx="3"/>
+    <text class="vl" x="535" y="85" text-anchor="middle" fill="var(--ok)">−43.7</text>
+    <rect x="605" y="130" width="70" height="53" fill="var(--ok)" rx="3"/>
+    <text class="vl" x="640" y="121" text-anchor="middle" fill="var(--ok)">−63.4</text>
+    <line class="grd" x1="150" y1="185" x2="185" y2="185"/>
+    <line class="grd" x1="255" y1="100" x2="290" y2="100"/>
+    <line class="grd" x1="360" y1="55"  x2="395" y2="55"/>
+    <line class="grd" x1="465" y1="94"  x2="500" y2="94"/>
+    <line class="grd" x1="570" y1="130" x2="605" y2="130"/>
+    <line class="ax" x1="70" y1="240" x2="700" y2="240"/>
+    <text class="lbm" x="115" y="258" text-anchor="middle">2022 총액</text>
+    <text class="lb"  x="220" y="258" text-anchor="middle">광고선전비</text>
+    <text class="lbm" x="325" y="258" text-anchor="middle">유통·급여</text>
+    <text class="lbm" x="430" y="258" text-anchor="middle">기타</text>
+    <text class="lbm" x="535" y="258" text-anchor="middle">운반비</text>
+    <text class="lbm" x="640" y="258" text-anchor="middle">지급수수료</text>
+  </svg>
+  <p class="sub">판관비 총액 <b>1,600.3억 → 1,601.7억 (+0.1%)</b>.
+  브랜드를 새로 세우는 일에 <b>총액조차 늘리지 못했다.</b></p>
+</section>
+
+<!-- 6 철회 -->
+<section class="slide" data-t="3:30–4:05" data-note="'그리고 1년 만에 거뒀습니다.' 광고비를 끊은 해에 브랜드 관심도가 5년 중 가장 크게 빠졌다. 그린티는 2023년 4월에 2.73배까지 반응했다 — 죽은 자산이 아니었는데 불러냈다가 놓았다.">
+  <div class="kicker">근거 2</div>
+  <h2>1년 만에 거뒀고,<br>그 해가 가장 나빴다</h2>
+  <div style="max-width:46em;margin-top:1vh">
+    <div class="hb"><div>매출</div><div class="hbt"><div class="hbf" style="width:37%;background:var(--ctrl)"></div></div><div class="hbv">−18.0%</div></div>
+    <div class="hb"><div>광고선전비</div><div class="hbt"><div class="hbf" style="width:43%;background:var(--hot)"></div></div><div class="hbv">−20.6%</div></div>
+    <div class="hb"><div>브랜드 검색</div><div class="hbt"><div class="hbf" style="width:80%;background:var(--brand)"></div></div><div class="hbv">−38.6%</div></div>
+    <div class="hb"><div>그린티 검색</div><div class="hbt"><div class="hbf" style="width:100%;background:var(--brand)"></div></div><div class="hbv">−48.1%</div></div>
+  </div>
+  <p class="sub">2023 → 2024. 그린티는 2023년 4월 <b>2.73배</b>까지 반응했다.
+  <b>죽은 자산이 아니었다 — 불러냈다가 놓아버렸다.</b></p>
+</section>
+
+<!-- 7 제주 반전 -->
+<section class="slide" data-t="4:05–4:50" data-note="반전 장면. '회사는 제주를 뗐는데, 소비자는 안 뗐습니다.' 제주 연상 비중이 3년째 오르고 있다. 즉 새 세계관이 심기지 않았다. 여기서 '제주 관심이 사라져서 실패'라는 흔한 프레임을 뒤집는다고 말할 것.">
+  <div class="kicker">반전</div>
+  <h2>회사만 떠났고,<br>소비자는 제주에 남았다</h2>
+  <svg viewBox="0 0 760 250" role="img" aria-label="제주 연상 비중 상승">
+    <line class="gr" x1="70" y1="130" x2="620" y2="130"/>
+    <line class="ax" x1="70" y1="30" x2="70" y2="200"/>
+    <line class="ax" x1="70" y1="200" x2="680" y2="200"/>
+    <text class="tk" x="62" y="204" text-anchor="end">0</text>
+    <text class="tk" x="62" y="134" text-anchor="end">1.0%</text>
+    <text class="tk" x="62" y="38"  text-anchor="end">2.0%</text>
+    <line class="grd" x1="345" y1="30" x2="345" y2="200" stroke="var(--hlb)" stroke-width="2"/>
+    <text class="lbm" x="352" y="44" fill="var(--hlb)">리브랜딩</text>
+    <polyline fill="none" stroke="var(--ok)" stroke-width="3.4"
+      points="70,124 207,105 345,100 482,78 620,32"/>
+    <circle cx="70" cy="124" r="6" fill="var(--ok)"/><circle cx="207" cy="105" r="6" fill="var(--ok)"/>
+    <circle cx="345" cy="100" r="7" fill="var(--ok)"/><circle cx="482" cy="78" r="6" fill="var(--ok)"/>
+    <circle cx="620" cy="32" r="8" fill="var(--ok)"/>
+    <text class="vl" x="70" y="114">0.79</text>
+    <text class="vl" x="620" y="22" text-anchor="middle">1.87</text>
+    <path d="M 345 128 L 345 176" stroke="var(--mut)" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+    <path d="M 340 170 L 345 179 L 350 170 Z" fill="var(--mut)"/>
+    <text class="lbm" x="356" y="162">회사 의도대로라면</text>
+    <text class="lbm" x="356" y="178">이 방향이어야 한다</text>
+    <text class="tk" x="70" y="222" text-anchor="middle">2021</text>
+    <text class="tk" x="207" y="222" text-anchor="middle">2022</text>
+    <text class="tk" x="345" y="222" text-anchor="middle">2023</text>
+    <text class="tk" x="482" y="222" text-anchor="middle">2024</text>
+    <text class="tk" x="620" y="222" text-anchor="middle">2025</text>
+  </svg>
+  <p class="sub">브랜드 검색 대비 <b>제주 연관어 비중</b>. 3년째 오르고 있다 —
+  <b>새 세계관이 심기지 않았다는 직접 증거다.</b></p>
+</section>
+
+<!-- 8 반론1 -->
+<section class="slide" data-t="4:50–5:25" data-note="반론 차단 1. '로드샵이 다 죽던 시기 아니냐'는 질문을 먼저 꺼낸다. 같은 그룹 아리따움과 비교. 반드시 '아리따움 대비'로 한정할 것 — 에뛰드는 -62%로 더 심하다.">
+  <div class="kicker">예상 반론 ① &nbsp;"로드샵이 다 죽던 시기 아닌가?"</div>
+  <h2>같은 그룹·같은 채널과 비교해도<br>이니스프리가 더 빨랐다</h2>
+  <svg viewBox="0 0 760 240" role="img" aria-label="슬로프 차트 두 개">
+    <text class="lb" x="30" y="24">매장 수 · 2022 → 2024</text>
+    <line class="ax" x1="120" y1="42" x2="120" y2="200"/>
+    <line class="ax" x1="250" y1="42" x2="250" y2="200"/>
+    <line stroke="var(--ctrl)" stroke-width="3" x1="120" y1="52" x2="250" y2="94"/>
+    <line stroke="var(--brand)" stroke-width="4" x1="120" y1="52" x2="250" y2="113"/>
+    <circle cx="120" cy="52" r="6" fill="var(--fg)"/>
+    <circle cx="250" cy="94" r="6" fill="var(--ctrl)"/>
+    <circle cx="250" cy="113" r="7" fill="var(--brand)"/>
+    <text class="lbm" x="112" y="56" text-anchor="end">100</text>
+    <text class="lb" x="262" y="92" fill="var(--ctrl)">아리따움 −28.7%</text>
+    <text class="lb" x="262" y="124" fill="var(--brand)">이니스프리 −41.4%</text>
+    <text class="tk" x="120" y="218" text-anchor="middle">2022</text>
+    <text class="tk" x="250" y="218" text-anchor="middle">2024</text>
+    <line class="grd" x1="430" y1="16" x2="430" y2="224"/>
+    <text class="lb" x="460" y="24">브랜드 검색 · 2021 → 2025</text>
+    <line class="ax" x1="540" y1="42" x2="540" y2="200"/>
+    <line class="ax" x1="650" y1="42" x2="650" y2="200"/>
+    <line stroke="var(--ctrl)" stroke-width="3" x1="540" y1="52" x2="650" y2="60"/>
+    <line stroke="var(--brand)" stroke-width="4" x1="540" y1="52" x2="650" y2="165"/>
+    <circle cx="540" cy="52" r="6" fill="var(--fg)"/>
+    <circle cx="650" cy="60" r="6" fill="var(--ctrl)"/>
+    <circle cx="650" cy="165" r="7" fill="var(--brand)"/>
+    <text class="lbm" x="532" y="56" text-anchor="end">100</text>
+    <text class="lb" x="662" y="58" fill="var(--ctrl)">토니모리 −5.3%</text>
+    <text class="lb" x="662" y="170" fill="var(--brand)">이니스프리 −72.9%</text>
+    <text class="tk" x="540" y="218" text-anchor="middle">2021</text>
+    <text class="tk" x="650" y="218" text-anchor="middle">2025</text>
+  </svg>
+  <p class="sub">채널 붕괴라는 공통 변수가 통제된 조건에서도 더 빨리 빠졌다.
+  <b>단, "아리따움 대비"로 한정한다 — 에뛰드는 −62.1%로 더 심하다.</b></p>
+</section>
+
+<!-- 9 반론2 -->
+<section class="slide" data-t="5:25–5:50" data-note="반론 차단 2. '광고비 늘려서 이익이 준 거 아니냐'. 아니다. 영업이익 감소 -220.8억 중 -219.5억이 매출총이익 감소. 판관비는 +1.4억으로 동결. 팔리는 양 자체가 줄었다.">
+  <div class="kicker">예상 반론 ② &nbsp;"광고비를 늘려서 이익이 준 것 아닌가?"</div>
+  <h2>아니다.<br>팔리는 양 자체가 줄었다</h2>
+  <div style="max-width:52em;margin-top:2vh">
+    <div style="display:flex;height:9vh;min-height:60px;border-radius:8px;overflow:hidden">
+      <div style="width:99.4%;background:var(--brand);display:flex;align-items:center;justify-content:center;
+        color:#fff;font-weight:800;font-size:clamp(.8rem,1.5vw,1.1rem)">매출총이익 감소 −219.5억 &nbsp;(99.4%)</div>
+      <div style="width:0.6%;background:var(--ctrl)"></div>
+    </div>
+    <p class="sub" style="margin-top:2.4vh">2022 → 2023 영업이익 감소 <b>−220.8억</b>의 구성.
+    판관비는 <b>+1.4억</b>으로 동결 — 오른쪽 끝 얇은 회색이 그것이다.</p>
+  </div>
+</section>
+
+<!-- 10 산점도 -->
+<section class="slide" data-t="5:50–6:30" data-note="'그럼 무엇이 브랜드를 움직였나.' 같은 브랜드 검색량에 두 변수를 세웠더니 광고비는 무상관, 매장 수는 r=0.98. 매장은 유통이 아니라 광고 매체였다. n이 작다는 한계는 다음 장에서 밝힌다.">
+  <div class="kicker">그렇다면 무엇이 브랜드를 움직였나</div>
+  <h2>광고비는 제품을 팔았고,<br>브랜드를 지탱한 건 매장이었다</h2>
+  <svg viewBox="0 0 760 250" role="img" aria-label="산점도 두 개 비교">
+    <text class="lb" x="40" y="24">광고선전비 → 브랜드 검색</text>
+    <text x="330" y="34" font-size="30" font-weight="800" fill="var(--ctrl)" text-anchor="end">r = −0.03</text>
+    <line class="ax" x1="60" y1="56" x2="60" y2="196"/>
+    <line class="ax" x1="60" y1="196" x2="340" y2="196"/>
+    <line class="grd" x1="76" y1="120" x2="326" y2="124"/>
+    <circle cx="140" cy="70"  r="7" fill="var(--ctrl)"/>
+    <circle cx="104" cy="96"  r="7" fill="var(--ctrl)"/>
+    <circle cx="306" cy="120" r="9" fill="var(--hot)"/>
+    <text class="lbm" x="298" y="112" text-anchor="end">2023</text>
+    <circle cx="166" cy="150" r="7" fill="var(--ctrl)"/>
+    <circle cx="112" cy="168" r="7" fill="var(--ctrl)"/>
+    <text class="lbm" x="200" y="216" text-anchor="middle">광고선전비 →</text>
+    <text class="lbm" x="40" y="238">점이 흩어진다</text>
+    <line class="grd" x1="400" y1="14" x2="400" y2="240"/>
+    <text class="lb" x="430" y="24">가맹점 수 → 브랜드 검색</text>
+    <text x="720" y="34" font-size="30" font-weight="800" fill="var(--brand)" text-anchor="end">r = 0.98</text>
+    <line class="ax" x1="450" y1="56" x2="450" y2="196"/>
+    <line class="ax" x1="450" y1="196" x2="720" y2="196"/>
+    <line class="grd" x1="466" y1="176" x2="700" y2="64" stroke="var(--ok)" stroke-width="2"/>
+    <circle cx="686" cy="70"  r="7.5" fill="var(--brand)"/>
+    <circle cx="616" cy="98"  r="7.5" fill="var(--brand)"/>
+    <circle cx="534" cy="128" r="7.5" fill="var(--brand)"/>
+    <circle cx="494" cy="162" r="7.5" fill="var(--brand)"/>
+    <circle cx="474" cy="178" r="6.5" fill="none" stroke="var(--ctrl)" stroke-width="2.4" stroke-dasharray="3 2"/>
+    <text class="lbm" x="585" y="216" text-anchor="middle">가맹점 수 →</text>
+    <text class="lbm" x="430" y="238">점 5개가 직선 위에 놓인다</text>
+  </svg>
+  <p class="sub">매장은 유통 채널이 아니라 <b>브랜드를 떠올리게 하는 매체</b>였다.
+  가맹점 100개 감소 = 검색지수 −2.37</p>
+</section>
+
+<!-- 11 제안 -->
+<section class="slide" data-t="6:30–7:10" data-note="제안. 원인이 노출 공백이면 처방은 광고 증액도 로고 재변경도 아니다. 매장 400개가 하던 일을 이제 1위 제품 하나와 그 구매 고객이 해야 한다. 여기서 목소리를 올릴 것.">
+  <div class="kicker">그래서 무엇을 해야 하나</div>
+  <h2>처방은 광고 증액도,<br>로고 재변경도 아니다</h2>
+  <div class="quote">사라진 매장 노출을<br>무엇으로 대체할 것인가</div>
+  <p class="sub" style="margin-top:3.4vh">
+    그리고 대체재는 이미 브랜드 안에 있다 —
+    올리브영 전체 판매 1위 제품(PDRN 앰플, 누적 <b>195만 병</b>)과 <b>그 제품을 산 고객</b>이다.<br><br>
+    <b>매장 400개가 하던 일을, 이제 제품 하나와 그 고객이 해야 한다.</b>
+  </p>
+</section>
+
+<!-- 12 한계 -->
+<section class="slide" data-t="7:10–7:35" data-note="한계를 먼저 밝힌다. 감추면 질의응답에서 훨씬 비싸게 돌아온다. 특히 n=4와 역인과는 통계 아는 심사위원이 반드시 짚는다. 우리가 먼저 말하면 근거가 되고, 나중에 지적당하면 허점이 된다.">
+  <div class="kicker">한계 — 먼저 밝힌다</div>
+  <h2>우리가 증명하지 못한 것</h2>
+  <ul class="pl">
+    <li><b>상관 분석의 n은 4~5로 작다.</b> "상관이 관찰된다"까지이며 인과가 입증된 것은 아니다</li>
+    <li><b>역인과를 배제할 수 없다.</b> 매장이 줄어 검색이 준 것인지, 수요가 줄어 매장이 닫힌 것인지 —
+      양방향 악순환일 가능성이 높다</li>
+    <li><b>매장 노출량을 계량하지 않았다.</b> "매장 = 매체"는 논리적 추론이다</li>
+    <li><b>광고선전비는 마케팅비 전부가 아니다.</b> 공정위 기준 2024년 광고+판촉은 450.5억으로
+      감사보고서 광고선전비(273.9억)의 1.6배 — 증감률 비교만 유효하다</li>
+  </ul>
+</section>
+
+<!-- 13 마무리 -->
+<section class="slide" data-t="7:35–8:00" data-note="마무리. 이 분석의 강점은 '독립적인 세 출처가 2023년이라는 한 지점에서 만난다'는 것. 이 한 문장으로 끝내고 질문 받는다.">
+  <div class="kicker">마무리</div>
+  <h2>서로 다른 세 기관의 자료가<br>2023년 한 지점에서 만난다</h2>
+  <table style="max-width:52em">
+    <tr><th>출처</th><th>무엇을 말하는가</th></tr>
+    <tr><td><b>감사보고서</b><br><span style="color:var(--mut)">재무</span></td>
+      <td>판관비 동결 + 광고선전비만 +101억 → 1년 만에 −20.6% 철회</td></tr>
+    <tr><td><b>데이터랩</b><br><span style="color:var(--mut)">검색</span></td>
+      <td>같은 해 제품 +118.5% / 브랜드 −23.9% → 이듬해 브랜드 최대 낙폭</td></tr>
+    <tr><td><b>공정위</b><br><span style="color:var(--mut)">가맹</span></td>
+      <td>같은 해 계약해지 91개로 3년 최다, 아리따움 대비 1.4배 빠른 감소</td></tr>
+  </table>
+  <p class="sub"><b>기사 재구성이 아니라 1차 자료 분석이라는 근거다.</b></p>
+</section>
+
+</div>
+
+<div class="bar"><i id="bar"></i></div>
+<div class="hud"><span id="cur">1</span> / <span id="tot">13</span> &nbsp;·&nbsp; <span id="tm">0:00–0:15</span></div>
+<div class="help">← → 이동 · <b>N</b> 발표노트 · <b>Ctrl+P</b> 인쇄</div>
+<div class="notes" id="notes"><h4>발표 노트 <span class="time" id="ntime"></span></h4><div id="ntext"></div></div>
+
+<script>
+(function(){
+  var s = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0, notesOn = false;
+  var bar = document.getElementById('bar'), cur = document.getElementById('cur'),
+      tot = document.getElementById('tot'), tm = document.getElementById('tm'),
+      notes = document.getElementById('notes'), ntext = document.getElementById('ntext'),
+      ntime = document.getElementById('ntime');
+  tot.textContent = s.length;
+  function go(n){
+    i = Math.max(0, Math.min(s.length - 1, n));
+    s.forEach(function(el, k){ el.classList.toggle('on', k === i); });
+    bar.style.width = ((i + 1) / s.length * 100) + '%';
+    cur.textContent = i + 1;
+    tm.textContent = s[i].dataset.t || '';
+    ntext.textContent = s[i].dataset.note || '';
+    ntime.textContent = s[i].dataset.t || '';
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(s.length - 1);
+    else if (e.key === 'n' || e.key === 'N') { notesOn = !notesOn; notes.classList.toggle('on', notesOn); }
+  });
+  document.getElementById('deck').addEventListener('click', function(e){
+    if (e.target.closest('a')) return;
+    go(i + (e.clientX > window.innerWidth * 0.35 ? 1 : -1));
+  });
+  go(0);
+})();
+</script>
+</body>
+</html>
