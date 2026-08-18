@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이니스프리 리브랜딩 — 요약 시안 3종</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#14161a; --mut:#6b7280; --line:#e5e7eb; --card:#fafbfc;
+    --acc:#c2410c; --ok:#0f766e; --bad:#b91c1c; --hl:#fff7ed; --hlb:#fdba74;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0e1014; --fg:#e7e9ed; --mut:#98a1ad; --line:#252a32; --card:#151920;
+      --acc:#fb923c; --ok:#2dd4bf; --bad:#f87171; --hl:#1e1710; --hlb:#7c3d10; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 22px 90px}
+  .topnote{font-size:.8rem;color:var(--mut);border-bottom:1px solid var(--line);
+    padding-bottom:16px;margin-bottom:44px}
+
+  .shell{margin-bottom:72px}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .badge b{color:var(--acc);letter-spacing:.06em}
+  .use{font-size:.79rem;color:var(--mut);margin:0 0 20px}
+  .frame{border:1px solid var(--line);border-radius:14px;padding:34px 30px;background:var(--card)}
+
+  /* ---------- 시안 A ---------- */
+  .a-kicker{font-size:.78rem;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:12px}
+  .a-head{font-size:1.85rem;line-height:1.38;letter-spacing:-.03em;margin:0 0 8px;font-weight:800}
+  .a-sub{font-size:.95rem;color:var(--mut);margin:0 0 30px}
+  .a-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .a-cell{background:var(--bg);padding:22px 18px}
+  .a-num{font-size:2rem;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .a-num.up{color:var(--acc)} .a-num.flat{color:var(--mut)} .a-num.dn{color:var(--bad)}
+  .a-lab{font-size:.76rem;color:var(--mut);margin-top:8px}
+  .a-desc{font-size:.83rem;margin-top:10px;line-height:1.5}
+  .a-close{margin-top:26px;padding-top:20px;border-top:2px solid var(--fg);font-size:1rem;font-weight:700;
+    letter-spacing:-.01em}
+  @media(max-width:620px){ .a-stats{grid-template-columns:1fr} .a-head{font-size:1.45rem} }
+
+  /* ---------- 시안 B ---------- */
+  .tl{position:relative;padding-left:30px}
+  .tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .ev{position:relative;margin-bottom:26px}
+  .ev:last-child{margin-bottom:0}
+  .ev::before{content:"";position:absolute;left:-29px;top:6px;width:16px;height:16px;border-radius:50%;
+    background:var(--bg);border:3px solid var(--line)}
+  .ev.key::before{border-color:var(--acc);background:var(--acc)}
+  .ev-yr{font-size:.95rem;font-weight:800;letter-spacing:-.01em;margin-bottom:2px}
+  .ev.key .ev-yr{color:var(--acc)}
+  .ev-what{font-size:.9rem;margin-bottom:8px}
+  .ev-nums{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+  .chip{font-size:.74rem;padding:3px 9px;border-radius:20px;border:1px solid var(--line);
+    background:var(--bg);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .chip.up{border-color:var(--acc);color:var(--acc)}
+  .chip.dn{border-color:var(--bad);color:var(--bad)}
+  .ev-read{font-size:.83rem;color:var(--mut);border-left:2px solid var(--line);padding-left:11px}
+  .ev.key .ev-read{border-left-color:var(--acc);color:var(--fg)}
+
+  /* ---------- 시안 C ---------- */
+  .qa{display:grid;gap:14px}
+  .qcard{border:1px solid var(--line);border-radius:11px;padding:20px 22px;background:var(--bg)}
+  .qcard.hit{border-color:var(--acc);background:var(--hl)}
+  .q{font-size:.88rem;color:var(--mut);margin-bottom:7px}
+  .ans{font-size:1.12rem;font-weight:800;letter-spacing:-.02em;margin-bottom:11px}
+  .ans.yes{color:var(--acc)} .ans.no{color:var(--bad)}
+  .ev2{font-size:.85rem;line-height:1.6}
+  .ev2 b{font-variant-numeric:tabular-nums}
+  .verdictbar{margin-top:18px;padding:16px 20px;border-radius:10px;background:var(--fg);color:var(--bg);
+    font-size:.93rem;font-weight:700;letter-spacing:-.01em;line-height:1.5}
+
+  .pick{margin-top:16px;font-size:.82rem;color:var(--mut)}
+  footer{border-top:1px solid var(--line);padding-top:16px;font-size:.73rem;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="topnote">
+  동일한 분석을 세 가지 방식으로 요약했습니다. 용도가 다르니 <b>하나를 고르거나 섞어</b> 쓰시면 됩니다.<br>
+  (주)이니스프리 국내법인 별도기준 · 단위 억원 · 출처: 감사보고서 6건(DART) 주석 21
+</p>
+
+<!-- ============ 시안 A ============ -->
+<div class="shell">
+  <div class="badge"><b>시안 A</b> · 한 장 결론형</div>
+  <p class="use">발표 첫 장 · 제안서 표지 다음 장. 3초 안에 결론이 박히는 구성.</p>
+  <div class="frame">
+    <div class="a-kicker">2023 리브랜딩 진단</div>
+    <h2 class="a-head">돈은 썼다.<br>다만 새 예산이 아니었고,<br>1년 만에 거뒀다.</h2>
+    <p class="a-sub">이니스프리는 리브랜딩에 광고비를 41.6% 늘렸지만, 그 돈은 다른 판관비를 깎아 만든 것이었다.</p>
+
+    <div class="a-stats">
+      <div class="a-cell">
+        <div class="a-num up">+41.6%</div>
+        <div class="a-lab">2023 광고선전비 · 244억 → 345억</div>
+        <div class="a-desc">7년 중 광고비가 늘어난 <b>유일한 해</b></div>
+      </div>
+      <div class="a-cell">
+        <div class="a-num flat">+0.1%</div>
+        <div class="a-lab">같은 해 판관비 총액 · 1,600억 → 1,602억</div>
+        <div class="a-desc">지급수수료 -63억, 운반비 -44억을 깎아 <b>돌려막았다</b></div>
+      </div>
+      <div class="a-cell">
+        <div class="a-num dn">-20.6%</div>
+        <div class="a-lab">이듬해 광고선전비 · 345억 → 274억</div>
+        <div class="a-desc">새 정체성이 자리 잡기 전에 <b>지원을 끊었다</b></div>
+      </div>
+    </div>
+
+    <div class="a-close">
+      결과 — 매출 -8.7%, 광고비 1억당 매출 12.3배 → 7.9배. 효율은 3년째 회복되지 않았다.
+    </div>
+  </div>
+  <p class="pick">숫자 3개로 끝내는 구성. 심사위원이 메모할 게 명확합니다.</p>
+</div>
+
+<!-- ============ 시안 B ============ -->
+<div class="shell">
+  <div class="badge"><b>시안 B</b> · 타임라인형</div>
+  <p class="use">발표 본문 · "무슨 일이 있었나"를 순서대로 따라가게 하는 구성. 인과가 자연스럽게 읽힙니다.</p>
+  <div class="frame">
+    <div class="tl">
+
+      <div class="ev">
+        <div class="ev-yr">2022 — 리브랜딩 직전</div>
+        <div class="ev-what">매출 감소가 멈춰가던 해. 영업이익은 324억으로 회복.</div>
+        <div class="ev-nums">
+          <span class="chip">매출 2,997억 (-2.4%)</span>
+          <span class="chip">광고비 244억</span>
+          <span class="chip">광고비율 8.1%</span>
+          <span class="chip">영업이익 324억</span>
+        </div>
+        <div class="ev-read">직전 4년간 광고비 비율은 7~8%대로 안정적이었다. 이게 기준선이다.</div>
+      </div>
+
+      <div class="ev key">
+        <div class="ev-yr">2023 — 리브랜딩 실행</div>
+        <div class="ev-what">로고·컬러 교체. 광고비를 101억 늘려 345억 투입.</div>
+        <div class="ev-nums">
+          <span class="chip up">광고비 345억 (+41.6%)</span>
+          <span class="chip up">광고비율 12.6%</span>
+          <span class="chip">판관비 총액 +0.1%</span>
+          <span class="chip dn">매출 2,738억 (-8.7%)</span>
+          <span class="chip dn">영업이익 103억 (-68%)</span>
+        </div>
+        <div class="ev-read">
+          <b>여기가 분기점이다.</b> 광고비는 늘었는데 판관비 총액은 그대로다 —
+          지급수수료 63억, 운반비 44억을 깎아 만든 <b>재배치</b>였다. 회사는 추가 투자를 하지 않았다.
+        </div>
+      </div>
+
+      <div class="ev">
+        <div class="ev-yr">2024 — 철회</div>
+        <div class="ev-what">광고비를 71억 되돌림. 매출은 오히려 더 크게 빠짐.</div>
+        <div class="ev-nums">
+          <span class="chip dn">광고비 274억 (-20.6%)</span>
+          <span class="chip dn">매출 2,246억 (-18.0%)</span>
+          <span class="chip dn">영업이익 16억 (-84%)</span>
+        </div>
+        <div class="ev-read">새 정체성이 시장에 정착하기 전에 지원이 끊겼다. 7년 중 매출 감소폭이 가장 큰 해.</div>
+      </div>
+
+      <div class="ev">
+        <div class="ev-yr">2025 — 방향 전환</div>
+        <div class="ev-what">브랜드가 아니라 유통을 접어 이익을 만듦.</div>
+        <div class="ev-nums">
+          <span class="chip dn">광고비 248억 (-9.6%)</span>
+          <span class="chip dn">매출 2,098억 (-6.6%)</span>
+          <span class="chip">영업이익 133억 (+716%)</span>
+        </div>
+        <div class="ev-read">
+          영업이익 개선의 85%가 유통·지급수수료 절감이다. 리브랜딩으로 성장을 만드는 시도는 <b>사실상 종료됐다.</b>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <p class="pick">"투입 → 결과 → 철회 → 포기" 4막 구조. 5분 발표의 뼈대로 그대로 씁니다.</p>
+</div>
+
+<!-- ============ 시안 C ============ -->
+<div class="shell">
+  <div class="badge"><b>시안 C</b> · 문답 카드형</div>
+  <p class="use">제안서 진단 챕터 · Q&amp;A 대비. 심사 질문을 먼저 던지고 답하는 구성이라 방어에 강합니다.</p>
+  <div class="frame">
+    <div class="qa">
+
+      <div class="qcard">
+        <div class="q">Q1. 리브랜딩에 실제로 돈을 썼나?</div>
+        <div class="ans yes">썼다</div>
+        <div class="ev2">2023년 광고선전비 <b>244억 → 345억, +41.6%</b>.
+        2019~2025년 <b>7년 중 광고비가 늘어난 유일한 해</b>다.
+        매출 대비 비율도 8.1% → <b>12.6%</b>로 뛰었다.</div>
+      </div>
+
+      <div class="qcard hit">
+        <div class="q">Q2. 그건 리브랜딩을 위한 <u>추가 투자</u>였나?</div>
+        <div class="ans no">아니다 — 재배치였다</div>
+        <div class="ev2">같은 해 판관비 총액은 <b>1,600.3억 → 1,601.7억(+0.1%)</b>으로 동결됐다.
+        광고에 101억을 넣으면서 <b>지급수수료 -63억, 운반비 -44억</b>을 깎았다.
+        <b>조직이 이 리브랜딩에 베팅하지 않았다</b>는 뜻이다.</div>
+      </div>
+
+      <div class="qcard">
+        <div class="q">Q3. 새 정체성이 자리 잡을 때까지 밀어줬나?</div>
+        <div class="ans no">1년 만에 끊었다</div>
+        <div class="ev2">2024년 광고선전비 <b>-20.6%</b>(345억 → 274억).
+        그해 매출은 <b>-18.0%</b>로 7년 중 최악이었고, 영업이익률은 <b>0.7%</b>까지 떨어졌다.</div>
+      </div>
+
+      <div class="qcard">
+        <div class="q">Q4. 광고비를 늘려서 이익이 준 것 아닌가?</div>
+        <div class="ans no">아니다</div>
+        <div class="ev2">2022→2023 영업이익 감소 <b>-220.8억</b> 중 <b>-219.5억이 매출총이익 감소</b>다.
+        판관비는 +1.4억으로 동결이었다. <b>팔리는 양 자체가 줄었다.</b></div>
+      </div>
+
+      <div class="qcard">
+        <div class="q">Q5. 로드샵이 다 죽던 시기 아닌가?</div>
+        <div class="ans no">이니스프리만 빠졌다</div>
+        <div class="ev2">2024년 토니모리 매출 <b>+23.8%</b>·영업이익 <b>+66%</b>, 에이블씨엔씨 영업이익 <b>+53%</b>.
+        이니스프리는 <b>-18.0%·-84.1%</b>.
+        <span style="color:var(--mut)">단, 경쟁사 성장 원인은 보도상 해외 공략 — "국내 성과만 비교하면"이라는 조건 필수.</span></div>
+      </div>
+
+      <div class="qcard">
+        <div class="q">Q6. "제주를 버려서" 실패했다는 근거는?</div>
+        <div class="ans">아직 없다</div>
+        <div class="ev2">재무 데이터는 <b>"돈을 쓰고 실패했다"</b>까지만 증명한다.
+        <b>무엇을 버려서</b>인지는 별도 증거가 필요하다 —
+        네이버 데이터랩 "이니스프리 제주" 검색량 추이, 리뷰의 자연주의 언급 빈도 변화.</div>
+      </div>
+
+    </div>
+
+    <div class="verdictbar">
+      결론 — 이니스프리의 2023년 리브랜딩은 예산을 늘리지 않은 채 항목만 바꿔 실행됐고,
+      효과가 나오기 전에 1년 만에 철회됐다. 광고 효율은 12.3배 → 7.9배로 무너진 뒤 회복되지 않았다.
+    </div>
+  </div>
+  <p class="pick">Q6이 정직해서 오히려 강합니다. 모르는 걸 먼저 말하면 나머지 답의 신뢰가 올라갑니다.</p>
+</div>
+
+<footer>
+  공개된 감사보고서·공시·보도를 근거로 한 학습용 분석이며,
+  이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+</footer>
+
+</div>
+</body>
+</html>
