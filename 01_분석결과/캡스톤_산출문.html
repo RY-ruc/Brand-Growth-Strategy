@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이니스프리 리브랜딩 진단과 재성장 설계 — 캡스톤 산출문</title>
+<style>
+  :root{
+    --ink:#101010; --paper:#FFFFFF; --dim:#454545; --mut:#8A8A88; --faint:#B6B6B3;
+    --rule:#E6E6E3; --wash:#F7F7F5; --acc:#146B4E;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --ink:#EDEDEB; --paper:#0C0D0C; --dim:#B9B9B6; --mut:#878784; --faint:#5C5C59;
+      --rule:#232422; --wash:#141513; --acc:#3DBE92; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","맑은 고딕","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased;
+    font-feature-settings:"tnum";}
+  .wrap{max-width:880px;margin:0 auto;padding:64px 28px 140px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ── cover ── */
+  .cover{padding-bottom:44px;border-bottom:1px solid var(--ink);margin-bottom:14px}
+  .over{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);margin-bottom:26px}
+  h1{font-size:38px;line-height:1.3;letter-spacing:-.035em;margin:0 0 22px;font-weight:800}
+  h1 em{font-style:normal;color:var(--acc)}
+  .stand{font-size:16px;color:var(--dim);max-width:38em;margin:0 0 30px}
+  .srcline{font-size:12px;color:var(--mut);line-height:1.9}
+
+  /* ── part / section ── */
+  .part{margin:96px 0 0;padding-top:26px;border-top:1px solid var(--ink)}
+  .part .pl{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut)}
+  .part h2{font-size:26px;letter-spacing:-.028em;margin:8px 0 6px;font-weight:800}
+  .part .pd{font-size:14px;color:var(--mut);margin:0}
+
+  section{margin:52px 0}
+  .snum{font-size:11px;letter-spacing:.18em;color:var(--faint);font-weight:700;margin-bottom:7px}
+  h3{font-size:20px;letter-spacing:-.022em;margin:0 0 8px;font-weight:800;line-height:1.42}
+  h4{font-size:15px;margin:30px 0 8px;font-weight:800;letter-spacing:-.01em}
+  .lede{color:var(--mut);font-size:14px;margin:0 0 22px;max-width:42em}
+  p{margin:0 0 15px}
+  strong{font-weight:800}
+  .acc{color:var(--acc)}
+
+  /* ── confidence chip (monochrome) ── */
+  .cf{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.06em;
+    font-weight:700;white-space:nowrap;vertical-align:2px}
+  .cf::before{content:"";width:7px;height:7px;border-radius:50%;display:block}
+  .cf.f{color:var(--ink)} .cf.f::before{background:var(--ink)}
+  .cf.e{color:var(--mut)} .cf.e::before{background:var(--mut);opacity:.5}
+  .cf.h{color:var(--faint)} .cf.h::before{border:1.5px solid var(--faint)}
+
+  /* ── tables ── */
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0 8px}
+  th,td{padding:11px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);
+    font-weight:700;border-bottom:1px solid var(--ink)}
+  td.r,th.r{text-align:right}
+  tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+  .kv td:last-child{font-weight:800;text-align:right;white-space:nowrap}
+
+  /* ── list ── */
+  ul.cl{margin:10px 0 0;padding:0;list-style:none}
+  ul.cl li{position:relative;padding-left:19px;margin-bottom:9px;font-size:14px}
+  ul.cl li::before{content:"";position:absolute;left:0;top:11px;width:5px;height:1.5px;background:var(--faint)}
+  ul.cl li b{font-weight:800}
+
+  /* ── note blocks ── */
+  .note{border-left:2px solid var(--ink);padding:2px 0 2px 20px;margin:22px 0;font-size:14.5px}
+  .note.q{border-left-color:var(--acc)}
+  .note.u{border-left-color:var(--rule);color:var(--mut)}
+  .note .lab{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--mut);font-weight:700;margin-bottom:5px}
+
+  /* ── two col ── */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:22px 0}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin:22px 0}
+  @media(max-width:720px){.two,.three{grid-template-columns:1fr;gap:26px}}
+  .col h5{margin:0 0 4px;font-size:13px;font-weight:800;letter-spacing:-.01em}
+  .col .sm{font-size:11.5px;color:var(--mut);margin:0 0 10px}
+
+  /* ── numbered pair ── */
+  .pair{border-top:1px solid var(--rule);padding:20px 0}
+  .pair:last-of-type{border-bottom:1px solid var(--rule)}
+  .pair .hd{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+  .pair .n{font-size:12px;font-weight:800;color:var(--faint);letter-spacing:.08em;min-width:22px}
+  .pair .t{font-size:16px;font-weight:800;letter-spacing:-.015em}
+  .pair .d{font-size:14px;color:var(--dim);margin:0 0 6px 34px}
+  .pair .ev{font-size:12.5px;color:var(--mut);margin:0 0 0 34px}
+
+  /* ── figure ── */
+  figure{margin:26px 0}
+  figcaption{font-size:11.5px;color:var(--mut);margin-top:9px}
+  .bars{margin:6px 0}
+  .br{display:grid;grid-template-columns:150px 1fr 72px;gap:12px;align-items:center;margin-bottom:8px;font-size:13px}
+  .brt{height:16px;background:var(--wash);position:relative;overflow:hidden}
+  .brf{height:100%;background:var(--faint)}
+  .brf.on{background:var(--acc)}
+  .brv{text-align:right;font-weight:700}
+
+  .big{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1.15}
+  .biglab{font-size:12px;color:var(--mut);margin-top:2px}
+
+  footer{margin-top:96px;padding-top:24px;border-top:1px solid var(--ink);
+    font-size:11.5px;color:var(--mut);line-height:1.9}
+
+  @media print{
+    body{font-size:10.5pt} .wrap{max-width:none;padding:0}
+    .part{page-break-before:always;border-top:none}
+    section{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══════════ COVER ══════════ -->
+<div class="cover">
+  <div class="over">Capstone · Brand Diagnosis · 2026</div>
+  <h1>이니스프리<br>리브랜딩 진단과 <em>재성장 설계</em></h1>
+  <p class="stand">
+    2023년 리브랜딩은 포지셔닝 전환이라는 목표를 달성했다.
+    다만 그 성과가 브랜드 성장으로 누적되지 않았다.
+    실패요인 5개와 해결법 5개, 그리고 그것을 검증할 모니터링 체계를 제시한다.
+  </p>
+  <p class="srcline">
+    감사보고서 6건 (DART) · 공정거래위원회 가맹사업거래 정보공개서 ·
+    네이버 데이터랩 검색어트렌드 1,826일 · 언론보도<br>
+    대상 — (주)이니스프리 국내법인 별도기준 · 단위 억원
+  </p>
+</div>
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part">
+  <div class="pl">Part 1</div>
+  <h2>캡스톤 산출문</h2>
+  <p class="pd">명제 교정 · 사실관계 · 실패요인 5 · 해결법 5</p>
+</div>
+
+<section>
+  <div class="snum">01</div>
+  <h3>명제를 먼저 교정한다</h3>
+  <p class="lede">결과를 보고 원인을 지목하면 사후확증편향에 걸린다. 명제가 틀리면 분석 전체가 무너진다.</p>
+
+  <div class="two">
+    <div class="col">
+      <h5>쓰지 않는 명제</h5>
+      <p class="sm">사후확증편향</p>
+      <p style="font-size:17px;font-weight:800;color:var(--mut);text-decoration:line-through;
+        text-decoration-thickness:1px;margin:0 0 10px">“리브랜딩은 실패했다”</p>
+      <p style="font-size:13.5px;color:var(--dim);margin:0">
+        같은 기간 매장 철수·채널 붕괴·중국 수요 소멸이 동시에 진행됐다.
+        리브랜딩만 원인으로 지목할 근거가 없다.</p>
+    </div>
+    <div class="col">
+      <h5>쓰는 명제</h5>
+      <p class="sm">본 보고서의 전제</p>
+      <p style="font-size:17px;font-weight:800;margin:0 0 10px">“리브랜딩은 성공했으나<br>브랜드 성장은 정체되었다”</p>
+      <p style="font-size:13.5px;color:var(--dim);margin:0">
+        포지셔닝 전환이라는 목표 자체는 달성됐다.
+        다만 그 성과가 브랜드 성장으로 누적되지 않았다.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="snum">02</div>
+  <h3>리브랜딩은 작동했다. 브랜드가 크지 않았을 뿐이다.</h3>
+  <p class="lede">2023년 2월 · 제주도 → THE NEW ISLE · 대행사 BBDO</p>
+
+  <div class="two">
+    <div class="col">
+      <h5>작동한 것</h5>
+      <table class="kv"><tbody>
+        <tr><td>미국 계열사 공급 (2023)</td><td class="acc">+86.1%</td></tr>
+        <tr><td>제품군 검색 (2023)</td><td class="acc">+118.5%</td></tr>
+        <tr><td>“리뉴얼·로고” 검색</td><td class="acc">146배</td></tr>
+      </tbody></table>
+    </div>
+    <div class="col">
+      <h5>정체한 것</h5>
+      <table class="kv"><tbody>
+        <tr><td>브랜드 검색 (5년)</td><td>−72.9%</td></tr>
+        <tr><td>국내 매출 (2023)</td><td>−8.7%</td></tr>
+        <tr><td>가맹점 수 (2021→2024)</td><td>400 → 190</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <p>방향은 맞았다. 문제는 그 성과를 브랜드로 누적시키지 못한 구조다.</p>
+</section>
+
+<section>
+  <div class="snum">03</div>
+  <h3>확실한 것과 확실하지 않은 것을 먼저 나눈다</h3>
+  <p class="lede">이 보고서에서 세 영역은 끝까지 구분해 표기한다. 섞어서 쓰지 않는다.</p>
+
+  <div class="three">
+    <div class="col">
+      <h5><span class="cf f">확인된 사실</span></h5>
+      <p class="sm">1차 자료로 직접 확인</p>
+      <ul class="cl">
+        <li>광고선전비 7개년 (감사보고서 주석 21)</li>
+        <li>판관비 총액 +0.1% 동결</li>
+        <li>가맹점 400→190 (공정위 법정 등록)</li>
+        <li>브랜드·제품 검색지수 (1,826일)</li>
+        <li>미국 공급 +86.1% (특수관계자 주석)</li>
+        <li>계약해지 91개 (2023, 3년 최다)</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h5><span class="cf e">추정</span></h5>
+      <p class="sm">근거는 있으나 대체 지표로 간접 측정</p>
+      <ul class="cl">
+        <li>“매장 = 노출 매체” — 상관 r=0.98이나 n=4~5</li>
+        <li>제주 연상 유지의 의미 해석</li>
+        <li>해외 SOM — 계열사 공급액으로 근사</li>
+        <li>기존 고객 이탈 사유 — 보도 인용 기반</li>
+        <li>브랜드 성장 정체의 원인 배분</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h5><span class="cf h">미검증 가설</span></h5>
+      <p class="sm">아직 데이터가 없다</p>
+      <ul class="cl">
+        <li>페스티벌의 접점 대체 효과</li>
+        <li>AEO 인용 점유율 현재 수준</li>
+        <li>2회차 구매율 목표치 +3%p</li>
+        <li>가맹점주 이탈과 리브랜딩의 인과</li>
+        <li>거버넌스(승계) 연결 — 시점 상관만</li>
+        <li>증액 규모의 적정선</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="snum">04</div>
+  <h3>실패요인 5개</h3>
+  <p class="lede">모두 “무엇을 바꿨나”가 아니라 “바꾼 뒤에 무엇을 하지 않았나”에서 나온다.</p>
+
+  <div class="pair">
+    <div class="hd"><span class="n">01</span><span class="t">접점 소멸</span><span class="cf f">확인된 사실</span></div>
+    <p class="d">브랜드를 만날 자리가 없어졌다</p>
+    <p class="ev">가맹점 400 → 190개 · 브랜드 검색 −72.9% · 가맹점 수와 브랜드 검색의 상관 r = 0.98</p>
+  </div>
+  <div class="pair">
+    <div class="hd"><span class="n">02</span><span class="t">자원 불일치</span><span class="cf f">확인된 사실</span></div>
+    <p class="d">포지셔닝 전환을 결정하고 표면적 수준의 예산만 썼다</p>
+    <p class="ev">광고선전비 +41.6%인데 판관비 총액은 +0.1% · 지급수수료 63억·운반비 44억을 깎아 만든 재배치</p>
+  </div>
+  <div class="pair">
+    <div class="hd"><span class="n">03</span><span class="t">지속 실패</span><span class="cf f">확인된 사실</span></div>
+    <p class="d">1년 만에 철회했다</p>
+    <p class="ev">2024 광고선전비 −20.6% · 그린티 검색 2023년 4월 2.73배 피크 후 −48.1%</p>
+  </div>
+  <div class="pair">
+    <div class="hd"><span class="n">04</span><span class="t">전달 실패</span><span class="cf f">확인된 사실</span></div>
+    <p class="d">돈이 브랜드가 아니라 제품에 닿았다</p>
+    <p class="ev">2023년 브랜드 검색 −23.9% vs 제품 검색 +118.5% · 광고비와 브랜드 검색 상관 r = −0.03</p>
+  </div>
+  <div class="pair">
+    <div class="hd"><span class="n">05</span><span class="t">계승 실패</span><span class="cf e">추정</span></div>
+    <p class="d">기존 고객에게 설명하지 않았다</p>
+    <p class="ev">제주 연상 비중 0.79% → 1.87% (3년째 상승) · “헤리티지가 안 보인다” · 브랜드평판 3위 이탈</p>
+  </div>
+
+  <div class="note">
+    <span class="lab">읽는 법</span>
+    01~04는 1차 자료로 확인된 사실이다. 05만 보도 인용과 검색 비중 해석에 기댄 <strong>추정</strong>이다.
+  </div>
+</section>
+
+<section>
+  <div class="snum">05</div>
+  <h3>해결법 5개 — 레버별로 나눈다</h3>
+  <p class="lede">오프라인 · 온라인 캠페인 · AEO · 랜딩페이지가 실행 수단이고, 예산 구조가 그 넷을 가능하게 하는 조건이다.</p>
+
+  <table>
+    <thead><tr><th style="width:34px"></th><th style="width:118px">레버</th><th>해결법</th>
+      <th style="width:78px">대응</th><th style="width:96px">확신도</th></tr></thead>
+    <tbody>
+      <tr><td>01</td><td><strong>오프라인</strong></td><td>브랜드 페스티벌 + 분기 팝업</td><td>요인 01</td><td><span class="cf h">미검증</span></td></tr>
+      <tr><td>02</td><td><strong>온라인 캠페인</strong></td><td>제품 → 브랜드 브리지</td><td>요인 04</td><td><span class="cf f">사실 기반</span></td></tr>
+      <tr><td>03</td><td><strong>AEO · 제로클릭</strong></td><td>AI 답변에 인용되게 만든다</td><td>환경 변화</td><td><span class="cf h">미검증</span></td></tr>
+      <tr><td>04</td><td><strong>랜딩페이지</strong></td><td>계승 서사로 변화를 인지시킨다</td><td>요인 05</td><td><span class="cf e">추정</span></td></tr>
+      <tr><td>05</td><td><strong>예산 · 운영 구조</strong></td><td>총액 증액 · 과제 분리 · 3년 게이트</td><td>요인 02·03</td><td><span class="cf f">사실 기반</span></td></tr>
+    </tbody>
+  </table>
+
+  <h4>01 · 오프라인 — 브랜드 페스티벌 + 분기 팝업 <span class="cf h">미검증 가설</span></h4>
+  <p style="font-size:14px;color:var(--dim);margin:0 0 4px">사라진 400개 매장의 노출을 대체하는 접점 자산</p>
+  <ul class="cl">
+    <li>이벤트가 아니라 <b>매년 반복되는 브랜드 자산</b>으로 설계한다</li>
+    <li>한 번의 사건과 그 콘텐츠의 연중 재생으로 상시 노출을 만든다</li>
+    <li>분기 팝업으로 사이 기간을 메운다</li>
+    <li>측정 — 개최 전후 3개월 <b>브랜드</b> 검색지수 (제품 검색 아님)</li>
+  </ul>
+  <div class="note u"><span class="lab">확실하지 않은 부분</span>
+    유사 사례 벤치마크 없이 세운 가설이다. 효과는 개최 전후 검색 비교로만 검증된다.</div>
+
+  <h4>02 · 온라인 캠페인 — 제품 → 브랜드 브리지 <span class="cf f">사실 기반</span></h4>
+  <p style="font-size:14px;color:var(--dim);margin:0 0 4px">1위 제품 구매자를 브랜드 여정으로 넘긴다</p>
+  <ul class="cl">
+    <li>앰플 구매 후 <b>7·21·40일</b> 루틴 전환 캠페인 — 제품이 아니라 사용 단계로 제안</li>
+    <li>상세페이지 하단을 “함께 구매”가 아니라 <b>“이 앰플을 쓰는 4주 루틴”</b>으로</li>
+    <li>핵심 지표를 전환율이 아니라 <b>30일 내 2회차 구매율</b>로 교체</li>
+    <li>획득 예산 일부를 리텐션으로 이동 — 신규 유입은 이미 작동 중</li>
+  </ul>
+  <div class="note u"><span class="lab">확실하지 않은 부분</span>
+    목표치 +3%p는 업계 통상 범위 가정이며 이니스프리 실데이터로 검증되지 않았다.</div>
+
+  <h4>03 · AEO · 제로클릭 — AI 답변에 인용되게 만든다 <span class="cf h">미검증 가설</span></h4>
+  <p style="font-size:14px;color:var(--dim);margin:0 0 4px">검색은 하는데 사이트에 오지 않는 구간을 방어한다</p>
+  <ul class="cl">
+    <li>“제주 화산송이 효능”, “PDRN 앰플 추천” 등 <b>질문형 쿼리 20개 세트</b> 설계</li>
+    <li>제품 정보를 <b>구조화 데이터</b>로 제공 — 성분·효능·사용법을 기계가 읽게</li>
+    <li>경쟁사 대비 <b>인용 점유율</b>을 월 단위로 실측</li>
+    <li>팀이 직접 생성하는 1차 데이터가 된다</li>
+  </ul>
+  <div class="note u"><span class="lab">확실하지 않은 부분</span>
+    아직 한 번도 실측하지 않았다. 인용 점유율의 현재 수준조차 모른다.</div>
+
+  <h4>04 · 랜딩페이지 — 계승 서사로 변화를 인지시킨다 <span class="cf e">추정</span></h4>
+  <p style="font-size:14px;color:var(--dim);margin:0 0 4px">제주와 THE NEW ISLE을 대립이 아니라 계승으로</p>
+  <ul class="cl">
+    <li>첫 화면에서 <b>“무엇이 왜 바뀌었는지”</b>를 선언한다 — 3년이 지나도 인지가 안 됐다</li>
+    <li>제주(과거)를 부정하지 않고 근거로 재배치한다</li>
+    <li>제품 구매자를 브랜드 여정으로 넘기는 동선을 심는다</li>
+    <li>A/B 지표는 전환율이 아니라 2회차 구매율</li>
+  </ul>
+  <div class="note u"><span class="lab">확실하지 않은 부분</span>
+    “계승 서사가 이탈을 막는다”는 인과는 검증되지 않았다. 리뷰 언급률 변화로 간접 관찰만 가능하다.</div>
+
+  <h4>05 · 예산 · 운영 구조 — 총액 증액 · 과제 분리 · 3년 게이트 <span class="cf f">사실 기반</span></h4>
+  <p style="font-size:14px;color:var(--dim);margin:0 0 4px">위 네 개를 실행 가능하게 만드는 조건</p>
+  <ul class="cl">
+    <li>판관비 <b>총액 자체를 늘린다</b> — 재배치는 베팅하지 않았다는 신호로 읽힌다</li>
+    <li>국내(접점 회복)와 해외(채널 심화)를 <b>별도 예산·KPI·책임자</b>로 분리</li>
+    <li>최소 3년 투자를 사전 확약하고 문서화한다</li>
+    <li>중단·확대 기준을 시작 전에 합의해 사후 판단을 배제한다</li>
+  </ul>
+  <div class="note u"><span class="lab">확실하지 않은 부분</span>
+    증액 규모의 적정선은 산정하지 못했다 — 해외 SAM을 계측하지 못했기 때문이다.</div>
+</section>
+
+<section>
+  <div class="snum">06</div>
+  <h3>필요한 것은 새 전략이 아니라, 이미 가진 자산을 접점으로 되돌릴 자원과 시간이다</h3>
+  <div class="three">
+    <div class="col"><h5>제품</h5><p class="sm">출시 당일 올리브영 판매 1위<br>제품 경쟁력은 이미 증명됐다</p></div>
+    <div class="col"><h5>제주</h5><p class="sm">연상 비중 0.79% → 1.87%<br>소비자는 아직 떠나지 않았다</p></div>
+    <div class="col"><h5>환경</h5><p class="sm">체험 소비와 AI 검색<br>새 접점 통로가 열려 있다</p></div>
+  </div>
+  <div class="note q">
+    리브랜딩은 메시지를 바꿨다. 남은 과제는 그 메시지를 <strong>전달할 자리</strong>를 다시 만드는 것이다.
+  </div>
+</section>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part">
+  <div class="pl">Part 2 · Appendix</div>
+  <h2>부록 — 분석 파트</h2>
+  <p class="pd">3C · 5 Forces · PESTEL · SWOT · 원자료 · 방법론과 한계</p>
+</div>
+
+<section>
+  <div class="snum">A-1 · 3C</div>
+  <h3>제품은 이겼고 소비자는 남아 있는데, 만날 자리가 없다</h3>
+  <div class="three">
+    <div class="col"><h5>Company</h5>
+      <ul class="cl">
+        <li>제품력 증명 — 올리브영 판매 1위</li>
+        <li>수익 정상화 — 영업이익률 6.3%</li>
+        <li>해외 채널 — 세포라 · Space NK</li>
+        <li>접점 소멸 — 가맹점 400→190</li>
+        <li>브랜드 관심 −72.9%</li>
+      </ul></div>
+    <div class="col"><h5>Customer</h5>
+      <ul class="cl">
+        <li>주력 구매자는 카테고리 비교구매층</li>
+        <li>브랜드가 아니라 제품을 산다</li>
+        <li>제주 연상은 3년째 상승 중</li>
+        <li>해외 Gen Z 반응 확인, 규모 미계측</li>
+        <li>가격 민감층은 다이소로 이탈</li>
+      </ul></div>
+    <div class="col"><h5>Competitor</h5>
+      <ul class="cl">
+        <li>올리브영 — 경쟁자이자 생명선</li>
+        <li>인디브랜드 — 어워즈 4중 3</li>
+        <li>다이소 — MAU 516만 (+42.3%)</li>
+        <li>아리따움 −28.7% vs 이니스프리 −41.4%</li>
+        <li>코스알엑스 — 그룹 내 성공 모델</li>
+      </ul></div>
+  </div>
+</section>
+
+<section>
+  <div class="snum">A-2 · 5 Forces</div>
+  <h3>다섯 축 중 넷이 불리하다 — 브랜드가 유일한 방어막인 산업</h3>
+  <div class="bars">
+    <div class="br"><div>① 기존 경쟁자 경쟁</div><div class="brt"><div class="brf on" style="width:100%"></div></div><div class="brv">매우 높음</div></div>
+    <div class="br"><div>② 신규 진입 위협</div><div class="brt"><div class="brf on" style="width:100%"></div></div><div class="brv">매우 높음</div></div>
+    <div class="br"><div>③ 구매자 교섭력</div><div class="brt"><div class="brf on" style="width:100%"></div></div><div class="brv">매우 높음</div></div>
+    <div class="br"><div>④ 대체재 위협</div><div class="brt"><div class="brf" style="width:78%"></div></div><div class="brv">높음</div></div>
+    <div class="br"><div>⑤ 공급자 교섭력</div><div class="brt"><div class="brf" style="width:22%"></div></div><div class="brv">낮음</div></div>
+  </div>
+  <table>
+    <tbody>
+      <tr><td style="width:150px"><strong>① 경쟁</strong></td><td>인디브랜드 폭증, 어워즈 4중 3. 규모의 경제가 방어막이 못 된다</td></tr>
+      <tr><td><strong>② 진입</strong></td><td>OEM/ODM 인프라로 제조 없이 브랜드 생성. 자본 장벽 사실상 0</td></tr>
+      <tr><td><strong>③ 구매자</strong></td><td>올리브영 단일 관문. 소비자 전환비용도 거의 0</td></tr>
+      <tr><td><strong>④ 대체재</strong></td><td>다이소 초저가가 하단을, 더마·시술이 상단을 잠식</td></tr>
+      <tr><td><strong>⑤ 공급자</strong></td><td>OEM 다수·원료 범용. 다섯 축 중 유일하게 유리</td></tr>
+    </tbody>
+  </table>
+  <div class="note q">
+    이 구조에서 브랜드는 방어막이 아니라 <strong>유일한</strong> 방어막이다.
+    그런데 이니스프리는 접점 210개를 3년 만에 잃었다. 지금은 브랜드를 줄일 국면이 아니다.
+  </div>
+</section>
+
+<section>
+  <div class="snum">A-3 · PESTEL</div>
+  <h3>환경은 불리하지 않다 — 대체 접점 통로가 열려 있다</h3>
+  <table>
+    <thead><tr><th style="width:130px">축</th><th>주요 변화</th><th style="width:64px" class="r">방향</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Political</strong></td><td>K-뷰티 수출 지원 확대, 가맹 정보공개서 등록 의무</td><td class="r">기회</td></tr>
+      <tr><td><strong>Economic</strong></td><td>내수 위축·고환율, 온라인 화장품 거래액 +20.4%</td><td class="r">혼재</td></tr>
+      <tr><td><strong>Social</strong></td><td>Gen Z의 경험·팬덤 소비, 오프라인 체험형 재부상</td><td class="r acc">기회</td></tr>
+      <tr><td><strong>Technological</strong></td><td>AI 검색 → 제로클릭 증가, AEO/GEO 부상</td><td class="r acc">기회</td></tr>
+      <tr><td><strong>Environmental</strong></td><td>클린뷰티·비건 정착, 그린워싱 규제</td><td class="r">기회</td></tr>
+      <tr><td><strong>Legal</strong></td><td>표시광고 심사 강화, 가맹 상생, 개인정보 제약</td><td class="r">위협</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13.5px;color:var(--mut)">
+    Social(체험 소비)과 Technological(AI 검색)이 사라진 오프라인 접점을 대체할 통로를 열어주고 있다 —
+    해결법 01과 03의 근거다.
+  </p>
+</section>
+
+<section>
+  <div class="snum">A-4 · SWOT</div>
+  <h3>3C · 5F · PESTEL에서 도출된 항목만 배치했다</h3>
+  <div class="two">
+    <div class="col"><h5>Strengths 강점</h5>
+      <ul class="cl">
+        <li>제품 경쟁력 증명 <span style="color:var(--faint)">[3C]</span></li>
+        <li>수익 구조 정상화 6.3% <span style="color:var(--faint)">[3C]</span></li>
+        <li>제주 자산 잔존 1.87% <span style="color:var(--faint)">[3C]</span></li>
+        <li>해외 채널 보유 <span style="color:var(--faint)">[3C]</span></li>
+        <li>공급자 교섭력 우위 <span style="color:var(--faint)">[5F⑤]</span></li>
+      </ul></div>
+    <div class="col"><h5>Weaknesses 약점</h5>
+      <ul class="cl">
+        <li>접점 소멸 400→190 <span style="color:var(--faint)">[3C]</span></li>
+        <li>브랜드 관심 −72.9% <span style="color:var(--faint)">[3C]</span></li>
+        <li>제품→브랜드 단절 r=−0.03 <span style="color:var(--faint)">[3C]</span></li>
+        <li>신규개점 3년간 1개 <span style="color:var(--faint)">[3C]</span></li>
+        <li>확장·전환 자원 분산 <span style="color:var(--faint)">[본문]</span></li>
+      </ul></div>
+    <div class="col"><h5>Opportunities 기회</h5>
+      <ul class="cl">
+        <li>체험·팬덤 소비 부상 <span style="color:var(--faint)">[PESTEL·S]</span></li>
+        <li>AI 검색·AEO 접점 <span style="color:var(--faint)">[PESTEL·T]</span></li>
+        <li>클린뷰티 → 제주 재활용 <span style="color:var(--faint)">[PESTEL·E]</span></li>
+        <li>온라인 거래액 +20.4% <span style="color:var(--faint)">[PESTEL·E]</span></li>
+        <li>그룹 내 성공 모델 존재 <span style="color:var(--faint)">[3C]</span></li>
+      </ul></div>
+    <div class="col"><h5>Threats 위협</h5>
+      <ul class="cl">
+        <li>인디브랜드 경쟁 심화 <span style="color:var(--faint)">[5F①]</span></li>
+        <li>진입장벽 소멸 <span style="color:var(--faint)">[5F②]</span></li>
+        <li>유통 교섭력 집중 <span style="color:var(--faint)">[5F③]</span></li>
+        <li>다이소·더마 대체 압박 <span style="color:var(--faint)">[5F④]</span></li>
+        <li>제로클릭 확산 <span style="color:var(--faint)">[PESTEL·T]</span></li>
+      </ul></div>
+  </div>
+
+  <h4>TOWS — 교차 전략</h4>
+  <table>
+    <thead><tr><th style="width:92px"></th><th>기회 (O)</th><th>위협 (T)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>강점 (S)</strong></td>
+        <td><b>SO 공격</b><br>제주 자산을 체험 소비와 결합해 페스티벌로 접점 재구축. 1위 제품을 AI 인용 대상으로 구조화.</td>
+        <td><b>ST 방어</b><br>제품력으로 유통 교섭력에 맞선다 — 랭킹 1위 제품은 매대 협상력이 된다.</td></tr>
+      <tr><td><strong>약점 (W)</strong></td>
+        <td><b>WO 보완</b><br>접점 소멸을 온라인 접점으로 대체 — AEO + 랜딩페이지. 제품→브랜드 단절을 2회차 구매 동선으로 연결.</td>
+        <td><b>WT 회피</b><br>가격 경쟁과 매장 재확대는 하지 않는다. 국내 접점 회복과 해외 채널 심화로 목표를 분리한다.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <div class="snum">A-5 · 원자료</div>
+  <h3>한 장으로 보는 7개년 데이터</h3>
+  <table>
+    <thead><tr><th>연도</th><th class="r">매출</th><th class="r">영업이익</th><th class="r">광고선전비</th>
+      <th class="r">가맹점 수</th><th class="r">브랜드 검색</th><th class="r">제품 검색</th></tr></thead>
+    <tbody>
+      <tr><td>2019</td><td class="r">5,518.6</td><td class="r">626.0</td><td class="r">389.6</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+      <tr><td>2020</td><td class="r">3,486.0</td><td class="r">69.8</td><td class="r">264.6</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+      <tr><td>2021</td><td class="r">3,071.7</td><td class="r">−9.6</td><td class="r">261.3</td><td class="r">400</td><td class="r">8.503</td><td class="r">0.091</td></tr>
+      <tr><td>2022</td><td class="r">2,997.4</td><td class="r">324.0</td><td class="r">243.6</td><td class="r">324</td><td class="r">6.903</td><td class="r">0.200</td></tr>
+      <tr><td><strong>2023</strong></td><td class="r"><strong>2,738.0</strong></td><td class="r"><strong>103.2</strong></td>
+        <td class="r acc"><strong>344.9</strong></td><td class="r"><strong>234</strong></td><td class="r"><strong>5.251</strong></td><td class="r"><strong>0.436</strong></td></tr>
+      <tr><td>2024</td><td class="r">2,246.1</td><td class="r">16.4</td><td class="r">273.9</td><td class="r">190</td><td class="r">3.228</td><td class="r">0.399</td></tr>
+      <tr><td>2025</td><td class="r">2,098.5</td><td class="r">133.5</td><td class="r">247.6</td><td class="r">147 *</td><td class="r">2.302</td><td class="r">0.269</td></tr>
+    </tbody>
+  </table>
+  <figcaption>
+    단위 억원 · 2023년이 리브랜딩 실행 연도 · 가맹점 수는 연말 기준 공정위 정보공개서(법정 등록) ·
+    <strong>*</strong> 2025년만 가맹점협의회 주장치<br>
+    검색지수는 상대지수로 그룹 간 절대 비교 불가. 같은 그룹의 시점 간 비교와 비율만 유효하다.
+  </figcaption>
+</section>
+
+<section>
+  <div class="snum">A-6 · 방법론과 한계</div>
+  <h3>우리가 증명한 것과 증명하지 못한 것</h3>
+  <div class="two">
+    <div class="col"><h5>검증 방법</h5>
+      <ul class="cl">
+        <li>감사보고서 6건의 당기·전기를 교차 검증 — 전 구간 일치 확인</li>
+        <li>가맹점 수는 공정위 법정 등록 수치 사용 (협의회 주장치 대체)</li>
+        <li>대조군 2개로 채널 요인 통제 — 아리따움(그룹·채널 동일), 토니모리(검색)</li>
+        <li>재무·검색·가맹 세 출처가 2023년 한 지점에서 교차하는지 확인</li>
+      </ul></div>
+    <div class="col"><h5>한계</h5>
+      <ul class="cl">
+        <li>상관 분석 n=4~5 — <b>“상관이 관찰된다”</b>까지만 유효</li>
+        <li>역인과(수요 감소 → 폐점)를 배제할 수 없음</li>
+        <li>해외 Gen Z TAM·SAM 미계측 — 계열사 공급액으로 근사</li>
+        <li>페스티벌 효과 미검증 — 벤치마크 없는 가설</li>
+        <li>AEO 인용 점유율 미실측</li>
+        <li>광고선전비 ≠ 전체 마케팅비 (광고+판촉 450.5억, 1.6배)</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part">
+  <div class="pl">Part 3</div>
+  <h2>모니터링과 빠른 액션</h2>
+  <p class="pd">지표 체계 · 30·60·90일 · 중단과 확대의 기준</p>
+</div>
+
+<section>
+  <div class="snum">B-1</div>
+  <h3>무엇을 볼 것인가 — 다섯 개면 충분하다</h3>
+  <p class="lede">전부 팀이 직접 수집 가능하고, 네 개는 무료다.</p>
+  <table>
+    <thead><tr><th style="width:34px"></th><th>지표</th><th>수집처 · 주기</th>
+      <th style="width:60px">비용</th><th>목표</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>브랜드 검색지수</strong></td><td>네이버 데이터랩 · 월간</td><td>무료</td><td>전년 동월비 하락폭 축소</td></tr>
+      <tr><td>2</td><td>30일 내 2회차 구매율</td><td>자사몰 CRM · 월간</td><td>내부</td><td>+3%p (180일)</td></tr>
+      <tr><td>3</td><td>접점 수</td><td>가맹점 + 팝업 + 이벤트 · 분기</td><td>공시</td><td>순증 전환</td></tr>
+      <tr><td>4</td><td>AI 인용 점유율</td><td>질문 20개 실측 · 월간</td><td>무료</td><td>경쟁사 대비 우위</td></tr>
+      <tr><td>5</td><td>계승 언급률</td><td>리뷰 100건당 코딩 · 분기</td><td>무료</td><td>제주·헤리티지 언급 증가</td></tr>
+    </tbody>
+  </table>
+  <div class="note q">
+    1번이 최우선이다. 접점 수와 브랜드 검색의 상관이 <strong>r = 0.98</strong>이었으므로,
+    접점을 늘렸을 때 검색이 반응하는지가 곧 가설 검증이 된다.
+  </div>
+</section>
+
+<section>
+  <div class="snum">B-2</div>
+  <h3>30 · 60 · 90일 — 예산 승인 없이 시작할 수 있는 것부터</h3>
+  <div class="three">
+    <div class="col"><h5>30일</h5><p class="sm">전부 무료 · 이번 주 착수 가능</p>
+      <ul class="cl">
+        <li>브랜드 검색 기준선 확정 (5년 월간)</li>
+        <li>AEO 질문 세트 20개 설계 + 1차 실측</li>
+        <li>랜딩페이지 A안 배포 — “무엇이 왜 바뀌었나”</li>
+        <li>앰플 구매자 CRM 세그먼트 정의</li>
+      </ul></div>
+    <div class="col"><h5>60일</h5><p class="sm">소규모 실행</p>
+      <ul class="cl">
+        <li>30일 루틴 전환 캠페인 파일럿</li>
+        <li>팝업 1회 테스트 — 전후 검색 반응 측정</li>
+        <li>리뷰 계승 언급률 1차 코딩 (2인 독립)</li>
+        <li>AEO 2차 실측 — 변화 추적</li>
+      </ul></div>
+    <div class="col"><h5>90일</h5><p class="sm">승인 요청</p>
+      <ul class="cl">
+        <li>페스티벌 컨셉·예산안 작성</li>
+        <li>3년 로드맵 + 게이트 기준 승인 요청</li>
+        <li>국내/해외 예산·KPI 분리안 제출</li>
+        <li>게이트 1차 판정</li>
+      </ul></div>
+  </div>
+</section>
+
+<section>
+  <div class="snum">B-3</div>
+  <h3>게이트를 시작 전에 합의한다</h3>
+  <p class="lede">1년 만의 철회가 반복되지 않으려면, 판단 기준을 사후가 아니라 사전에 정해야 한다.</p>
+  <table>
+    <thead><tr><th style="width:76px">시점</th><th>판정 질문</th><th>결과에 따른 행동</th></tr></thead>
+    <tbody>
+      <tr><td><strong>90일</strong></td><td>브랜드 검색 전년 동월비 하락폭이 축소되었는가</td>
+        <td>축소 → 계속 / 악화 → 실행 방식 재검토 (중단 아님)</td></tr>
+      <tr><td><strong>180일</strong></td><td>30일 내 2회차 구매율 +3%p 달성했는가</td>
+        <td>달성 → 페스티벌 예산 승인 / 미달 → 브리지 설계 수정</td></tr>
+      <tr><td><strong>360일</strong></td><td>페스티벌 전후 브랜드 검색 +10% 반응했는가</td>
+        <td>반응 → 연례 자산화 / 무반응 → 접점 수단 교체</td></tr>
+    </tbody>
+  </table>
+  <div class="note q">
+    <strong>미달이 곧 중단이 아니다</strong> — 1년차 부진이 자동 철회로 이어지는 구조가 2024년의 실패였다.
+  </div>
+</section>
+
+<section>
+  <div class="snum">07</div>
+  <h3>리브랜딩은 성공했다. 성장은 지금부터 만든다.</h3>
+  <p>
+    실패요인 5개는 모두 “무엇을 바꿨나”가 아니라 <strong>“바꾼 뒤에 무엇을 하지 않았나”</strong>에서 나왔다.
+    해결법 5개는 전부 이미 가진 자산 — 1위 제품, 제주 연상, 열린 환경 — 위에 서 있다.
+  </p>
+</section>
+
+<footer>
+  근거 — (주)이니스프리 감사보고서 6건 (DART, 2021~2026 제출) 주석 21 ·
+  공정거래위원회 가맹사업거래 「이니스프리」 정보공개서 (2024 사업연도) ·
+  네이버 데이터랩 검색어트렌드 (2021-01-01~2025-12-31, 일간 1,826일) · 언론보도<br><br>
+  공개된 감사보고서·공시·보도를 근거로 한 학습용 분석이며,
+  이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+</footer>
+
+</div>
+</body>
+</html>
