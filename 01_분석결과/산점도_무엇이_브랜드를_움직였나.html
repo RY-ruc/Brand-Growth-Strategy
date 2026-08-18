@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무엇이 브랜드를 움직였나 — 산점도 3종</title>
+<style>
+  :root{ --bg:#fff; --fg:#14161a; --mut:#6b7280; --line:#e5e7eb; --card:#fafbfc; --grid:#eef0f3;
+    --no:#94a3b8; --mid:#c2410c; --yes:#b91c1c; --reg:#0f766e; --hl:#fff7ed; --hlb:#fdba74; }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0e1014; --fg:#e7e9ed; --mut:#98a1ad; --line:#252a32; --card:#151920; --grid:#1c2028;
+      --no:#5b6675; --mid:#fb923c; --yes:#f87171; --reg:#2dd4bf; --hl:#1e1710; --hlb:#7c3d10; } }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:42px 22px 80px}
+  .eyebrow{font-size:.73rem;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+  h1{font-size:1.6rem;margin:0 0 14px;letter-spacing:-.025em;line-height:1.38}
+  .lead{background:var(--hl);border-left:4px solid var(--hlb);padding:16px 20px;border-radius:0 9px 9px 0;font-size:.94rem}
+  .src{font-size:.75rem;color:var(--mut);margin-top:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+  @media(max-width:820px){ .grid3{grid-template-columns:1fr} }
+  .p{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 14px 12px;
+    display:flex;flex-direction:column}
+  .p.win{border-color:var(--yes);border-width:2px}
+  .ph{margin-bottom:2px}
+  .pn{font-size:.7rem;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+  .pt{font-size:.93rem;font-weight:800;letter-spacing:-.015em;margin-top:3px;line-height:1.35}
+  .pr{font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.03em;margin-top:8px}
+  .pr.no{color:var(--no)} .pr.mid{color:var(--mid)} .pr.yes{color:var(--yes)}
+  .pv{font-size:.74rem;color:var(--mut);margin-top:1px}
+  svg{display:block;width:100%;height:auto;margin-top:8px}
+  .ax{stroke:var(--line);stroke-width:1.2}
+  .gr{stroke:var(--grid);stroke-width:1}
+  .tk{fill:var(--mut);font-size:10px}
+  .axl{fill:var(--mut);font-size:10.5px}
+  .yr{fill:var(--fg);font-size:10px;font-weight:700}
+  .regl{stroke:var(--reg);stroke-width:1.6;stroke-dasharray:5 4;opacity:.8}
+  .pconc{font-size:.8rem;color:var(--mut);margin-top:10px;padding-top:10px;border-top:1px solid var(--line);line-height:1.55}
+  .pconc b{color:var(--fg)}
+
+  section{margin:44px 0}
+  h2{font-size:1.06rem;margin:0 0 4px;letter-spacing:-.015em}
+  .lede{color:var(--mut);font-size:.83rem;margin:0 0 16px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:22px 22px 16px;overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:.83rem;min-width:520px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--mut);font-weight:600;font-size:.76rem}
+  tr.mark td{background:var(--hl);font-weight:700}
+  tr.est td{color:var(--mut);font-style:italic}
+  .read{border-left:3px solid var(--yes);padding-left:16px;margin-top:18px;font-size:.89rem}
+  .read b{color:var(--yes)}
+  .caveat{font-size:.79rem;color:var(--mut);background:var(--card);border:1px solid var(--line);
+    border-radius:9px;padding:16px 18px}
+  .caveat li{margin-bottom:7px}
+  footer{border-top:1px solid var(--line);padding-top:16px;font-size:.73rem;color:var(--mut);margin-top:44px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="eyebrow">감사보고서 × 공정위 정보공개서 × 네이버 데이터랩</div>
+<h1>광고비는 제품을 팔았고,<br>브랜드를 지탱한 건 매장이었다</h1>
+<div class="lead">
+  같은 브랜드 검색량을 두고 <b>광고선전비</b>와 <b>가맹점 수</b>를 각각 세워 봤다.<br>
+  광고비와는 <b>상관이 없고</b>(r = -0.03), 매장 수와는 <b>거의 완전히 연동</b>된다(r = 0.98).<br>
+  <b>돈으로 브랜드를 되살리려 한 시도는 숫자에 흔적을 남기지 못했다.</b>
+</div>
+<p class="src">
+  광고선전비 = 감사보고서 주석 21 · 가맹점 수 = 공정위 정보공개서(연말, 법정 등록) ·
+  검색지수 = 네이버 데이터랩 연평균 · 단위 억원 / 개
+</p>
+
+<div class="grid3">
+
+  <!-- A -->
+  <div class="p">
+    <div class="ph">
+      <div class="pn">A</div>
+      <div class="pt">광고선전비 →<br>브랜드 검색</div>
+      <div class="pr no">r = −0.03</div>
+      <div class="pv">사실상 무상관</div>
+    </div>
+    <svg viewBox="0 0 300 300">
+      <line class="gr" x1="44" y1="179.3" x2="286" y2="179.3"/>
+      <line class="gr" x1="44" y1="98.7" x2="286" y2="98.7"/>
+      <line class="ax" x1="44" y1="18" x2="44" y2="260"/>
+      <line class="ax" x1="44" y1="260" x2="286" y2="260"/>
+      <text class="tk" x="38" y="264" text-anchor="end">0</text>
+      <text class="tk" x="38" y="183" text-anchor="end">3</text>
+      <text class="tk" x="38" y="102" text-anchor="end">6</text>
+      <text class="tk" x="38" y="22" text-anchor="end">9</text>
+      <text class="tk" x="81" y="277" text-anchor="middle">250</text>
+      <text class="tk" x="174" y="277" text-anchor="middle">300</text>
+      <text class="tk" x="267" y="277" text-anchor="middle">350</text>
+      <text class="axl" x="165" y="293" text-anchor="middle">광고선전비 (억원)</text>
+      <line class="regl" x1="62.6" y1="117.3" x2="267.4" y2="123.2"/>
+      <circle cx="102.3" cy="31.4"  r="5.5" fill="var(--no)"/><text class="yr" x="110" y="29">2021</text>
+      <circle cx="69.3"  cy="74.4"  r="5.5" fill="var(--no)"/><text class="yr" x="77"  y="72">2022</text>
+      <circle cx="257.9" cy="118.8" r="6.5" fill="var(--mid)"/><text class="yr" x="250" y="112" text-anchor="end">2023</text>
+      <circle cx="125.7" cy="173.2" r="5.5" fill="var(--no)"/><text class="yr" x="133" y="171">2024</text>
+      <circle cx="76.8"  cy="198.1" r="5.5" fill="var(--no)"/><text class="yr" x="84"  y="196">2025</text>
+    </svg>
+    <div class="pconc">점들이 흩어진다. 광고비가 가장 컸던 <b>2023년</b>이 오히려 오른쪽 아래로 빠진다.
+      <b>돈을 더 써도 브랜드를 찾는 사람은 늘지 않았다.</b></div>
+  </div>
+
+  <!-- B -->
+  <div class="p">
+    <div class="ph">
+      <div class="pn">B</div>
+      <div class="pt">광고선전비 →<br>제품군 검색</div>
+      <div class="pr mid">r = +0.69</div>
+      <div class="pv">중간 정도 양의 상관</div>
+    </div>
+    <svg viewBox="0 0 300 300">
+      <line class="gr" x1="44" y1="163.2" x2="286" y2="163.2"/>
+      <line class="gr" x1="44" y1="66.4" x2="286" y2="66.4"/>
+      <line class="ax" x1="44" y1="18" x2="44" y2="260"/>
+      <line class="ax" x1="44" y1="260" x2="286" y2="260"/>
+      <text class="tk" x="38" y="264" text-anchor="end">0</text>
+      <text class="tk" x="38" y="167" text-anchor="end">.2</text>
+      <text class="tk" x="38" y="70"  text-anchor="end">.4</text>
+      <text class="tk" x="81" y="277" text-anchor="middle">250</text>
+      <text class="tk" x="174" y="277" text-anchor="middle">300</text>
+      <text class="tk" x="267" y="277" text-anchor="middle">350</text>
+      <text class="axl" x="165" y="293" text-anchor="middle">광고선전비 (억원)</text>
+      <line class="regl" x1="62.6" y1="164.4" x2="267.4" y2="37.9"/>
+      <circle cx="102.3" cy="215.9" r="5.5" fill="var(--no)"/><text class="yr" x="110" y="214">2021</text>
+      <circle cx="69.3"  cy="163.2" r="5.5" fill="var(--no)"/><text class="yr" x="77"  y="161">2022</text>
+      <circle cx="257.9" cy="49.0"  r="6.5" fill="var(--mid)"/><text class="yr" x="250" y="43" text-anchor="end">2023</text>
+      <circle cx="125.7" cy="66.9"  r="5.5" fill="var(--no)"/><text class="yr" x="133" y="65">2024</text>
+      <circle cx="76.8"  cy="129.8" r="5.5" fill="var(--no)"/><text class="yr" x="84"  y="128">2025</text>
+    </svg>
+    <div class="pconc">여기선 관계가 보인다. 광고비를 41.6% 늘린 <b>2023년에 제품군 검색이 +118%</b>로 뛰었다.
+      <b>돈은 제품을 움직였다.</b></div>
+  </div>
+
+  <!-- C -->
+  <div class="p win">
+    <div class="ph">
+      <div class="pn">C</div>
+      <div class="pt">가맹점 수 →<br>브랜드 검색</div>
+      <div class="pr yes">r = 0.98</div>
+      <div class="pv">거의 완전한 연동 · R² = 0.97</div>
+    </div>
+    <svg viewBox="0 0 300 300">
+      <line class="gr" x1="44" y1="179.3" x2="286" y2="179.3"/>
+      <line class="gr" x1="44" y1="98.7" x2="286" y2="98.7"/>
+      <line class="ax" x1="44" y1="18" x2="44" y2="260"/>
+      <line class="ax" x1="44" y1="260" x2="286" y2="260"/>
+      <text class="tk" x="38" y="264" text-anchor="end">0</text>
+      <text class="tk" x="38" y="183" text-anchor="end">3</text>
+      <text class="tk" x="38" y="102" text-anchor="end">6</text>
+      <text class="tk" x="38" y="22" text-anchor="end">9</text>
+      <text class="tk" x="61" y="277" text-anchor="middle">150</text>
+      <text class="tk" x="144" y="277" text-anchor="middle">250</text>
+      <text class="tk" x="228" y="277" text-anchor="middle">350</text>
+      <text class="axl" x="165" y="293" text-anchor="middle">연말 가맹점 수 (개)</text>
+      <line class="regl" x1="69.0" y1="180.4" x2="277.7" y2="21.0"/>
+      <circle cx="269.3" cy="31.4"  r="6" fill="var(--yes)"/><text class="yr" x="261" y="26" text-anchor="end">2021</text>
+      <circle cx="205.9" cy="74.4"  r="6" fill="var(--yes)"/><text class="yr" x="214" y="72">2022</text>
+      <circle cx="130.8" cy="118.8" r="6" fill="var(--yes)"/><text class="yr" x="139" y="117">2023</text>
+      <circle cx="94.1"  cy="173.2" r="6" fill="var(--yes)"/><text class="yr" x="102" y="171">2024</text>
+      <circle cx="58.2"  cy="198.1" r="6" fill="none" stroke="var(--no)" stroke-width="2" stroke-dasharray="3 2"/>
+      <text class="yr" x="66" y="196" opacity=".6">2025</text>
+    </svg>
+    <div class="pconc">점 5개가 직선 위에 놓인다. 회귀선에서 제외한 2025년(○)조차 선에 얹힌다.
+      <b>가맹점 100개 감소 = 검색지수 −2.37.</b></div>
+  </div>
+
+</div>
+
+<section>
+  <h2>이 세 장이 함께 말하는 것</h2>
+  <div class="panel" style="padding:24px">
+    <p style="margin:0 0 14px;font-size:.94rem">
+      <b>A와 C를 나란히 놓는 것이 이 분석의 핵심이다.</b><br>
+      같은 브랜드 검색량인데, <b>광고비로는 설명되지 않고 매장 수로는 거의 완전히 설명된다.</b>
+      이니스프리에게 매장은 유통 채널이 아니라 <b>브랜드를 떠올리게 하는 매체</b>였다는 뜻이다.
+    </p>
+    <p style="margin:0 0 14px;font-size:.94rem">
+      <b>B는 그 돈이 어디로 갔는지 보여준다.</b>
+      2023년 광고비 +41.6%가 만든 것은 브랜드 검색(−23.9%)이 아니라 제품군 검색(+118.5%)이었다.
+      <b>브랜드를 새로 세운다며 쓴 돈이 제품 한 줄만 올렸다.</b>
+    </p>
+    <p style="margin:0;font-size:.94rem">
+      그래서 나중에 PDRN 앰플이 올리브영 전체 1위(누적 195만 병)를 하는데도
+      <b>브랜드 매출은 계속 줄어드는</b> 구조가 만들어진다. 제품은 팔리는데 브랜드는 비어간다.
+    </p>
+  </div>
+  <div class="read">
+    <b>마케터에게 이 그림이 주는 결론</b> — 처방은 광고 증액도, 로고 재변경도 아니다.
+    사라진 <b>매장 노출을 무엇으로 대체할 것인가</b>가 유일한 질문이다.
+    그리고 대체재는 이미 브랜드 안에 있다 — 올리브영 1위 제품과 그것을 산 고객이다.
+  </div>
+</section>
+
+<section>
+  <h2>데이터</h2>
+  <div class="panel">
+    <table>
+      <tr><th>연도</th><th>광고선전비</th><th>연말 가맹점 수</th><th>브랜드 검색지수</th><th>제품군 검색지수</th></tr>
+      <tr><td>2021</td><td>261.3</td><td>400</td><td>8.503</td><td>0.091</td></tr>
+      <tr><td>2022</td><td>243.6</td><td>324</td><td>6.903</td><td>0.200</td></tr>
+      <tr class="mark"><td>2023 ★</td><td>344.9</td><td>234</td><td>5.251</td><td>0.436</td></tr>
+      <tr><td>2024</td><td>273.9</td><td>190</td><td>3.228</td><td>0.399</td></tr>
+      <tr class="est"><td>2025</td><td>247.6</td><td>147 (협의회)</td><td>2.302</td><td>0.269</td></tr>
+    </table>
+    <p style="font-size:.78rem;color:var(--mut);margin:12px 2px 0">
+      ★ 리브랜딩 실행 연도 · 제품군 = <code>이니스프리 레티놀</code>·<code>이니스프리 앰플</code> 검색 그룹
+      (포지셔닝이 아니라 <b>제품 검색</b>이다) · 2025년 가맹점 수는 협의회 주장치로 C패널 회귀선에서 제외
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>한계 — 반드시 함께 밝힐 것</h2>
+  <div class="caveat"><ul style="margin:0;padding-left:18px">
+    <li><b>n=4~5는 통계적으로 매우 작다.</b> r 값이 인상적이어도 점 몇 개로는 우연히 높거나 낮게 나올 수 있다.
+      <b>"상관이 관찰된다"</b>까지만 쓰고 <b>"입증됐다"</b>고 쓰지 말 것.</li>
+    <li><b>C패널은 허위상관 위험이 있다.</b> 가맹점 수와 브랜드 검색량은 둘 다 시간에 따라 단조 감소한다.
+      다만 <b>광고선전비는 단조 감소가 아닌데도(2023년 급등) 상관이 없다</b>는 점이
+      "시간이 흘러서 다 같이 줄었다"는 설명을 약화시킨다. 이 대비가 A패널의 진짜 가치다.</li>
+    <li><b>역인과를 배제할 수 없다.</b> 매장이 줄어 검색이 준 것인지, 수요가 줄어 매장이 닫은 것인지
+      이 데이터로는 가릴 수 없다. 양방향 악순환일 가능성이 높다.</li>
+    <li><b>광고선전비는 전체 마케팅비가 아니다.</b> 공정위 공시 기준 2024년 광고 223.0억 + 판촉 227.5억 = <b>450.5억</b>으로,
+      감사보고서 광고선전비(273.9억)의 1.6배다. <b>추세 비교는 유효하지만 절대액 서술은 틀린다.</b></li>
+    <li><b>검색지수는 그룹 간 절대 비교가 불가능한 상대지수다.</b> 같은 그룹의 시점 간 비교와 비율만 유효하다.</li>
+  </ul></div>
+</section>
+
+<footer>
+  출처: (주)이니스프리 감사보고서 6건(DART) 주석 21 ·
+  공정거래위원회 가맹사업거래 「이니스프리」 정보공개서 ·
+  네이버 데이터랩 검색어트렌드(2021-01-01~2025-12-31)<br>
+  공개 자료를 근거로 한 학습용 분석이며, 이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+</footer>
+
+</div>
+</body>
+</html>
