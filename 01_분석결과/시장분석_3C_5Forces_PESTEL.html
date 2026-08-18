@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이니스프리 시장분석 — 3C · 5 Forces · PESTEL · SWOT</title>
+<style>
+  :root{
+    --ink:#10131A; --paper:#FFFFFF; --jade:#00A878; --clay:#E4572E; --amber:#C98A2B;
+    --gray:#8A9099; --dim:#5B6169; --wash:#F3F4F6; --line:#E3E5E9; --jadebg:#EAF7F1;
+    --claybg:#FDEEE9; --amberbg:#FDF6E7;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --ink:#E7E9ED; --paper:#0E1014; --jade:#2DD4BF; --clay:#F87171; --amber:#FBBF24;
+      --gray:#98A1AD; --dim:#B4BAC4; --wash:#151920; --line:#252A32; --jadebg:#0F231E;
+      --claybg:#241512; --amberbg:#221B0F; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","맑은 고딕","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.72;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 100px}
+
+  header{border-bottom:2px solid var(--ink);padding-bottom:26px;margin-bottom:8px}
+  .kick{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--jade);
+    font-weight:700;margin-bottom:12px}
+  h1{font-size:2rem;line-height:1.32;letter-spacing:-.035em;margin:0 0 14px;font-weight:800}
+  .meta{font-size:.78rem;color:var(--gray)}
+
+  h2{font-size:1.35rem;letter-spacing:-.026em;margin:60px 0 6px;font-weight:800;line-height:1.35}
+  h3{font-size:1.02rem;letter-spacing:-.018em;margin:32px 0 10px;font-weight:800}
+  h4{font-size:.9rem;margin:20px 0 8px;font-weight:800;color:var(--jade)}
+  .lede{color:var(--gray);font-size:.88rem;margin:0 0 22px;max-width:46em}
+  p{margin:0 0 14px}
+  .num{font-variant-numeric:tabular-nums}
+
+  .callout{background:var(--jadebg);border-left:4px solid var(--jade);padding:18px 22px;
+    border-radius:0 10px 10px 0;margin:22px 0;font-size:.94rem}
+  .callout.warn{background:var(--claybg);border-left-color:var(--clay)}
+  .callout.note{background:var(--wash);border-left-color:var(--gray)}
+  .callout b{color:inherit}
+
+  table{border-collapse:collapse;width:100%;font-size:.85rem;margin:14px 0 6px}
+  th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--gray);font-weight:700;font-size:.76rem;letter-spacing:.03em;
+    text-transform:uppercase;border-bottom:1.5px solid var(--line)}
+  td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+  tr.hi td{background:var(--jadebg)}
+  .src{font-size:.74rem;color:var(--gray);margin-top:2px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+  .card{background:var(--wash);border-radius:11px;padding:18px 20px}
+  .card h5{margin:0 0 8px;font-size:.92rem;font-weight:800}
+  .card p{font-size:.85rem;color:var(--dim);margin:0 0 8px}
+  .card ul{margin:6px 0 0;padding-left:17px;font-size:.84rem;color:var(--dim)}
+  .card li{margin-bottom:5px}
+
+  /* 5 forces meter */
+  .force{display:grid;grid-template-columns:186px 1fr 96px;gap:14px;align-items:start;
+    padding:15px 0;border-bottom:1px solid var(--line)}
+  .force:last-child{border-bottom:none}
+  .fname{font-size:.9rem;font-weight:800}
+  .fdesc{font-size:.84rem;color:var(--dim)}
+  .fmeter{display:flex;gap:3px;justify-content:flex-end;margin-bottom:5px}
+  .fmeter i{width:13px;height:13px;border-radius:3px;background:var(--line);display:block}
+  .fmeter i.on{background:var(--clay)}
+  .fmeter i.mid{background:var(--amber)}
+  .fmeter i.lo{background:var(--jade)}
+  .flab{font-size:.72rem;text-align:right;color:var(--gray);font-weight:700}
+
+  /* swot */
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+  @media(max-width:760px){.swot{grid-template-columns:1fr}}
+  .sq{border-radius:11px;padding:18px 20px}
+  .sq h5{margin:0 0 4px;font-size:1rem;font-weight:800;letter-spacing:-.01em}
+  .sq .tag{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+    opacity:.75;margin-bottom:2px;display:block}
+  .sq ul{margin:10px 0 0;padding-left:17px;font-size:.83rem;line-height:1.62}
+  .sq li{margin-bottom:7px}
+  .sq.s{background:var(--jadebg)} .sq.s h5,.sq.s .tag{color:var(--jade)}
+  .sq.w{background:var(--claybg)} .sq.w h5,.sq.w .tag{color:var(--clay)}
+  .sq.o{background:var(--amberbg)} .sq.o h5,.sq.o .tag{color:var(--amber)}
+  .sq.t{background:var(--wash)} .sq.t h5,.sq.t .tag{color:var(--gray)}
+
+  .step{display:grid;grid-template-columns:52px 1fr;gap:16px;margin-bottom:20px;align-items:start}
+  .stepn{font-size:1.5rem;font-weight:800;color:var(--line);font-variant-numeric:tabular-nums;
+    line-height:1.1}
+  .step h4{margin:0 0 4px;color:var(--ink);font-size:.98rem}
+  .step p{font-size:.86rem;color:var(--dim);margin:0}
+
+  footer{border-top:1px solid var(--line);margin-top:64px;padding-top:20px;
+    font-size:.74rem;color:var(--gray)}
+  code{font-family:Consolas,Menlo,monospace;font-size:.86em;background:var(--wash);
+    padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kick">캡스톤 팀 프로젝트 · 시장분석</div>
+  <h1>리브랜딩은 성공했다.<br>성장하지 못했을 뿐이다.</h1>
+  <p class="meta">
+    3C · 5 Forces · PESTEL 분석 및 부록 SWOT · 2026-08-18<br>
+    근거: 감사보고서 6건(DART) · 공정거래위원회 정보공개서 · 네이버 데이터랩 1,826일 · 업계 공개자료
+  </p>
+</header>
+
+<!-- ============ 0. 전제 ============ -->
+<h2>0. 전제 — 명제를 먼저 교정한다</h2>
+<p class="lede">이 문서의 모든 분석은 아래 명제 위에서 진행된다. 명제가 틀리면 분석 전체가 선택편향에 걸린다.</p>
+
+<div class="callout warn">
+  <b>❌ 쓰지 않는 명제 — “이니스프리 리브랜딩은 실패했다”</b><br>
+  결과(매출 감소)를 먼저 보고 원인(리브랜딩)을 지목하는 <b>사후확증편향</b>이다.
+  같은 기간 매장 철수·채널 붕괴·중국 수요 소멸이 동시에 진행됐으므로, 리브랜딩만 원인으로 지목할 근거가 없다.
+</div>
+
+<div class="callout">
+  <b>⭕ 쓰는 명제 — “리브랜딩은 성공했으나 브랜드 성장은 정체되었다”</b><br>
+  포지셔닝 전환이라는 <b>리브랜딩 자체의 목표는 달성</b>됐다. 다만 그 성과가 <b>브랜드 성장으로 누적되지 않았다.</b>
+</div>
+
+<h3>데이터가 이 명제를 지지한다</h3>
+<table>
+  <tr><th>구분</th><th>지표</th><th class="r">결과</th><th>해석</th></tr>
+  <tr class="hi"><td rowspan="3"><b>리브랜딩은<br>작동했다</b></td>
+    <td>미국 계열사 공급 매출 (2023)</td><td class="r"><b>+86.1%</b></td><td>새 타깃(해외)에서 실제 반응</td></tr>
+  <tr class="hi"><td>제품군 검색 (레티놀·앰플, 2023)</td><td class="r"><b>+118.5%</b></td><td>메시지가 제품으로 전달됨</td></tr>
+  <tr class="hi"><td>“리뉴얼·로고” 검색 (발표 직후)</td><td class="r"><b>146배</b></td><td>인지 자체는 폭발적으로 발생</td></tr>
+  <tr><td rowspan="3"><b>그러나 브랜드는<br>성장하지 않았다</b></td>
+    <td>브랜드 검색 (2021→2025)</td><td class="r">−72.9%</td><td>관심 총량은 계속 이탈</td></tr>
+  <tr><td>국내 매출 (2023)</td><td class="r">−8.7%</td><td>해외 성과가 국내를 못 메움</td></tr>
+  <tr><td>가맹점 수 (2021→2024)</td><td class="r">400 → 190</td><td>접점 소멸이 계속 진행</td></tr>
+</table>
+<p class="src">전 항목 1차 자료 기준. 검색지수는 상대지수로 그룹 간 절대 비교 불가.</p>
+
+<h3>발표 4단계 구조에서 이 문서의 위치</h3>
+<div class="step"><div class="stepn">01</div><div>
+  <h4>사실 — 2023~24년 리브랜딩, 성과 누적 없이 지원 중단</h4>
+  <p>광고선전비 +41.6% → 이듬해 −20.6%. 판관비 총액은 +0.1%로 동결이었다.</p></div></div>
+<div class="step"><div class="stepn">02</div><div>
+  <h4>실패요인 5개 분석</h4>
+  <p>아래 3C·5 Forces·PESTEL이 <b>이 다섯 요인의 구조적 배경</b>을 제공한다.</p></div></div>
+<div class="step"><div class="stepn">03</div><div>
+  <h4>재리브랜딩 — 확장과 전환을 분리하고, 잃은 접점을 되산다</h4>
+  <p>시장분석의 결론이 여기로 수렴한다. §5 참조.</p></div></div>
+<div class="step"><div class="stepn">04</div><div>
+  <h4>AI 시대 전략 — 제로클릭 AEO · 랜딩페이지</h4>
+  <p>PESTEL의 <b>Technological</b> 축이 이 전략의 근거가 된다. §4·§6 참조.</p></div></div>
+
+<!-- ============ 1. 3C ============ -->
+<h2>1. 3C 분석</h2>
+<p class="lede">Company · Customer · Competitor를 같은 시점(2024~2025년 기준)으로 맞춰 비교한다.</p>
+
+<h3>Company — 이니스프리</h3>
+<div class="grid2">
+  <div class="card">
+    <h5>가진 것</h5>
+    <ul>
+      <li><b>제품력이 증명됐다</b> — PDRN 앰플, 출시 당일 올리브영 판매 1위</li>
+      <li><b>수익 구조는 정상화</b> — 2025년 영업이익 133.5억, 영업이익률 6.3%</li>
+      <li><b>해외 채널 확보</b> — 세포라, Space NK(2024 신규 입점), 아마존</li>
+      <li><b>제주 자산이 아직 살아 있다</b> — 연상 비중 0.79% → 1.87%로 3년째 상승</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h5>잃은 것</h5>
+    <ul>
+      <li><b>오프라인 접점</b> — 가맹점 400개 → 190개 (2021→2024, 법정 기준)</li>
+      <li><b>브랜드 관심 총량</b> — 검색지수 −72.9% (5년)</li>
+      <li><b>신규 유입 경로</b> — 3년간 신규개점 단 <span class="num">1개</span></li>
+      <li><b>그룹 내 우선순위</b> — 2026년 1분기 그룹 성장동력 목록에 미포함</li>
+    </ul>
+  </div>
+</div>
+<div class="callout note">
+  <b>핵심 비대칭</b> — 제품은 팔리는데 브랜드는 비어간다.
+  광고선전비와 <b>브랜드</b> 검색의 상관은 <b>r = −0.03</b>(무상관), <b>제품</b> 검색과는 <b>r = +0.69</b>였다.
+  같은 돈이 제품만 밀어 올렸다.
+</div>
+
+<h3>Customer — 누가, 어떻게 사는가</h3>
+<table>
+  <tr><th>세그먼트</th><th>구매 방식</th><th>이니스프리와의 관계</th></tr>
+  <tr><td><b>기존 국내 2030</b><br>자연주의 선호</td>
+    <td>브랜드 신뢰 기반, 재구매 중심</td>
+    <td>제주 연상은 유지하나 <b>접점이 사라져 이탈</b>. “헤리티지가 안 보인다”</td></tr>
+  <tr class="hi"><td><b>현재 주력 구매자</b><br>성분·후기 비교층</td>
+    <td>올리브영·화해에서 <b>카테고리 단위 비교구매</b></td>
+    <td><b>브랜드가 아니라 제품을 산다.</b> PDRN 앰플은 사도 다음 제품으로 안 넘어감</td></tr>
+  <tr><td><b>신규 타깃</b><br>해외 Gen Z</td>
+    <td>세포라·아마존·소셜 발견</td>
+    <td>실제 반응 발생(미국 +86.1%). <b>다만 규모 미계측</b></td></tr>
+  <tr><td><b>가격 민감층</b></td><td>다이소몰 등 초저가</td>
+    <td>이탈 완료. 되찾는 것이 목표가 아님</td></tr>
+</table>
+<div class="callout">
+  <b>고객 관점의 진단</b> — 소비자는 브랜드를 버린 게 아니라 <b>브랜드를 만날 자리를 잃었다.</b>
+  제주 연상 비중이 3년째 오르는 것이 그 증거다. 회사는 THE NEW ISLE로 떠났는데 소비자 인식은 제주에 남아 있다.
+</div>
+
+<h3>Competitor — 누구와 싸우는가</h3>
+<table>
+  <tr><th>경쟁 축</th><th>대표</th><th>강점</th><th>이니스프리의 상대적 위치</th></tr>
+  <tr><td>채널 지배</td><td>올리브영</td><td>MAU 934만, 연매출 5조 클럽, 온·오프 멤버십</td>
+    <td><b>경쟁자이자 생명선</b> — 입점하면 수수료, 안 하면 접점 0</td></tr>
+  <tr><td>제품 회전</td><td>인디브랜드</td><td>2025 어워즈 수상 4개 중 3개, 빠른 출시</td>
+    <td>대응 속도에서 열위</td></tr>
+  <tr><td>가격</td><td>다이소 뷰티</td><td>다이소몰 MAU 516만(+42.3%)</td><td>가격 경쟁 포기 — 올바른 선택</td></tr>
+  <tr><td>같은 그룹</td><td>아리따움 · 에뛰드</td><td>동일 채널·동일 시기</td>
+    <td>매장 감소 −41.4% vs 아리따움 −28.7% (2년)</td></tr>
+  <tr class="hi"><td><b>내부 벤치마크</b></td><td><b>코스알엑스</b></td>
+    <td>그룹 성장동력으로 지목, 해외 직판 성공</td>
+    <td><b>같은 회사 안에 성공 모델이 있다</b> — 왜 이니스프리에는 적용 안 됐나</td></tr>
+</table>
+<p class="src">⚠ 토니모리 +23.8%·에이블씨엔씨 +53%(2024 영업이익) 인용 시, 보도상 성장 원인은 <b>해외 공략</b>이므로 “국내 성과만 비교하면”이라는 조건을 붙일 것.</p>
+
+<!-- ============ 2. 5 Forces ============ -->
+<h2>2. 5 Forces 분석</h2>
+<p class="lede">국내 화장품 브랜드사가 놓인 산업 구조. 다섯 축 중 <b>네 축이 불리</b>하다.</p>
+
+<div>
+  <div class="force">
+    <div><div class="fname">① 기존 경쟁자 간 경쟁</div></div>
+    <div class="fdesc">인디브랜드 폭증으로 신제품 회전이 극단적으로 빨라졌다.
+      올리브영 어워즈 수상 브랜드의 4분의 3이 인디브랜드다. 규모의 경제가 방어막이 되지 못한다.</div>
+    <div><div class="fmeter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="flab">매우 높음</div></div>
+  </div>
+  <div class="force">
+    <div><div class="fname">② 신규 진입 위협</div></div>
+    <div class="fdesc">코스맥스·한국콜마 등 OEM/ODM 인프라로 <b>제조 없이 브랜드를 만들 수 있다.</b>
+      자본·설비 장벽이 사실상 없고, 남은 진입장벽은 <b>브랜드와 채널 확보</b>뿐이다.</div>
+    <div><div class="fmeter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="flab">매우 높음</div></div>
+  </div>
+  <div class="force">
+    <div><div class="fname">③ 구매자(유통) 교섭력</div></div>
+    <div class="fdesc">올리브영이 사실상 단일 관문이다. 입점·매대·프로모션 조건을 유통이 정한다.
+      최종 소비자 역시 리뷰·성분 비교로 브랜드 전환 비용이 거의 0이다.</div>
+    <div><div class="fmeter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="flab">매우 높음</div></div>
+  </div>
+  <div class="force">
+    <div><div class="fname">④ 대체재 위협</div></div>
+    <div class="fdesc">다이소 초저가 라인이 기초 카테고리를 잠식하고, 상단에서는 피부과 시술·더마 브랜드가 대체한다.
+      아모레퍼시픽 그룹 성장동력도 더마(에스트라·코스알엑스)로 이동했다.</div>
+    <div><div class="fmeter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="mid"></i><i></i></div>
+      <div class="flab">높음</div></div>
+  </div>
+  <div class="force">
+    <div><div class="fname">⑤ 공급자 교섭력</div></div>
+    <div class="fdesc">OEM/ODM 업체가 다수이고 원료도 범용이다. 브랜드사가 가격·물량 협상에서 우위에 있다.
+      <b>다섯 축 중 유일하게 유리한 축.</b></div>
+    <div><div class="fmeter"><i class="lo"></i><i class="lo"></i><i></i><i></i><i></i></div>
+      <div class="flab">낮음</div></div>
+  </div>
+</div>
+
+<div class="callout warn">
+  <b>구조적 결론</b> — 제조도 쉽고, 진입도 쉽고, 유통이 갑이고, 소비자 전환비용은 0이다.
+  이 산업에서 <b>브랜드는 방어막이 아니라 유일한 방어막</b>이다.
+  그런데 이니스프리는 그 방어막을 담당하던 <b>오프라인 접점 210개를 3년 만에 잃었다.</b>
+  5 Forces가 말하는 것은 <b>“지금은 브랜드를 줄일 때가 아니다”</b>이다.
+</div>
+
+<!-- ============ 3. PESTEL ============ -->
+<h2>3. PESTEL 분석</h2>
+<p class="lede">거시 환경 여섯 축. 기회(O)와 위협(T)을 함께 표기한다.</p>
+
+<table>
+  <tr><th style="width:110px">축</th><th>주요 변화</th><th style="width:64px">방향</th><th>이니스프리 함의</th></tr>
+  <tr><td><b>Political</b><br>정치·정책</td>
+    <td>K-뷰티 수출 지원 확대(중소기업 미국 진출 프로그램), 가맹사업법상 정보공개서 등록 의무</td>
+    <td><b style="color:var(--jade)">기회</b></td>
+    <td>해외 확장에 제도적 순풍. 다만 가맹 관련 공시 의무로 <b>매장 축소가 외부에 그대로 드러난다</b></td></tr>
+  <tr><td><b>Economic</b><br>경제</td>
+    <td>내수 소비 위축 지속, 고환율(수출 유리), 화장품 온라인 거래액 +20.4%(2분기)</td>
+    <td><b style="color:var(--amber)">혼재</b></td>
+    <td>국내는 축소·해외는 확대 압력. 회사의 해외 선회는 <b>합리적 대응</b>이었다</td></tr>
+  <tr class="hi"><td><b>Social</b><br>사회·문화</td>
+    <td>Gen Z의 성분·후기 중심 소비, 브랜드 서사보다 <b>경험·팬덤</b> 중시, 오프라인 체험형 소비 재부상</td>
+    <td><b style="color:var(--jade)">기회</b></td>
+    <td><b>페스티벌·체험형 전략의 근거.</b> 매대가 아닌 <b>사건</b>으로 접점을 만들 수 있다</td></tr>
+  <tr class="hi"><td><b>Technological</b><br>기술</td>
+    <td>AI 검색 확산 → <b>제로클릭</b> 증가, AEO/GEO 부상, 리테일미디어(올리브영 앱 내 광고) 성장</td>
+    <td><b style="color:var(--jade)">기회</b></td>
+    <td><b>4단계 AI 전략의 근거.</b> 검색 유입이 줄어드는 만큼 <b>AI 답변에 인용되는 것</b>이 새 접점</td></tr>
+  <tr><td><b>Environmental</b><br>환경</td>
+    <td>클린뷰티·비건·리필 수요 정착, 그린워싱 규제 강화</td>
+    <td><b style="color:var(--jade)">기회</b></td>
+    <td><b>제주·자연주의 자산의 재활용 경로.</b> 낡은 서사가 아니라 <b>검증 가능한 근거</b>로 재구성 가능</td></tr>
+  <tr><td><b>Legal</b><br>법·규제</td>
+    <td>표시·광고 심사 강화, 가맹점 상생 요구, 개인정보 활용 제약</td>
+    <td><b style="color:var(--clay)">위협</b></td>
+    <td>CRM 기반 리텐션 설계 시 동의·활용 범위 사전 확인 필요</td></tr>
+</table>
+
+<div class="callout">
+  <b>PESTEL의 결론</b> — 거시 환경은 <b>불리하지 않다.</b> 오히려 Social(체험 소비)과 Technological(AI 검색)은
+  <b>사라진 오프라인 접점을 대체할 새 통로</b>를 열어주고 있다. 문제는 환경이 아니라 <b>그 통로에 자원을 넣지 않은 것</b>이다.
+</div>
+
+<!-- ============ 4. 종합 ============ -->
+<h2>4. 세 분석이 가리키는 한 지점</h2>
+
+<div class="grid3">
+  <div class="card"><h5>3C가 말하는 것</h5>
+    <p>제품은 이겼고 소비자는 남아 있는데 <b>만날 자리가 없다.</b>
+    제주 연상은 3년째 오르는데 회사는 그 자산을 쓰지 않고 있다.</p></div>
+  <div class="card"><h5>5 Forces가 말하는 것</h5>
+    <p>다섯 축 중 넷이 불리한 산업에서 <b>브랜드가 유일한 방어막</b>이다.
+    지금은 브랜드 투자를 줄일 국면이 아니다.</p></div>
+  <div class="card"><h5>PESTEL이 말하는 것</h5>
+    <p>체험 소비와 AI 검색이라는 <b>새 접점 통로가 열려 있다.</b>
+    환경은 불리하지 않다.</p></div>
+</div>
+
+<div class="callout">
+  <b>수렴 지점</b><br>
+  세 분석이 각각 다른 층위에서 같은 문장을 만든다 —
+  <b>“접점을 잃었고, 대체 접점을 만들 조건은 갖춰져 있다.”</b><br>
+  리브랜딩은 <b>메시지</b>를 바꿨다. 남은 과제는 그 메시지를 <b>전달할 자리</b>를 다시 만드는 것이다.
+</div>
+
+<!-- ============ 5. 전략 연결 ============ -->
+<h2>5. 시장분석 → 재리브랜딩 전략</h2>
+<p class="lede">3단계 “재리브랜딩”이 시장분석에서 어떻게 도출되는지 연결한다.</p>
+
+<h3>① 확장 전략과 리브랜딩 전략을 분리했어야 했다</h3>
+<p>
+  2023년 이니스프리는 <b>두 가지를 동시에</b> 했다 — 국내 브랜드 정체성 전환(리브랜딩)과 해외 신시장 진입(확장).
+  그런데 판관비 총액은 <span class="num">+0.1%</span>로 동결이었다. <b>두 개의 과제에 한 개 분량의 자원을 나눠 썼다.</b>
+</p>
+<table>
+  <tr><th>과제</th><th>필요한 것</th><th>실제</th></tr>
+  <tr><td>국내 리브랜딩</td><td>기존 고객 설득 · 접점 유지 · 3년 이상 지속</td><td>1년 만에 지원 중단</td></tr>
+  <tr><td>해외 확장</td><td>현지 채널 · 신규 인지 구축 예산</td><td>반응은 왔으나(+86.1%) 후속 투자 없음</td></tr>
+</table>
+<div class="callout note">
+  둘 다 절반씩 진행되어 <b>어느 쪽도 임계점을 넘지 못했다.</b>
+  재리브랜딩에서는 <b>국내는 접점 회복, 해외는 채널 심화</b>로 목표와 예산을 분리해야 한다.
+</div>
+
+<h3>② 페스티벌 — 사라진 400개 매장을 대체하는 장치</h3>
+<p>
+  이 제안은 아이디어가 아니라 <b>3C·PESTEL에서 도출된 결론</b>이다.
+</p>
+<table>
+  <tr><th>근거</th><th>내용</th></tr>
+  <tr><td>3C · Company</td><td>매장 400개 → 190개. <b>브랜드를 떠올리게 하던 매체가 소멸</b>했다</td></tr>
+  <tr><td>3C · Customer</td><td>제주 연상 비중이 3년째 상승. <b>쓸 수 있는 자산이 남아 있다</b></td></tr>
+  <tr><td>PESTEL · Social</td><td>Gen Z는 브랜드 서사보다 <b>경험·팬덤</b>에 반응한다</td></tr>
+  <tr><td>5 Forces · ③</td><td>올리브영 매대에서는 <b>브랜드가 아니라 제품</b>으로만 인식된다 — 매대 밖 접점이 필요하다</td></tr>
+</table>
+<div class="callout">
+  <b>페스티벌의 전략적 정의</b><br>
+  이벤트가 아니라 <b>연 1회 반복되는 브랜드 접점 자산</b>이다.
+  매장 400개가 매일 조금씩 만들던 노출을, <b>한 번의 사건과 그 콘텐츠의 연중 재생</b>으로 대체한다.<br><br>
+  <b>측정 지표</b> — 브랜드 검색지수(제품 검색이 아니라), 개최 전후 3개월 비교.
+  이 프로젝트에서 <b>브랜드 검색과 접점 수의 상관이 r = 0.98</b>이었으므로, 접점을 늘리면 검색이 반응하는지가 곧 검증이 된다.
+</div>
+<p class="src">⚠ r = 0.98은 n = 4~5의 관찰이다. “상관이 관찰된다”까지만 쓰고 “입증됐다”고 쓰지 말 것.</p>
+
+<!-- ============ 6. AI ============ -->
+<h2>6. 4단계 — AI 시대의 접점 전략</h2>
+<p class="lede">PESTEL의 Technological 축에서 직접 도출된다.</p>
+
+<h3>제로클릭 시대의 문제 정의</h3>
+<p>
+  AI 검색이 답을 직접 제시하면서 <b>검색은 하는데 사이트에 오지 않는</b> 구간이 커지고 있다.
+  이니스프리는 이미 브랜드 검색이 −72.9% 빠진 상태다. 남은 검색량마저 클릭으로 이어지지 않으면 접점은 한 번 더 줄어든다.
+</p>
+
+<div class="grid2">
+  <div class="card">
+    <h5>AEO — AI 답변에 인용되게 만들기</h5>
+    <ul>
+      <li>“제주 화산송이 효능”, “PDRN 앰플 추천” 같은 <b>질문형 쿼리</b>에 브랜드가 인용되는지 실측</li>
+      <li>제품 정보를 <b>구조화 데이터</b>로 제공 — 성분·효능·사용법을 기계가 읽을 수 있는 형태로</li>
+      <li>인용 점유율을 경쟁사 대비 <b>월 단위로 추적</b> (팀이 직접 생성 가능한 1차 데이터)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h5>랜딩페이지 — “바뀌었다”를 명확히 인지시키기</h5>
+    <ul>
+      <li><b>첫 화면에서 변화를 선언</b>한다. 리브랜딩 3년이 지나도 소비자 연상은 제주에 머물러 있다</li>
+      <li>제주(과거)와 THE NEW ISLE(현재)을 <b>대립이 아니라 계승</b>으로 배치 — “헤리티지가 안 보인다”가 실제 이탈 사유였다</li>
+      <li>제품 구매자를 <b>브랜드 여정으로 넘기는 동선</b>을 심는다 — 현재는 앰플에서 끝난다</li>
+      <li>A/B 테스트 지표는 전환율이 아니라 <b>2회차 구매율</b></li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout">
+  <b>4단계의 핵심</b> — AI 전략은 유행이라서가 아니라, <b>잃어버린 접점을 대체할 수 있는 통로 중 하나</b>이기 때문에 필요하다.
+  페스티벌이 <b>오프라인 접점</b>을 되사는 장치라면, AEO·랜딩페이지는 <b>온라인 접점</b>을 되사는 장치다.
+</div>
+
+<!-- ============ 부록 SWOT ============ -->
+<h2>부록. SWOT 분석</h2>
+<p class="lede">3C · 5 Forces · PESTEL에서 도출된 항목만 배치했다. 각 항목 끝의 대괄호가 출처 분석이다.</p>
+
+<div class="swot">
+  <div class="sq s">
+    <span class="tag">Strengths</span><h5>강점</h5>
+    <ul>
+      <li>제품 경쟁력 증명 — PDRN 앰플 출시 당일 올리브영 판매 1위 <b>[3C·Company]</b></li>
+      <li>수익 구조 정상화 — 2025년 영업이익률 6.3% <b>[3C·Company]</b></li>
+      <li>제주 자산 잔존 — 연상 비중 0.79%→1.87%, 3년째 상승 <b>[3C·Customer]</b></li>
+      <li>해외 채널 보유 — 세포라·Space NK·아마존 <b>[3C·Company]</b></li>
+      <li>공급자 교섭력 우위 — OEM 다수, 원가 협상력 <b>[5F·⑤]</b></li>
+    </ul>
+  </div>
+  <div class="sq w">
+    <span class="tag">Weaknesses</span><h5>약점</h5>
+    <ul>
+      <li>오프라인 접점 소멸 — 가맹점 400→190개 <b>[3C·Company]</b></li>
+      <li>브랜드 관심 이탈 — 검색지수 −72.9% <b>[3C·Company]</b></li>
+      <li>제품→브랜드 전환 단절 — 광고비와 브랜드 검색 상관 r = −0.03 <b>[3C]</b></li>
+      <li>신규 유입 경로 부재 — 3년간 신규개점 1개 <b>[3C·Company]</b></li>
+      <li>그룹 내 자원 배분 후순위 <b>[3C·Competitor]</b></li>
+      <li>확장·전환 과제 동시 추진에 따른 자원 분산 <b>[§5]</b></li>
+    </ul>
+  </div>
+  <div class="sq o">
+    <span class="tag">Opportunities</span><h5>기회</h5>
+    <ul>
+      <li>체험형·팬덤 소비 부상 → 페스티벌 접점 <b>[PESTEL·Social]</b></li>
+      <li>AI 검색·AEO — 새 인용 접점 <b>[PESTEL·Tech]</b></li>
+      <li>클린뷰티·비건 정착 → 제주 자산 재활용 <b>[PESTEL·Env]</b></li>
+      <li>K-뷰티 수출 지원 및 고환율 <b>[PESTEL·Pol/Econ]</b></li>
+      <li>온라인 화장품 거래액 +20.4% <b>[PESTEL·Econ]</b></li>
+      <li>그룹 내 성공 모델 존재(코스알엑스) — 이식 가능 <b>[3C·Competitor]</b></li>
+    </ul>
+  </div>
+  <div class="sq t">
+    <span class="tag">Threats</span><h5>위협</h5>
+    <ul>
+      <li>인디브랜드 경쟁 심화 — 어워즈 4중 3 <b>[5F·①]</b></li>
+      <li>진입장벽 소멸 — OEM/ODM 인프라 <b>[5F·②]</b></li>
+      <li>유통 교섭력 집중 — 올리브영 MAU 934만 <b>[5F·③]</b></li>
+      <li>대체재 압박 — 다이소(+42.3%)·더마·시술 <b>[5F·④]</b></li>
+      <li>제로클릭 확산으로 자사몰 유입 추가 감소 <b>[PESTEL·Tech]</b></li>
+      <li>표시광고·가맹 상생 규제 <b>[PESTEL·Legal]</b></li>
+    </ul>
+  </div>
+</div>
+
+<h3>TOWS — 교차 전략</h3>
+<table>
+  <tr><th style="width:96px"></th><th>기회 (O)</th><th>위협 (T)</th></tr>
+  <tr>
+    <td><b>강점 (S)</b></td>
+    <td><b>SO — 공격</b><br>
+      제주 자산(S)을 클린뷰티·체험 소비(O)와 결합해 <b>페스티벌로 접점 재구축</b>.
+      1위 제품(S)을 AI 인용 대상(O)으로 구조화.</td>
+    <td><b>ST — 방어</b><br>
+      제품력(S)으로 유통 교섭력(T)에 맞선다 — 올리브영 랭킹 1위 제품은 매대 협상력이 된다.
+      원가 우위(S)로 가격 압박(T) 흡수.</td>
+  </tr>
+  <tr>
+    <td><b>약점 (W)</b></td>
+    <td><b>WO — 보완</b><br>
+      접점 소멸(W)을 온라인 접점(O)으로 대체 — <b>AEO + 랜딩페이지</b>.
+      제품→브랜드 단절(W)을 2회차 구매 동선으로 연결.</td>
+    <td><b>WT — 회피</b><br>
+      자원 분산(W) + 경쟁 심화(T) 상황에서 <b>가격 경쟁과 매장 재확대는 하지 않는다.</b>
+      국내 접점 회복과 해외 채널 심화로 <b>목표를 분리</b>한다.</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <b>SWOT의 결론 한 문장</b><br>
+  강점(제품·제주 자산)과 기회(체험 소비·AI 검색)는 갖춰져 있고, 약점(접점 소멸)은 그 둘의 조합으로 메울 수 있다.
+  <b>필요한 것은 새로운 전략이 아니라, 이미 가진 자산을 접점으로 되돌릴 자원과 시간이다.</b>
+</div>
+
+<!-- ============ 한계 ============ -->
+<h2>한계 — 발표에서 먼저 밝힐 것</h2>
+<div class="callout warn">
+  <ul style="margin:0;padding-left:18px">
+    <li><b>TAM·SAM 미계측.</b> 해외 Gen Z 세그먼트 규모는 공개 자료로 확인하지 못했다. 계열사 공급액으로 근사했을 뿐이다</li>
+    <li><b>상관은 인과가 아니다.</b> 접점 수와 브랜드 검색의 r = 0.98은 n = 4~5의 관찰이며, 역인과(수요 감소 → 폐점)를 배제할 수 없다</li>
+    <li><b>페스티벌 효과는 미검증.</b> 유사 사례 벤치마크 없이 제안한 가설이며, 개최 전후 브랜드 검색 비교로 검증해야 한다</li>
+    <li><b>AEO 실측 미실시.</b> 인용 점유율은 아직 측정하지 않았다 — 실행하면 팀의 1차 데이터가 된다</li>
+    <li><b>광고선전비 ≠ 전체 마케팅비.</b> 공정위 기준 2024년 광고+판촉 450.5억은 감사보고서 광고선전비(273.9억)의 1.6배다</li>
+  </ul>
+</div>
+
+<footer>
+  근거: (주)이니스프리 감사보고서 6건(DART) · 공정거래위원회 가맹사업거래 정보공개서 ·
+  네이버 데이터랩 검색어트렌드(2021-01-01~2025-12-31) · 업계 공개자료 및 언론보도<br><br>
+  공개된 감사보고서·공시·보도를 근거로 한 학습용 분석이며,
+  이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+</footer>
+
+</div>
+</body>
+</html>
