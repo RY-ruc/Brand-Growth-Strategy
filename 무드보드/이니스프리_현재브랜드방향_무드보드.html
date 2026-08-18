@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>innisfree — 현재 지향 브랜드 방향 (THE NEW ISLE) 레퍼런스 무드보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --active-green:#2FAE60;
+    --deep:#123A26;
+    --lime:#B7E62B;
+    --ink:#14201A;
+    --paper:#FFFFFF;
+    --mist:#F1F5F1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:56px 32px 96px;}
+
+  .note{
+    background:var(--mist);
+    border-left:4px solid var(--active-green);
+    padding:16px 20px;
+    font-size:13px;
+    border-radius:6px;
+    margin-bottom:40px;
+    color:#3a453e;
+  }
+
+  header.hero{
+    background:var(--deep);
+    color:#fff;
+    border-radius:16px;
+    padding:52px 44px;
+    margin-bottom:56px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:'';
+    position:absolute;
+    right:-60px;top:-60px;
+    width:220px;height:220px;
+    border-radius:50%;
+    background:radial-gradient(circle, var(--lime) 0%, transparent 70%);
+    opacity:0.35;
+  }
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--lime);
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .headline{
+    font-weight:900;
+    font-size:40px;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;
+  }
+  .headline .mixcase{
+    background:linear-gradient(180deg, var(--active-green), var(--lime));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .subhead{
+    font-size:16px;
+    color:#d7e5da;
+    margin:0;
+    max-width:600px;
+  }
+
+  section{margin-bottom:60px;}
+  h2.section-title{
+    font-size:22px;
+    font-weight:700;
+    color:var(--deep);
+    margin:0 0 24px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  h2.section-title::before{
+    content:'';
+    width:28px;height:3px;
+    background:var(--active-green);
+    display:inline-block;
+  }
+
+  .keywords{display:flex;flex-wrap:wrap;gap:10px;}
+  .keywords span{
+    background:var(--mist);
+    border:1px solid rgba(18,58,38,0.15);
+    color:var(--deep);
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:500;
+  }
+
+  .slogan-box{
+    background:var(--active-green);
+    color:#fff;
+    border-radius:12px;
+    padding:32px 28px;
+    text-align:center;
+  }
+  .slogan-box .en{font-size:22px;font-weight:700;font-style:italic;margin:0 0 8px;}
+  .slogan-box .kr{font-size:14px;opacity:0.9;margin:0;}
+
+  .palette{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+  .swatch{border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+  .swatch .fill{height:110px;}
+  .swatch .label{background:#fff;padding:10px 12px;font-size:12px;}
+  .swatch .label .name{font-weight:700;display:block;margin-bottom:2px;}
+  .swatch .label .hex{opacity:0.6;font-variant-numeric:tabular-nums;}
+  .palette-note{font-size:12px;opacity:0.55;margin-top:10px;}
+
+  .type-sample{
+    background:var(--mist);
+    border-radius:12px;
+    padding:36px 32px;
+    text-align:center;
+  }
+  .type-sample .word{
+    font-weight:900;
+    font-size:48px;
+    letter-spacing:-0.01em;
+  }
+  .type-sample .word .lower{font-weight:400;}
+  .type-sample .desc{font-size:13px;opacity:0.65;margin-top:14px;}
+
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .photo{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/5;box-shadow:0 3px 14px rgba(0,0,0,0.08);}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo .cap{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:14px 14px 12px;
+    background:linear-gradient(to top, rgba(10,20,14,0.8), rgba(10,20,14,0));
+    color:#fff;font-size:13px;font-weight:500;
+  }
+
+  .persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .persona-card{background:#fff;border:1px solid rgba(18,58,38,0.12);border-radius:12px;padding:24px 22px;}
+  .persona-card .tag{font-size:12px;font-weight:700;color:var(--active-green);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;display:block;}
+  .persona-card p{margin:0;font-size:14px;}
+
+  .critique-box{
+    background:#FFF7ED;
+    border:1px dashed #E0A45C;
+    border-radius:12px;
+    padding:24px 22px;
+    font-size:14px;
+  }
+  .critique-box .tag{font-size:12px;font-weight:700;color:#B4661A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;display:block;}
+
+  footer{text-align:center;font-size:12px;opacity:0.5;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="note">
+    이 무드보드는 언론 보도·아모레퍼시픽 공식 스토리·디자인 비평 아티클 등 공개 자료를 바탕으로 <b>이니스프리가 2023년 리브랜딩 이후 실제로 지향하고 있는 방향</b>을 재구성한 레퍼런스입니다. 실제 로고·상표 등 브랜드 자산 원본이 아니라, 톤앤매너를 이해하기 위한 참고용 이미지로 구성했습니다. 색상 수치는 공개된 명칭("액티브 그린")을 바탕으로 한 근사치입니다.
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">innisfree · THE NEW ISLE (2023~ )</div>
+    <h1 class="headline">무한한 자연을 <span class="mixcase">개척</span>하다</h1>
+    <p class="subhead">가상의 섬 'THE NEW ISLE'을 배경으로, 자연 원료와 액티브 성분을 결합한 도전적이고 에너지 넘치는 브랜드로의 전환</p>
+  </header>
+
+  <section>
+    <h2 class="section-title">브랜드 키워드</h2>
+    <div class="keywords">
+      <span>개척 · 탐험 · 도전정신</span>
+      <span>액티브 그린</span>
+      <span>클린뷰티 · 크루얼티프리</span>
+      <span>글로벌 리더십</span>
+      <span>에너지 넘치는 자신감</span>
+      <span>다양한 아름다움 존중</span>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">브랜드 슬로건</h2>
+    <div class="slogan-box">
+      <p class="en">"Effective, Nature-Powered Skincare<br>Discovered from the Island"</p>
+      <p class="kr">자연의 에너지를 탐구하며 건강한 아름다움을 개척한다는 철학을 담은 새 슬로건</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">컬러 — Active Green</h2>
+    <div class="palette">
+      <div class="swatch">
+        <div class="fill" style="background:#2FAE60;"></div>
+        <div class="label"><span class="name">액티브 그린</span><span class="hex">≈ #2FAE60</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#123A26;"></div>
+        <div class="label"><span class="name">딥 그린</span><span class="hex">≈ #123A26</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#B7E62B;"></div>
+        <div class="label"><span class="name">라임 포인트</span><span class="hex">≈ #B7E62B</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#F1F5F1;"></div>
+        <div class="label"><span class="name">미스트 화이트</span><span class="hex">≈ #F1F5F1</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#14201A;"></div>
+        <div class="label"><span class="name">잉크 그린블랙</span><span class="hex">≈ #14201A</span></div>
+      </div>
+    </div>
+    <p class="palette-note">기존의 짙고 차분한 "비자림 그린"에서 벗어나, 더 밝고 채도 높은 톤으로 "에너지·액티브함"을 강조하는 방향으로 전환됨.</p>
+  </section>
+
+  <section>
+    <h2 class="section-title">타이포그래피 — 믹스케이스 워드마크</h2>
+    <div class="type-sample">
+      <div class="word">inn<span class="lower">IS</span>free</div>
+      <p class="desc">대소문자를 혼합한 워드마크로 "에너지 넘치고 자신감 있는 이미지"를 표현. 기존의 정갈한 심볼·서체는 제거하고 보다 역동적인 형태로 전환.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">비주얼 레퍼런스 — THE NEW ISLE 세계관</h2>
+    <div class="photo-grid">
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/4407569/pexels-photo-4407569.jpeg?auto=compress&cs=tinysrgb&w=800" alt="열대 우림 폭포">
+        <div class="cap">그린티우림 — 개척해야 할 신비로운 자연</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/4700935/pexels-photo-4700935.jpeg?auto=compress&cs=tinysrgb&w=800" alt="자연 속에서 점프하는 여성">
+        <div class="cap">액티브한 움직임 — 도전 정신의 시각화</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/247287/pexels-photo-247287.jpeg?auto=compress&cs=tinysrgb&w=800" alt="자신감 있는 인물 포트레이트">
+        <div class="cap">다양한 아름다움 — 자신감 있는 페르소나</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/28408422/pexels-photo-28408422.jpeg?auto=compress&cs=tinysrgb&w=800" alt="열대 섬 항공 뷰">
+        <div class="cap">THE NEW ISLE — 가상의 섬 세계관</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/7256116/pexels-photo-7256116.jpeg?auto=compress&cs=tinysrgb&w=800" alt="투명한 병에 담긴 초록 액체">
+        <div class="cap">액티브 성분 — 자연 + 과학의 결합</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/14177811/pexels-photo-14177811.jpeg?auto=compress&cs=tinysrgb&w=800" alt="안개 낀 바위산 풍경">
+        <div class="cap">정화의 암석 — 세계관 속 공간 모티프</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/5023759/pexels-photo-5023759.jpeg?auto=compress&cs=tinysrgb&w=800" alt="밝은 청록색 수면">
+        <div class="cap">치유의 연못 — 세계관 속 공간 모티프</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/18478575/pexels-photo-18478575.jpeg?auto=compress&cs=tinysrgb&w=800" alt="숲 사이로 비치는 햇살">
+        <div class="cap">자연 에너지 — 헤리티지(1979 개척정신)와 연결</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/35261920/pexels-photo-35261920.jpeg?auto=compress&cs=tinysrgb&w=800" alt="밝은 액티브웨어 조깅하는 여성">
+        <div class="cap">액티브 라이프스타일 — 젊고 역동적인 앰배서더 이미지 지향</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">추구하는 페르소나</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <span class="tag">브랜드 앰배서더 방향</span>
+        <p>기존의 잔잔하고 자연친화적인 이미지 대신, 젊고 역동적인 K-팝 아티스트를 앰배서더로 기용해 "에너지·도전" 이미지를 강화하려는 시도가 있었음.</p>
+      </div>
+      <div class="persona-card">
+        <span class="tag">헤리티지 재해석</span>
+        <p>1979년 황무지에서 녹차를 수확한 "개척 정신"을 브랜드 뿌리로 재소환하여, 자연주의를 넘어 "도전하는 브랜드"로 서사를 확장.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">참고: 이 방향에 대한 실제 비평</h2>
+    <div class="critique-box">
+      <span class="tag">디자인 업계 평가</span>
+      <p>새 아이덴티티에 대해 "기계로 만들어낸 IT회사의 로고처럼 느껴지며 자연에 대한 경의를 찾기 어렵다"는 비판이 제기됨. 기존의 절제되고 고결한 이미지를 극복할 만큼 파격적이지 못했다는 평가도 있음 — 이는 "왜 리브랜딩이 성과로 이어지지 못했는가"를 진단하는 우리 프로젝트의 핵심 논점과 직접 연결됨.</p>
+    </div>
+  </section>
+
+  <footer>
+    이미지 출처: Pexels (무료 라이선스, 톤앤매너 참고용) · 텍스트 근거: 아모레퍼시픽 스토리, EBN뉴스, 코스인코리아, 디자인나침반, 인사이트 등 공개 보도자료 기반 재구성
+  </footer>
+
+</div>
+</body>
+</html>
