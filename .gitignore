@@ -10,3 +10,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+# Office 임시 잠금파일
+~$*
