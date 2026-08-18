@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>innisfree_Reactivation — 캠페인 크리에이티브 무드보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2E4A3B;
+    --sage:#9FB89A;
+    --cream:#F6F1E4;
+    --terracotta:#C97C5D;
+    --ink:#2B2A25;
+    --paper:#FBF8F1;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:64px 32px 96px;}
+
+  header.hero{
+    text-align:center;
+    padding-bottom:48px;
+    border-bottom:1px solid rgba(43,42,37,0.12);
+    margin-bottom:56px;
+  }
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--forest);
+    font-weight:500;
+    margin-bottom:14px;
+  }
+  .headline{
+    font-family:'Nanum Pen Script', cursive;
+    font-size:64px;
+    color:var(--forest);
+    margin:0 0 8px;
+    line-height:1.2;
+  }
+  .subhead{
+    font-family:'Gowun Batang', serif;
+    font-size:19px;
+    color:var(--ink);
+    opacity:0.75;
+    margin:0;
+  }
+
+  section{margin-bottom:64px;}
+  h2.section-title{
+    font-family:'Gowun Batang', serif;
+    font-size:22px;
+    color:var(--forest);
+    margin:0 0 24px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  h2.section-title::before{
+    content:'';
+    width:28px;height:1px;
+    background:var(--terracotta);
+    display:inline-block;
+  }
+
+  /* 톤 키워드 */
+  .keywords{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .keywords span{
+    background:var(--cream);
+    border:1px solid rgba(46,74,59,0.18);
+    color:var(--forest);
+    padding:8px 18px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:500;
+  }
+
+  /* 컬러 팔레트 */
+  .palette{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:16px;
+  }
+  .swatch{border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+  .swatch .fill{height:110px;}
+  .swatch .label{
+    background:#fff;
+    padding:10px 12px;
+    font-size:12px;
+  }
+  .swatch .label .name{font-weight:700;display:block;margin-bottom:2px;}
+  .swatch .label .hex{opacity:0.6;font-variant-numeric:tabular-nums;}
+
+  /* 타이포그래피 */
+  .type-samples{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .type-card{
+    background:#fff;
+    border-radius:12px;
+    padding:28px 26px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  }
+  .type-card .role{
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .type-card .sample-headline{
+    font-family:'Nanum Pen Script', cursive;
+    font-size:38px;
+    color:var(--forest);
+    margin:0 0 6px;
+  }
+  .type-card .sample-serif{
+    font-family:'Gowun Batang', serif;
+    font-size:22px;
+    color:var(--ink);
+    margin:0 0 6px;
+  }
+  .type-card .sample-sans{
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    opacity:0.8;
+    margin:0;
+  }
+  .type-card .usage{
+    margin-top:14px;
+    font-size:13px;
+    opacity:0.6;
+  }
+
+  /* 이미지 그리드 */
+  .photo-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
+  .photo{
+    position:relative;
+    border-radius:10px;
+    overflow:hidden;
+    aspect-ratio:4/5;
+    box-shadow:0 3px 14px rgba(0,0,0,0.08);
+  }
+  .photo img{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .photo .cap{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    padding:14px 14px 12px;
+    background:linear-gradient(to top, rgba(20,20,15,0.75), rgba(20,20,15,0));
+    color:#fff;
+    font-size:13px;
+    font-weight:500;
+  }
+
+  /* 메시지 톤 대조 */
+  .tone-compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .tone-box{
+    border-radius:12px;
+    padding:26px 24px;
+  }
+  .tone-box.do{background:var(--cream);border:1px solid rgba(46,74,59,0.2);}
+  .tone-box.dont{background:#fff;border:1px dashed rgba(43,42,37,0.25);}
+  .tone-box .tag{
+    font-size:12px;font-weight:700;letter-spacing:0.06em;
+    text-transform:uppercase;margin-bottom:12px;display:inline-block;
+  }
+  .tone-box.do .tag{color:var(--forest);}
+  .tone-box.dont .tag{color:#9a9187;}
+  .tone-box ul{margin:0;padding-left:18px;font-size:14px;}
+  .tone-box li{margin-bottom:8px;}
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    opacity:0.5;
+    margin-top:24px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">innisfree · Reactivation Campaign 2026Q3</div>
+    <h1 class="headline">오랜만이에요</h1>
+    <p class="subhead">휴면 고객 재구매 캠페인 — 크리에이티브 톤앤매너 무드보드</p>
+  </header>
+
+  <section>
+    <h2 class="section-title">톤 키워드</h2>
+    <div class="keywords">
+      <span>다시 만난 반가움</span>
+      <span>부담스럽지 않은 다정함</span>
+      <span>제주 자연의 익숙함</span>
+      <span>손편지 같은 개인화</span>
+      <span>담백한 그린</span>
+      <span>따뜻한 채도</span>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">컬러 팔레트</h2>
+    <div class="palette">
+      <div class="swatch">
+        <div class="fill" style="background:#2E4A3B;"></div>
+        <div class="label"><span class="name">포레스트 그린</span><span class="hex">#2E4A3B</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#9FB89A;"></div>
+        <div class="label"><span class="name">세이지</span><span class="hex">#9FB89A</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#F6F1E4;"></div>
+        <div class="label"><span class="name">웜 크림</span><span class="hex">#F6F1E4</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#C97C5D;"></div>
+        <div class="label"><span class="name">테라코타</span><span class="hex">#C97C5D</span></div>
+      </div>
+      <div class="swatch">
+        <div class="fill" style="background:#2B2A25;"></div>
+        <div class="label"><span class="name">잉크 블랙</span><span class="hex">#2B2A25</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">타이포그래피</h2>
+    <div class="type-samples">
+      <div class="type-card">
+        <div class="role">Headline · 손글씨 톤</div>
+        <p class="sample-headline">오랜만이에요, 그때 그 성분 그대로</p>
+        <p class="usage">Nanum Pen Script — 광고 소재의 첫 줄, 개인화 메시지처럼 보여야 하는 헤드라인에 사용</p>
+      </div>
+      <div class="type-card">
+        <div class="role">Sub-headline · 세리프</div>
+        <p class="sample-serif">제주에서 온 익숙한 초록,<br>다시 당신 곁으로</p>
+        <p class="usage">Gowun Batang — 브랜드 헤리티지를 은근히 상기시키는 서브카피에 사용</p>
+      </div>
+      <div class="type-card">
+        <div class="role">Body · 산세리프</div>
+        <p class="sample-sans">지금 앱으로 돌아오시면, 예전에 즐겨 찾던 그 라인의 리뉴얼 소식을 가장 먼저 확인하실 수 있어요.</p>
+        <p class="usage">Noto Sans KR (실제 소재는 Pretendard 권장) — CTA 주변 설명 카피, 상세 정보</p>
+      </div>
+      <div class="type-card">
+        <div class="role">CTA 버튼</div>
+        <p class="sample-sans" style="font-weight:700;font-size:16px;color:#2E4A3B;">다시 만나러 가기 →</p>
+        <p class="usage">"할인" "쿠폰" 같은 프로모션 언어보다 "재회"를 연상시키는 동사 중심 카피 우선</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">비주얼 레퍼런스</h2>
+    <div class="photo-grid">
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/5672690/pexels-photo-5672690.jpeg?auto=compress&cs=tinysrgb&w=800" alt="햇빛 아래 초록 차밭">
+        <div class="cap">제주 녹차밭 — 브랜드 헤리티지의 근원</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/34302340/pexels-photo-34302340.jpeg?auto=compress&cs=tinysrgb&w=800" alt="자연광 속 피부 질감">
+        <div class="cap">자연광 속 피부 질감 — 담백한 클로즈업</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/7851906/pexels-photo-7851906.jpeg?auto=compress&cs=tinysrgb&w=800" alt="따뜻한 조명의 거실">
+        <div class="cap">따뜻한 오후 볕 — 편안한 집안 무드</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/5207627/pexels-photo-5207627.jpeg?auto=compress&cs=tinysrgb&w=800" alt="테이블 위 편지들">
+        <div class="cap">테이블 위 편지 — 개인화 메시지의 은유</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/10024569/pexels-photo-10024569.jpeg?auto=compress&cs=tinysrgb&w=800" alt="손글씨 메모">
+        <div class="cap">손글씨 노트 — "오랜만이에요" 헤드라인 톤</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/34939742/pexels-photo-34939742.jpeg?auto=compress&cs=tinysrgb&w=800" alt="미니멀 스킨케어 플랫레이">
+        <div class="cap">담백한 제품 플랫레이 — 자연 소재와 함께</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/34939739/pexels-photo-34939739.jpeg?auto=compress&cs=tinysrgb&w=800" alt="아늑한 스킨케어 플랫레이">
+        <div class="cap">아늑한 플랫레이 — 프로모션보다 일상의 톤</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/4262410/pexels-photo-4262410.jpeg?auto=compress&cs=tinysrgb&w=800" alt="가족의 포옹">
+        <div class="cap">반가운 재회 — 캠페인 감정의 핵심</div>
+      </div>
+      <div class="photo">
+        <img src="https://images.pexels.com/photos/4544743/pexels-photo-4544743.jpeg?auto=compress&cs=tinysrgb&w=800" alt="빈티지 편지와 엽서">
+        <div class="cap">빈티지 엽서 — 향수를 자극하는 디테일</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Do / Don't</h2>
+    <div class="tone-compare">
+      <div class="tone-box do">
+        <span class="tag">Do</span>
+        <ul>
+          <li>"오랜만이에요" 같은 관계 회복형 언어 사용</li>
+          <li>과거 구매 이력을 살짝 언급하는 개인화 카피</li>
+          <li>초록·크림·테라코타 중심의 차분한 채도</li>
+          <li>손글씨/편지 모티프로 다정함 전달</li>
+        </ul>
+      </div>
+      <div class="tone-box dont">
+        <span class="tag">Don't</span>
+        <ul>
+          <li>"최대 50% 할인" 같은 프로모션 중심 헤드라인</li>
+          <li>비비드한 원색, 급박한 타이머형 UI</li>
+          <li>신규 고객 획득용 소재와 동일한 톤 재사용</li>
+          <li>과도한 이모지·느낌표 남발</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    이미지 출처: Pexels (무료 라이선스) · 개인 포트폴리오 목적의 캠페인 시뮬레이션용 무드보드
+  </footer>
+
+</div>
+</body>
+</html>
