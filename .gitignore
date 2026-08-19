@@ -12,3 +12,7 @@ $RECYCLE.BIN/
 *.lnk
 # Office 임시 잠금파일
 ~$*
+
+### macOS
+.DS_Store
+._*
