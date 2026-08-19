@@ -16,3 +16,9 @@ $RECYCLE.BIN/
 ### macOS
 .DS_Store
 ._*
+
+### 비밀정보
+.env
+.env.*
+*.key
+
