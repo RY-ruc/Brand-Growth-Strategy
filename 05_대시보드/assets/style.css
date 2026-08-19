@@ -1,26 +1,35 @@
-/* 이니스프리 브랜드 인지도 대시보드 — 시안 3 "그린티 필드"
+﻿/* 이니스프리 브랜드 인지도 대시보드 — 시안 3 "그린티 필드"
    컬러: 리브랜딩 무드보드(베이잘트·포레스트·스톤·동백) + 캠페인 무드보드(세이지)
    타이포 규칙(무드보드): 헤드라인·수치 = Noto Sans KR Black + 좁은 자간 /
                         디지털 UI 본문 = Regular·Medium /
                         세리프(Gowun Batang) = 브랜드 스토리 콘텐츠 한정 */
 
 :root{
+  /* 무드보드 컬러 시스템을 그대로 토큰화 — 이 팔레트가 곧 브랜드 톤앤매너다 */
   --deepforest:#24382C; --forest:#3B5D48; --sage:#9FB89A; --sage-dim:#C6D4C2;
   --stone:#E8E2D6; --camellia:#C97C86; --camellia-dk:#8E4A52;
   --offwhite:#FAFAF7; --ink:#22241F; --paper:#FFFFFF;
-  --neg:#9C4A42;
+  --neg:#9C4A42;              /* 의미색(악화) — 액센트와 별개 */
   --side:212px;
-  --r:0px;
+
+  /* 단일 테마를 의도적으로 택했다. 무드보드가 규정한 '스톤 베이지 위의 절제된 초록'이
+     이 브랜드의 세계관이고, 다크 반전은 그 톤을 깨뜨린다. 브라우저 자동 반전만 막는다. */
+  color-scheme: light;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* 웹폰트가 차단되는 환경(게시본)에서도 한글이 시스템 폰트로 안전하게 떨어지도록 스택을 명시한다 */
 body{
   background:var(--offwhite); color:var(--ink);
-  font-family:'Noto Sans KR',system-ui,sans-serif; font-weight:400;
-  -webkit-font-smoothing:antialiased; display:flex; min-height:100vh;
+  font-family:'Noto Sans KR','Pretendard','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  font-weight:400; -webkit-font-smoothing:antialiased;
 }
-svg text{font-family:'Noto Sans KR',system-ui,sans-serif}
+/* 레이아웃은 body가 아니라 .app이 잡는다 — 게시 환경이 body를 감싸도 깨지지 않도록 */
+.app{display:flex;min-height:100vh;background:var(--offwhite);color:var(--ink)}
+svg text{font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif}
+:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
 a{color:inherit}
 
 /* ── 사이드바 ───────────────────────────────── */
@@ -38,7 +47,7 @@ aside{
 }
 .nav a:hover{opacity:.85;background:rgba(159,184,154,.09)}
 .nav a.on{background:rgba(159,184,154,.16);opacity:1;font-weight:700;color:var(--offwhite);box-shadow:inset 2px 0 0 var(--sage)}
-.nav .idx{font-size:9px;font-weight:700;opacity:.5;font-variant-numeric:tabular-nums}
+
 .nav .grp{font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--sage);margin:16px 0 6px 11px}
 .blk{margin-top:22px;padding-top:16px;border-top:1px solid rgba(232,226,214,.16)}
 .blk .k{font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--sage)}
@@ -121,6 +130,27 @@ td.hi{font-weight:700;color:var(--deepforest)}
 .foothint{margin-top:22px;font-size:9.5px;font-weight:300;line-height:1.85;opacity:.55}
 .foothint b{font-weight:700;opacity:.8}
 
+/* 경보 배너 */
+.alert{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--stone);background:var(--paper);
+  padding:11px 14px;margin-bottom:6px;font-size:11px;line-height:1.65}
+.alert .tag{font-size:9px;font-weight:700;letter-spacing:.1em;padding:3px 7px;white-space:nowrap;margin-top:1px}
+.alert.high{border-left:3px solid var(--neg)} .alert.high .tag{background:#F3E3E1;color:#8E4A52}
+.alert.mid{border-left:3px solid var(--camellia)} .alert.mid .tag{background:#F6EAEC;color:#8E4A52}
+.alert.info{border-left:3px solid var(--sage)} .alert.info .tag{background:#E9EFE7;color:var(--forest)}
+.alert.ok{border-left:3px solid var(--sage);opacity:.7}
+.alert b{font-weight:700}
+.alert .act{display:block;margin-top:3px;font-size:10px;opacity:.62}
+
+/* 변화 이력 */
+td.up{color:var(--forest);font-weight:700}
+td.dn{color:var(--neg);font-weight:700}
+
+/* 차트 내보내기 버튼 */
+.p h3{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.exp{font:inherit;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;
+  border:1px solid var(--stone);background:transparent;color:var(--forest);cursor:pointer;opacity:.55;transition:.15s}
+.exp:hover{opacity:1;background:var(--offwhite);border-color:var(--sage)}
+
 /* 토스트 */
 .toast{position:fixed;right:20px;bottom:20px;background:var(--deepforest);color:var(--stone);
   font-size:11px;font-weight:500;padding:12px 16px;border-radius:6px;max-width:320px;line-height:1.6;
@@ -140,7 +170,7 @@ td.hi{font-weight:700;color:var(--deepforest)}
   .three{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:860px){
-  body{display:block}
+  .app{display:block}
   aside{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .22s;box-shadow:0 0 40px rgba(0,0,0,.3)}
   aside.open{transform:none}
   .burger{display:block}

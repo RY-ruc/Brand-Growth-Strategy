@@ -1,0 +1,864 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이니스프리 브랜드 인지도 진단·모니터링 대시보드</title>
+<meta name="description" content="공개 데이터 기반 이니스프리 브랜드 인지도 진단 및 KPI 모니터링 대시보드">
+<!-- 공유본: 외부 폰트 대신 시스템 한글 폰트 사용 -->
+<style>
+﻿/* 이니스프리 브랜드 인지도 대시보드 — 시안 3 "그린티 필드"
+   컬러: 리브랜딩 무드보드(베이잘트·포레스트·스톤·동백) + 캠페인 무드보드(세이지)
+   타이포 규칙(무드보드): 헤드라인·수치 = Noto Sans KR Black + 좁은 자간 /
+                        디지털 UI 본문 = Regular·Medium /
+                        세리프(Gowun Batang) = 브랜드 스토리 콘텐츠 한정 */
+
+:root{
+  /* 무드보드 컬러 시스템을 그대로 토큰화 — 이 팔레트가 곧 브랜드 톤앤매너다 */
+  --deepforest:#24382C; --forest:#3B5D48; --sage:#9FB89A; --sage-dim:#C6D4C2;
+  --stone:#E8E2D6; --camellia:#C97C86; --camellia-dk:#8E4A52;
+  --offwhite:#FAFAF7; --ink:#22241F; --paper:#FFFFFF;
+  --neg:#9C4A42;              /* 의미색(악화) — 액센트와 별개 */
+  --side:212px;
+
+  /* 단일 테마를 의도적으로 택했다. 무드보드가 규정한 '스톤 베이지 위의 절제된 초록'이
+     이 브랜드의 세계관이고, 다크 반전은 그 톤을 깨뜨린다. 브라우저 자동 반전만 막는다. */
+  color-scheme: light;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* 웹폰트가 차단되는 환경(게시본)에서도 한글이 시스템 폰트로 안전하게 떨어지도록 스택을 명시한다 */
+body{
+  background:var(--offwhite); color:var(--ink);
+  font-family:'Noto Sans KR','Pretendard','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  font-weight:400; -webkit-font-smoothing:antialiased;
+}
+/* 레이아웃은 body가 아니라 .app이 잡는다 — 게시 환경이 body를 감싸도 깨지지 않도록 */
+.app{display:flex;min-height:100vh;background:var(--offwhite);color:var(--ink)}
+svg text{font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif}
+:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+a{color:inherit}
+
+/* ── 사이드바 ───────────────────────────────── */
+aside{
+  width:var(--side); flex:0 0 var(--side); background:var(--deepforest); color:var(--stone);
+  padding:24px 18px; position:sticky; top:0; height:100vh; overflow-y:auto; z-index:40;
+}
+.mark{font-size:15px;font-weight:900;letter-spacing:-.05em;color:var(--offwhite)}
+.mark span{display:block;font-size:9px;font-weight:500;letter-spacing:.18em;color:var(--sage);margin-top:6px}
+.nav{margin-top:24px;display:flex;flex-direction:column;gap:2px}
+.nav a{
+  font-size:12px;font-weight:500;padding:9px 11px;border-radius:5px;
+  color:var(--stone);opacity:.55;text-decoration:none;transition:.15s;
+  display:flex;align-items:center;gap:8px;
+}
+.nav a:hover{opacity:.85;background:rgba(159,184,154,.09)}
+.nav a.on{background:rgba(159,184,154,.16);opacity:1;font-weight:700;color:var(--offwhite);box-shadow:inset 2px 0 0 var(--sage)}
+
+.nav .grp{font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--sage);margin:16px 0 6px 11px}
+.blk{margin-top:22px;padding-top:16px;border-top:1px solid rgba(232,226,214,.16)}
+.blk .k{font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--sage)}
+.blk .v{font-size:10.5px;font-weight:400;line-height:1.65;margin-top:6px;opacity:.8}
+.blk .v b{font-weight:700;opacity:1;color:var(--offwhite)}
+.sidefoot{margin-top:22px;font-size:9px;font-weight:300;line-height:1.7;opacity:.45}
+.livebtn{
+  margin-top:14px;width:100%;font:inherit;font-size:10.5px;font-weight:700;
+  padding:9px;border:1px solid rgba(159,184,154,.45);background:transparent;color:var(--sage);
+  border-radius:5px;cursor:pointer;transition:.15s;
+}
+.livebtn:hover{background:rgba(159,184,154,.12);color:var(--offwhite)}
+
+/* ── 본문 ──────────────────────────────────── */
+main{flex:1;min-width:0;padding:26px 32px 60px;max-width:1080px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding-bottom:15px;border-bottom:1px solid var(--stone)}
+h1{font-size:22px;font-weight:900;letter-spacing:-.04em;line-height:1.3}
+.top p{font-size:11.5px;font-weight:300;line-height:1.7;opacity:.7;margin-top:7px;max-width:640px}
+.stamp{font-size:10px;font-weight:500;color:var(--forest);white-space:nowrap;text-align:right;line-height:1.7}
+.stamp b{display:block;font-weight:700}
+.stamp .dot{display:inline-block;width:6px;height:6px;border-radius:99px;background:var(--sage);margin-right:5px;vertical-align:middle}
+
+section{scroll-margin-top:16px}
+section[hidden]{display:none}
+.sec{font-size:10.5px;font-weight:700;letter-spacing:.15em;color:var(--forest);margin:26px 0 12px;display:flex;align-items:baseline;gap:10px}
+.sec small{font-size:9.5px;font-weight:400;letter-spacing:0;opacity:.55}
+
+/* KPI 스트립 */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--stone);background:var(--paper)}
+.strip>div{padding:15px 16px;border-right:1px solid var(--stone)}
+.strip>div:last-child{border-right:0}
+.lab{font-size:10.5px;font-weight:500;opacity:.6;line-height:1.45;min-height:30px}
+.lab i{font-style:normal;font-weight:700;opacity:.75}
+.num{font-size:27px;font-weight:900;letter-spacing:-.05em;margin:8px 0 3px;font-variant-numeric:tabular-nums;color:var(--deepforest)}
+.num .u{font-size:15px}
+.sub{font-size:10px;font-weight:400;line-height:1.6;opacity:.68}
+.neg{color:var(--neg);font-weight:700}
+.hold{color:var(--forest);font-weight:700}
+.gatestrip{display:flex;align-items:center;gap:7px;margin-top:9px}
+.gatestrip .tr{flex:1;height:3px;background:var(--stone)}
+.gatestrip .tr i{display:block;height:100%;background:var(--sage)}
+.gatestrip em{font-size:9px;font-style:normal;font-weight:500;opacity:.45;white-space:nowrap}
+
+/* 실행 지표 */
+.aeo{margin-top:12px;border:1px solid var(--stone);border-left:3px solid var(--sage);background:var(--paper);padding:14px 17px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.aeo .n{font-size:22px;font-weight:900;letter-spacing:-.04em;color:var(--deepforest);white-space:nowrap}
+.aeo .k{font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--forest)}
+.aeo ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:10.5px;font-weight:400}
+.aeo li{opacity:.8;line-height:1.6}
+.aeo li b{font-weight:700}
+.chk{display:inline-block;width:14px;font-weight:700}
+.chk.y{color:var(--forest)} .chk.n{color:var(--neg)} .chk.q{color:var(--stone);color:#B3A98F}
+
+/* 패널·차트 */
+.two{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.p{border:1px solid var(--stone);background:var(--paper);padding:15px 17px}
+.p h3{font-size:12.5px;font-weight:700;letter-spacing:-.015em}
+.p .src{font-size:9.5px;font-weight:300;opacity:.5;margin:3px 0 11px}
+.cap{margin-top:10px;font-size:9.5px;font-weight:400;line-height:1.65;background:var(--offwhite);padding:8px 10px;border-left:2px solid var(--camellia)}
+.cap b{font-weight:700;color:var(--camellia-dk)}
+.chartbox{position:relative;display:flex;justify-content:center}
+.chartbox svg{display:block;width:100%;height:auto}
+.strip svg{display:block;width:100%;height:auto;max-width:100%!important}
+
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 9px;border-bottom:1px solid var(--stone);text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:700;font-size:10px;letter-spacing:.02em;opacity:.6;border-bottom:1px solid var(--sage-dim)}
+tr:last-child td{border-bottom:0}
+td.hi{font-weight:700;color:var(--deepforest)}
+.tblwrap{overflow-x:auto}
+
+/* 스토리 (세리프 허용 구역) */
+.story{margin-top:26px;border:1px solid var(--stone);border-top:3px solid var(--forest);background:var(--paper);padding:26px 30px}
+.story .q{font-family:'Gowun Batang',serif;font-size:19px;line-height:1.68;color:var(--deepforest)}
+.story .a{font-size:11px;font-weight:300;line-height:1.85;margin-top:13px;opacity:.75;max-width:730px}
+
+.foothint{margin-top:22px;font-size:9.5px;font-weight:300;line-height:1.85;opacity:.55}
+.foothint b{font-weight:700;opacity:.8}
+
+/* 경보 배너 */
+.alert{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--stone);background:var(--paper);
+  padding:11px 14px;margin-bottom:6px;font-size:11px;line-height:1.65}
+.alert .tag{font-size:9px;font-weight:700;letter-spacing:.1em;padding:3px 7px;white-space:nowrap;margin-top:1px}
+.alert.high{border-left:3px solid var(--neg)} .alert.high .tag{background:#F3E3E1;color:#8E4A52}
+.alert.mid{border-left:3px solid var(--camellia)} .alert.mid .tag{background:#F6EAEC;color:#8E4A52}
+.alert.info{border-left:3px solid var(--sage)} .alert.info .tag{background:#E9EFE7;color:var(--forest)}
+.alert.ok{border-left:3px solid var(--sage);opacity:.7}
+.alert b{font-weight:700}
+.alert .act{display:block;margin-top:3px;font-size:10px;opacity:.62}
+
+/* 변화 이력 */
+td.up{color:var(--forest);font-weight:700}
+td.dn{color:var(--neg);font-weight:700}
+
+/* 차트 내보내기 버튼 */
+.p h3{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.exp{font:inherit;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;
+  border:1px solid var(--stone);background:transparent;color:var(--forest);cursor:pointer;opacity:.55;transition:.15s}
+.exp:hover{opacity:1;background:var(--offwhite);border-color:var(--sage)}
+
+/* 토스트 */
+.toast{position:fixed;right:20px;bottom:20px;background:var(--deepforest);color:var(--stone);
+  font-size:11px;font-weight:500;padding:12px 16px;border-radius:6px;max-width:320px;line-height:1.6;
+  box-shadow:0 8px 26px -12px rgba(36,56,44,.6);opacity:0;transform:translateY(8px);transition:.25s;z-index:90}
+.toast.on{opacity:1;transform:none}
+.toast b{color:var(--sage)}
+
+/* 모바일 토글 */
+.burger{display:none;position:fixed;left:12px;top:12px;z-index:60;background:var(--deepforest);color:var(--stone);
+  border:0;border-radius:6px;width:38px;height:38px;font-size:16px;cursor:pointer}
+.scrim{display:none;position:fixed;inset:0;background:rgba(34,36,31,.45);z-index:35}
+.scrim.on{display:block}
+
+/* ── 반응형 ────────────────────────────────── */
+@media (max-width:1100px){
+  .two{grid-template-columns:1fr}
+  .three{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:860px){
+  .app{display:block}
+  aside{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .22s;box-shadow:0 0 40px rgba(0,0,0,.3)}
+  aside.open{transform:none}
+  .burger{display:block}
+  main{max-width:none;padding:60px 20px 50px}
+  .strip{grid-template-columns:repeat(2,1fr)}
+  .strip>div{border-right:1px solid var(--stone);border-bottom:1px solid var(--stone)}
+  .strip>div:nth-child(2n){border-right:0}
+  .strip>div:nth-last-child(-n+2){border-bottom:0}
+  .top{flex-direction:column;align-items:flex-start}
+  .stamp{text-align:left}
+}
+@media (max-width:600px){
+  .three{grid-template-columns:1fr}
+  .strip{grid-template-columns:1fr}
+  .strip>div{border-right:0;border-bottom:1px solid var(--stone)}
+  .strip>div:last-child{border-bottom:0}
+  h1{font-size:19px}
+  .num{font-size:25px}
+  main{padding:58px 15px 44px}
+  .story{padding:20px 18px}
+  .story .q{font-size:16px}
+}
+
+@media print{
+  aside,.burger,.livebtn,.scrim{display:none!important}
+  body{display:block;background:#fff}
+  main{max-width:none;padding:0}
+  section[hidden]{display:block!important}
+  .p,.strip,.aeo,.story{break-inside:avoid}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+<button class="burger" aria-label="메뉴 열기">☰</button>
+<div class="scrim"></div>
+
+<aside>
+  <div class="mark">innisfree<span>AWARENESS MONITOR</span></div>
+
+  <div class="nav">
+    <div class="grp">화면</div>
+    <a href="#monitor" data-go="monitor" class="on">KPI 모니터링</a>
+    <a href="#analysis" data-go="analysis">분석 재현</a>
+    <a href="#compete" data-go="compete">경쟁 벤치마크</a>
+    <a href="#table" data-go="table">연도별 원표</a>
+    <a href="#changes" data-go="changes">변화 이력</a>
+    <a href="#method" data-go="method">정의 · 방법론</a>
+  </div>
+
+  <div class="blk"><div class="k">지표 정의</div><div class="v" id="defBox">불러오는 중…</div></div>
+  <div class="blk"><div class="k">데이터 소스</div><div class="v" id="srcBox">불러오는 중…</div></div>
+  <div class="blk"><div class="k">문서 성격</div><div class="v"><b>캡스톤 학습용 · 비공식</b><br>이니스프리·아모레퍼시픽과 무관한 가상 기획</div></div>
+
+  <button class="livebtn" id="liveBtn">↻ API 갱신 방법</button>
+  <button class="livebtn" id="printBtn">⎙ 전체 인쇄 · PDF</button>
+  <div class="sidefoot" id="sideFoot"></div>
+</aside>
+
+<main>
+  <div class="top">
+    <div>
+      <h1>브랜드 인지도 진단·모니터링</h1>
+      <p>과거 데이터로 문제를 진단하고, 동일 KPI를 지속 모니터링하여 브랜드 인지도의 회복 여부를 확인합니다.</p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </div>
+
+  <!-- ── 화면 1: KPI 모니터링 ─────────────────── -->
+  <section data-view="monitor">
+    <div class="sec">경보 <small>게이트 이탈·급변 자동 감지</small></div>
+    <div id="alertBox"></div>
+
+    <div class="sec">핵심 성과 지표 <small>90 / 180 / 360일 게이트 · 스파크라인의 세로 점선은 개입 시점</small></div>
+    <div class="strip" id="kpiStrip"></div>
+    <div class="aeo" id="aeoBox"></div>
+
+    <div class="sec">경쟁 검색 점유율 <small>직접경쟁 3사(이니스프리·미샤·3CE) 기준 판정 · 2026-08-19 확정</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>점유율 추이 — 구성별</h3>
+        <div class="src">NAVER 데이터랩 · 동일 척도 그룹 조회 · 연평균</div>
+        <div class="chartbox" id="chartShare"></div>
+        <div class="cap"><b>왜 세 선인가</b> 토니모리를 넣은 4사 기준은 2026년에 올라 보이지만, 이는 토니모리가 2026-02부터 붕괴(YoY −53.5%)한 착시다. 판정은 <b>직접경쟁 3사</b>로 하고 나머지는 참고로만 본다.</div>
+      </div>
+      <div class="p">
+        <h3>‘제주’ 연상 비중 — 단독 정의</h3>
+        <div class="src">확정 2026-08-19 · 화산송이·그린티 합산 금지</div>
+        <div class="chartbox" id="chartJeju"></div>
+        <div class="cap"><b>읽는 법</b> 비중이 오른 것은 제주가 늘어서가 아니라 분모(브랜드 검색)가 더 빨리 무너졌기 때문이다. 2024년 정점 이후 보합이며, 2025년부터는 제주 절대 검색도 브랜드만큼 빠진다.</div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="q">회사는 제주를 뗐지만,<br>소비자는 아직 제주로 브랜드를 기억한다.</div>
+      <div class="a">브랜드 검색이 5년간 −72.9% 빠지는 동안 ‘제주’ 연상 비중은 0.34%에서 0.52%로 버텼다. 다만 이 비중은 제주가 늘어서가 아니라 분모가 더 빨리 무너져 생긴 것이며, 2025년부터는 제주 절대 검색도 브랜드만큼 빠지기 시작했다 — 쓸 수 있는 동안 써야 하는 자산이다.</div>
+    </div>
+  </section>
+
+  <!-- ── 화면 2: 분석 재현 ────────────────────── -->
+  <section data-view="analysis" hidden>
+    <div class="sec">분석 재현 <small>제안 근거로 쓴 데이터를 그대로 확인 · 2021–2025 확정 데이터</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>브랜드 검색 vs 제품군 검색 (월간)</h3>
+        <div class="src">NAVER 데이터랩 · 월간 API 계열 · 세로 점선은 주요 이벤트</div>
+        <div class="chartbox" id="chartTrend"></div>
+        <div class="cap"><b>스케일 주의</b> 두 계열은 절대 크기 차이가 커서 <b>각자의 축</b>으로 그렸다 — 선의 높낮이를 서로 비교하지 말고 <b>기울기(방향)만</b> 볼 것. 실제로 제품군은 브랜드의 1/10 규모다.</div>
+        <div class="cap">리브랜딩 해에 브랜드는 −23.9%, 제품군은 +118.5%로 정반대로 움직였다. 광고선전비를 41.6% 늘린 바로 그 해다. <b>돈이 만든 것은 브랜드가 아니라 제품 한 줄이었다.</b></div>
+      </div>
+      <div class="p">
+        <h3>브랜드평판 순위</h3>
+        <div class="src">한국기업평판연구소 · 화장품전문점 카테고리(1위는 항상 올리브영)</div>
+        <div class="chartbox" id="chartRep"></div>
+        <div class="cap"><b>주의</b> 버즈량(언급량) 지표이지 소비자 선호도가 아니다. 결측월이 많아 분기 단위 경향으로만 인용하고, 순위 하락에서 미샤 상승 기여를 분리해 설명해야 한다.</div>
+      </div>
+    </div>
+
+    <div class="three">
+      <div class="p">
+        <h3>매장 수 ↔ 브랜드 검색</h3>
+        <div class="src">공정위 정보공개서 · r = 0.98 (R²=0.97)</div>
+        <div class="chartbox" id="chartStore"></div>
+        <div class="cap"><b>주의</b> 상관이지 인과가 아니다. 연간 n=4로 표본이 작고, 역인과(수요 감소 → 채산성 악화 → 폐점)를 배제하지 못한다. “매장을 늘리면 검색이 는다”로 읽지 말 것.</div>
+      </div>
+      <div class="p">
+        <h3>광고선전비 ↔ 브랜드 검색</h3>
+        <div class="src">DART 감사보고서 주석21 · r = −0.03</div>
+        <div class="chartbox" id="chartAd"></div>
+        <div class="cap"><b>주의</b> 무상관(r≈0)을 “광고가 무의미하다”로 단정하지 않는다. n=5, 채널별 반응 시차 미반영. 같은 돈이 제품 검색과는 r=+0.69로 연결됐다.</div>
+      </div>
+      <div class="p">
+        <h3>이벤트 타임라인</h3>
+        <div class="src">개입 시점 — KR 판정의 기준선</div>
+        <div class="tblwrap"><table><tbody id="eventList"></tbody></table></div>
+        <div class="cap">모든 KR이 “자연 추세 대비 초과분”으로 판정되도록 설계돼 있어, 개입 시점을 함께 보지 않으면 성과 판정이 불가능하다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 경쟁 벤치마크 ────────────────────────── -->
+  <section data-view="compete" hidden>
+    <div class="sec">경쟁 벤치마크 <small>3CE 직접경쟁 편입(2026-08-19) · 토니모리 제외</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>경쟁 브랜드 검색량 추이</h3>
+        <div class="src">NAVER 데이터랩 · 한 요청 안에서 동일 척도로 조회 · 연평균</div>
+        <div class="chartbox" id="chartComp"></div>
+        <div class="cap"><b>실선 = 직접경쟁 / 점선 = 참고</b> 같은 요청 안에서 조회했으므로 브랜드 간 크기 비교가 가능하다. 다른 조회의 값과는 절대 비교하지 말 것.</div>
+      </div>
+      <div class="p">
+        <h3>3CE를 직접경쟁으로 편입한 근거</h3>
+        <div class="src">2026-08-19 검색 데이터 실사 결과</div>
+        <div class="cap" style="border-left-color:var(--sage)">
+          <b>데이터 품질</b> 2021-01~2026-08 전 구간 <b>결측 0</b>. 규모도 미샤와 비교 가능한 수준이라 점유율 분모로 쓸 수 있다.
+        </div>
+        <div class="cap" style="margin-top:8px;border-left-color:var(--sage)">
+          <b>오염 검증</b> 메타 광고 라이브러리에서는 “3CE” 단독 검색이 전세계 무관 광고로 오염됐지만, 네이버 데이터랩은 <b>국내 검색어</b>라 사정이 다르다.
+          제품 키워드(3CE 틴트·립·쿠션)와의 비율이 자연스러워 브랜드 검색으로서 신뢰할 수 있다.
+        </div>
+        <div class="cap" style="margin-top:8px">
+          <b>맥락별 구분</b> 메타 광고 <b>패턴 비교</b>에서는 원자료 규정대로 <b>참고군</b> 라벨을 유지한다(로드샵 채널 경쟁이 아니므로).
+          <b>검색 점유율</b>은 “소비자가 어떤 브랜드를 찾는가”를 재는 다른 질문이므로 직접경쟁으로 편입한다.
+        </div>
+      </div>
+    </div>
+    <div class="p" style="margin-top:12px">
+      <h3>브랜드별 연도 지표</h3>
+      <div class="src">동일 척도 · 5년 변화는 2021 대비</div>
+      <div class="tblwrap" id="compTbl"></div>
+      <div class="cap"><b>대조군 다변화</b> 판정을 미샤 하나에 걸면 미샤가 토니모리처럼 무너질 때 같은 문제가 반복된다. 3CE·에뛰드를 함께 추적해 대조군이 깨지는 것을 조기에 감지한다.</div>
+    </div>
+  </section>
+
+  <!-- ── 화면 3: 연도별 원표 ──────────────────── -->
+  <section data-view="table" hidden>
+    <div class="sec">연도별 원표 <small>인용 시 이 표를 기준으로 · 계열 혼용 금지</small></div>
+    <div class="p">
+      <h3>2021–2025 통합 지표</h3>
+      <div class="src">브랜드 지수는 일간 정밀 계열(1,826일 참평균) · 비중·점유율은 월간 API 계열</div>
+      <div class="tblwrap" id="tblAnnual"></div>
+      <div class="cap"><b>계열 주의</b> 브랜드 지수는 집계 방식에 따라 값이 갈린다(일간 정밀 −38.5% / 월간 API −38.4% / 단순평균 −38.6%). 문서 간 통일 기준은 <code>02_수집자료/검색지수_표준수치표_2021-2026.md</code>를 따른다.</div>
+    </div>
+  </section>
+
+  <!-- ── 변화 이력 ────────────────────────────── -->
+  <section data-view="changes" hidden>
+    <div class="sec">변화 이력 <small>갱신할 때마다 스냅샷을 남기고 직전과 비교</small></div>
+    <div class="p">
+      <h3>직전 갱신 대비 변화</h3>
+      <div id="diffBox"></div>
+    </div>
+    <div class="p" style="margin-top:12px">
+      <h3>개입 시점 타임라인</h3>
+      <div class="src">KR 판정의 기준선 — 모든 차트의 세로 점선과 같은 목록</div>
+      <div class="tblwrap"><table><tbody id="eventList2"></tbody></table></div>
+      <div class="cap">KR1·2·4는 전부 “자연 추세 대비 <b>초과분</b>만 성과로 인정”하도록 설계돼 있다. 개입 시점을 함께 보지 않으면 초과분 판정 자체가 불가능하다.</div>
+    </div>
+  </section>
+
+  <!-- ── 화면 4: 정의·방법론 ──────────────────── -->
+  <section data-view="method" hidden>
+    <div class="sec">지표 정의 · 방법론 <small>2026-08-19 팀 확정</small></div>
+    <div class="p">
+      <h3>KPI 정의</h3>
+      <div class="src">각 지표의 산식·데이터 출처·주의사항</div>
+      <div class="tblwrap"><table>
+        <thead><tr><th>KPI</th><th style="text-align:left">정의 · 산식</th><th style="text-align:left">주의</th></tr></thead>
+        <tbody>
+          <tr><td class="hi">브랜드 검색지수</td><td style="text-align:left">데이터랩에 <code>이니스프리</code> 단일 키워드 조회 → 월간 상대지수</td><td style="text-align:left">요청 단위로 재정규화되므로 다른 조회와 절대값 비교 불가</td></tr>
+          <tr><td class="hi">‘제주’ 연상 비중</td><td style="text-align:left"><code>이니스프리 제주</code> <b>단독</b> ÷ <code>이니스프리</code> (같은 요청 안에서)</td><td style="text-align:left"><b>합산 금지.</b> 화산송이·그린티를 합치면 같은 구간이 상승·하락·보합으로 갈린다</td></tr>
+          <tr><td class="hi">제품↔브랜드 Gap</td><td style="text-align:left">제품군 YoY − 브랜드 YoY (%p)</td><td style="text-align:left">비교 구간에 따라 부호가 뒤집힌다. 단독 인용 금지, 두 성장률 병기</td></tr>
+          <tr><td class="hi">AEO/SEO 대응</td><td style="text-align:left">robots.txt·llms.txt·FAQPage 스키마 등 4항목 Boolean 충족률</td><td style="text-align:left">소비자 인지가 아니라 <b>실행 지표</b>. KR 목록 밖. 항목 자체가 유동적</td></tr>
+          <tr><td class="hi">경쟁 검색 점유율</td><td style="text-align:left">2사 = 이니 ÷ (이니+미샤) · 3사 = ÷ (이니+미샤+토니모리)</td><td style="text-align:left">게이트 판정은 <b>2사</b>. 토니모리는 2026-02 붕괴로 검색량 대조군에서 제외</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="p" style="margin-top:12px">
+      <h3>데이터 파이프라인</h3>
+      <div class="src">저장소 연결 · API 갱신</div>
+      <div class="cap" style="border-left-color:var(--sage)">
+        <b>저장소 연결</b> — <code>build_data.py</code>가 <code>02_수집자료/</code>의 원자료 CSV(데이터랩 월간·일간)를 읽어
+        <code>data/dashboard_data.json</code> 하나로 집계합니다. 매장 수·광고선전비·상관계수·평판 순위 등
+        비검색 지표는 공정위·DART 확정치를 출처 주석과 함께 담습니다.
+      </div>
+      <div class="cap" style="margin-top:8px;border-left-color:var(--sage)">
+        <b>API 갱신</b> — <code>python build_data.py --live</code> 를 실행하면 NAVER 데이터랩을 최신 월까지 재조회해
+        <code>02_수집자료/</code> CSV·JSON을 갱신하고 대시보드 데이터를 다시 만듭니다.
+        API 키는 <code>.env</code>에만 두고 브라우저로 내보내지 않습니다.
+      </div>
+      <div class="cap" style="margin-top:8px">
+        <b>주의</b> 마지막 월은 조회 시점에 진행 중일 수 있어 모든 집계에서 제외합니다.
+        YoY는 <b>같은 달끼리</b>(1~N월 vs 전년 1~N월) 비교해 계절성을 구조적으로 통제합니다.
+      </div>
+    </div>
+  </section>
+
+  <div class="foothint">
+    <b>이니스프리 브랜드 인지도 진단·모니터링 대시보드</b> · 시안 3 「그린티 필드」 스타일 —
+    리브랜딩 무드보드(베이잘트·리파인드 포레스트·스톤 베이지·동백 로즈)와 캠페인 무드보드(세이지) 팔레트 결합.<br>
+    타이포 규칙 준수: 헤드라인·수치는 Noto Sans KR Black(자간 −0.05em), UI 본문은 Regular/Light,
+    세리프(Gowun Batang)는 브랜드 스토리 블록 한 곳으로 한정.<br>
+    공개된 감사보고서·공정거래위원회 정보공개서·네이버 데이터랩·언론보도를 근거로 한 학습용 분석이며,
+    이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+  </div>
+</main>
+
+</div><!-- /.app -->
+<div class="toast" id="toast"></div>
+<script>window.__DATA__={"meta": {"generated_at": "2026-08-19 16:28 KST", "source_mode": "repo", "coverage": "2021-01 ~ 2026-08", "latest_partial_month": "2026-08", "ytd_window": "2026 1~7월 vs 2025 동기", "definitions": {"jeju": "'이니스프리 제주' 단독 ÷ 브랜드 (2026-08-19 확정 · 합산 금지)", "share": "직접경쟁 3사(이니스프리·미샤·3CE) 기준 판정 · 2사·4사 참고 병기", "index": "월간 API 계열(라이브) · 과거 확정치는 일간 정밀 계열 병기", "standard_doc": "02_수집자료/검색지수_표준수치표_2021-2026.md"}, "sources": ["NAVER 데이터랩 검색어트렌드", "DART 감사보고서", "공정거래위원회 정보공개서", "한국기업평판연구소", "Meta 광고 라이브러리"]}, "kpi": {"brand_search": {"yoy": -31.5, "cum5y": -73.0}, "jeju_ratio": {"current": 0.51, "prev": 0.51, "peak_year": "2024", "peak": 0.53, "abs_yoy": -32.5}, "gap": {"ytd": 9.6, "brand_yoy": -31.5, "product_yoy": -22.0}, "share": {"direct": 51.2, "direct_prev": 53.1, "pair": 59.0, "pair_prev": 60.5, "all4": 39.3, "all4_prev": 36.4, "members": ["이니스프리", "미샤", "3CE"]}, "aeo": {"score": 1, "total": 4, "checked": "2026-08-19", "items": [{"k": "llms.txt", "ok": true, "note": "200 OK · 2026-08-19 신규 생성(8/18에는 404)"}, {"k": "robots.txt AI 크롤러 규칙", "ok": false, "note": "범용 규칙만 존재"}, {"k": "FAQPage 스키마(JSON-LD)", "ok": null, "note": "정적 조회 한계 · 판정 보류"}, {"k": "FAQ형 콘텐츠 비중", "ok": false, "note": "제품나열형 구조"}]}}, "alerts": [{"level": "high", "kpi": "브랜드 검색지수", "msg": "YoY -31.5% — 90일 게이트(낙폭 축소) 미달, 하락 지속", "action": "KR1 게이트 재판정 · 개입 시점 대비 초과분 확인 필요"}, {"level": "high", "kpi": "‘제주’ 연상", "msg": "제주 절대 지수 -32.5%가 브랜드 -31.5%보다 빠르게 하락", "action": "‘브랜드보다 오래 버틴다’는 우위가 소멸 — 헤리티지 캠페인 우선순위 상향"}, {"level": "mid", "kpi": "‘제주’ 연상", "msg": "2024년 0.53% 정점 이후 0.51%로 정체", "action": "비중만 보지 말고 절대 지수와 함께 판정"}, {"level": "high", "kpi": "경쟁 검색 점유율", "msg": "직접경쟁 3사 기준 53.1% → 51.2% 하락", "action": "KR4 게이트 미달 — 3CE·미샤 대비 상대 위치 점검"}, {"level": "info", "kpi": "경쟁 검색 점유율", "msg": "토니모리 포함 4사 기준은 36.4% → 39.3%로 상승(착시)", "action": "토니모리 붕괴 효과 — 이 수치를 성과로 인용하지 말 것"}, {"level": "mid", "kpi": "AEO/SEO", "msg": "1/4 충족 — 미완료 항목 존재", "action": "랜딩페이지 신규 제작(Part 5 30~90일)과 연동"}], "diff": {"base": "2026-08-19 16:24 KST", "rows": [{"label": "브랜드 검색 YoY", "prev": -31.5, "cur": -31.5, "delta": 0.0, "unit": "%"}, {"label": "‘제주’ 연상 비중", "prev": 0.51, "cur": 0.51, "delta": 0.0, "unit": "%"}, {"label": "제품↔브랜드 Gap", "prev": 9.6, "cur": 9.6, "delta": 0.0, "unit": "%p"}, {"label": "점유율(직접 3사)", "prev": 51.2, "cur": 51.2, "delta": 0.0, "unit": "%"}, {"label": "AEO 충족", "prev": 1, "cur": 1, "delta": 0, "unit": "/4"}]}, "series": {"monthly": {"months": ["2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"], "brand": [55.77575, 62.11824, 42.06918, 42.55392, 55.77738, 40.98996, 42.4743, 41.0697, 52.07004, 100.0, 53.93777, 40.33695, 49.93608, 51.82918, 41.71668, 40.05226, 57.3539, 36.1784, 35.08373, 36.20377, 41.83536, 35.35636, 47.77976, 37.26604, 34.2475, 43.42405, 37.44512, 35.17565, 44.16648, 28.68699, 27.21081, 33.06919, 22.69512, 25.61257, 29.70707, 26.44114, 21.81783, 25.01218, 20.84622, 18.76362, 27.91204, 17.14215, 17.15822, 18.7699, 17.6854, 17.28945, 19.69429, 16.72899, 17.62299, 15.8841, 15.33406, 14.63886, 16.94775, 12.20011, 11.41587, 15.26801, 12.2845, 10.49613, 15.33783, 12.26793, 10.09692, 10.94985, 10.60802, 9.28015, 12.84722, 9.1724, 8.26748, 5.68483], "jeju": [0.1414, 0.13662, 0.16551, 0.18535, 0.20155, 0.19979, 0.22503, 0.21009, 0.17103, 0.19602, 0.16538, 0.14416, 0.20758, 0.15521, 0.13173, 0.21624, 0.17317, 0.15421, 0.18158, 0.17882, 0.2062, 0.21298, 0.15333, 0.19213, 0.23119, 0.25693, 0.14529, 0.13914, 0.16475, 0.17116, 0.17154, 0.16789, 0.11302, 0.11641, 0.11754, 0.13436, 0.14115, 0.12507, 0.09996, 0.09782, 0.10762, 0.1041, 0.10887, 0.11942, 0.10485, 0.09983, 0.07911, 0.08313, 0.08464, 0.0722, 0.06191, 0.06869, 0.08451, 0.07396, 0.08777, 0.10259, 0.0599, 0.06894, 0.06191, 0.06015, 0.06693, 0.0496, 0.04257, 0.0442, 0.05575, 0.04395, 0.05713, 0.03918], "greentea": [0.39368, 0.31055, 0.34647, 0.31821, 0.30352, 0.2666, 0.27514, 0.36317, 0.33906, 0.46439, 0.39193, 0.34772, 0.44555, 0.46313, 0.46991, 0.47719, 0.5646, 0.44228, 0.39343, 0.38012, 0.38766, 0.36618, 0.38402, 0.35639, 0.44078, 0.51751, 0.92488, 1.15331, 1.11488, 0.9392, 0.82668, 0.78172, 0.59863, 0.6898, 0.69922, 0.63568, 0.6353, 0.51135, 0.50495, 0.44279, 0.41152, 0.37133, 0.3422, 0.34509, 0.28707, 0.34358, 0.3265, 0.31922, 0.32776, 0.29799, 0.24701, 0.24399, 0.28832, 0.24249, 0.20306, 0.18472, 0.25354, 0.29159, 0.40461, 0.59109, 0.52868, 0.75837, 0.34057, 0.25517, 0.20054, 0.11816, 0.0889, 0.05035], "volcanic": [0.16162, 0.13713, 0.15772, 0.1591, 0.26585, 0.23684, 0.30277, 0.40549, 0.25467, 0.35224, 0.21926, 0.22641, 0.24801, 0.26961, 0.23018, 0.22101, 0.27376, 0.25329, 0.31105, 0.35626, 0.28895, 0.23068, 0.1969, 0.15383, 0.1743, 0.17995, 0.20921, 0.21448, 0.23935, 0.2062, 0.20971, 0.23232, 0.18083, 0.15471, 0.14655, 0.1213, 0.13612, 0.14994, 0.13462, 0.13637, 0.15308, 0.13072, 0.15709, 0.17405, 0.12495, 0.08765, 0.25781, 0.30804, 0.1306, 0.10372, 0.2661, 0.272, 0.26986, 0.23357, 0.23345, 0.24977, 0.17103, 0.16802, 0.14981, 0.09945, 0.09255, 0.07396, 0.10096, 0.0928, 0.08539, 0.10598, 0.12143, 0.06957], "product": [0.17367, 0.18347, 0.14893, 0.11013, 0.1159, 0.07848, 0.06015, 0.06705, 1.18759, 2.4626, 1.46399, 0.75736, 1.00249, 0.85569, 1.6383, 1.58681, 1.21158, 0.71303, 0.62199, 1.04343, 1.45533, 1.60276, 1.76827, 1.4282, 2.85378, 2.76474, 2.63452, 2.31002, 2.34506, 2.76135, 2.49676, 3.24382, 2.47227, 3.03034, 3.21017, 2.45368, 2.58692, 2.57851, 2.51547, 2.19361, 2.88906, 2.27662, 2.39403, 2.6919, 2.51773, 2.80442, 2.44175, 1.98063, 2.76461, 2.61304, 2.2132, 1.74416, 1.56107, 1.25302, 1.16763, 1.72796, 1.39292, 1.10672, 1.30928, 1.22125, 1.40183, 1.21635, 1.69544, 1.43549, 1.80783, 1.53193, 1.29923, 0.67046], "c_이니스프리": [55.77575, 62.11824, 42.06918, 42.55392, 55.77738, 40.98996, 42.4743, 41.0697, 52.07004, 100.0, 53.93777, 40.33695, 49.93608, 51.82918, 41.71668, 40.05226, 57.3539, 36.1784, 35.08373, 36.20377, 41.83536, 35.35636, 47.77976, 37.26604, 34.2475, 43.42405, 37.44512, 35.17565, 44.16648, 28.68699, 27.21081, 33.06919, 22.69512, 25.61257, 29.70707, 26.44114, 21.81783, 25.01218, 20.84622, 18.76362, 27.91204, 17.14215, 17.15822, 18.7699, 17.6854, 17.28945, 19.69429, 16.72899, 17.62299, 15.8841, 15.33406, 14.63886, 16.94775, 12.20011, 11.41587, 15.26801, 12.2845, 10.49613, 15.33783, 12.26793, 10.09692, 10.94985, 10.60802, 9.28015, 12.84722, 9.1724, 8.26748, 5.68483], "c_미샤": [25.75058, 22.643, 24.89288, 21.76232, 21.14887, 21.5585, 17.59737, 16.67976, 16.21876, 18.67609, 30.49169, 22.06383, 18.75156, 16.95214, 20.52562, 19.70584, 17.60151, 18.44678, 14.22168, 15.32866, 17.17053, 16.7752, 23.7962, 16.50697, 15.99084, 16.15484, 19.10607, 16.77558, 16.10361, 16.88308, 10.45168, 17.06805, 54.85563, 20.71487, 18.792, 12.11824, 11.56983, 10.92473, 14.10514, 10.87777, 10.91833, 11.51935, 8.2936, 8.92439, 10.04166, 11.75581, 12.70858, 10.16624, 9.22628, 9.33616, 16.50408, 8.31093, 8.53836, 9.07583, 6.83061, 7.25833, 7.41367, 7.8979, 9.88783, 8.59926, 8.49654, 7.18236, 8.55581, 6.96096, 6.45463, 6.61625, 5.19921, 3.19836], "c_3CE": [9.61947, 9.56722, 9.51159, 7.05753, 7.62653, 8.52806, 6.7854, 6.93283, 6.95782, 7.62954, 6.57116, 6.04109, 6.87004, 6.09195, 5.33748, 5.20738, 6.2586, 6.17107, 5.99752, 7.79732, 7.79229, 8.54878, 6.87419, 5.9886, 7.33983, 6.79356, 6.01836, 5.78152, 6.83325, 6.33608, 5.78881, 6.28082, 5.28097, 5.57695, 5.36561, 6.16881, 5.42852, 5.76495, 5.58549, 4.55123, 4.8815, 5.32391, 5.53137, 5.59554, 4.30911, 4.8069, 4.46407, 3.83467, 4.08985, 4.06699, 3.53127, 2.93816, 3.70658, 2.87851, 3.00535, 3.44174, 3.39188, 3.56644, 3.35019, 3.29895, 3.30071, 2.83733, 2.77968, 2.76863, 2.37055, 2.27398, 2.17967, 1.26231], "c_토니모리": [15.03694, 11.05333, 11.41926, 11.11298, 11.7808, 14.65568, 11.21972, 10.49098, 10.37972, 10.82377, 11.72932, 12.02694, 12.84584, 13.55523, 13.07778, 20.0994, 15.62653, 11.39477, 10.64934, 10.11726, 10.60564, 8.8307, 9.55781, 12.29028, 11.23416, 11.59922, 11.62622, 10.35247, 10.80179, 10.34117, 9.06529, 17.06265, 9.40787, 8.70487, 10.74905, 9.48635, 13.83276, 10.36653, 10.36955, 14.09673, 16.90782, 19.44602, 14.54681, 11.46485, 9.84111, 9.11476, 8.80785, 8.13613, 8.50483, 14.97164, 15.78413, 12.0125, 11.23655, 14.51453, 12.97016, 9.42017, 8.1517, 8.88809, 9.37484, 8.00502, 7.79732, 6.39347, 6.05604, 5.99162, 5.59253, 4.76408, 5.29465, 2.8588], "c_에뛰드": [9.36291, 8.68717, 8.58495, 8.69269, 8.54162, 7.52983, 7.76529, 7.38906, 8.34911, 7.50647, 8.49817, 6.92216, 7.44921, 7.42083, 7.42384, 6.48363, 26.47881, 7.29261, 7.84177, 7.00014, 6.38267, 6.2915, 6.29451, 7.41593, 8.29637, 7.38378, 7.20433, 6.11669, 6.41419, 5.1638, 4.71134, 4.99703, 6.09271, 6.12272, 6.81479, 13.27318, 8.27615, 6.96171, 10.67157, 6.57192, 7.89866, 7.87354, 7.06431, 5.3425, 5.14861, 5.58901, 6.09811, 4.41836, 5.51216, 5.9935, 4.54495, 3.76209, 4.43394, 3.77465, 3.77866, 4.58099, 3.40092, 3.42516, 4.03384, 3.37016, 3.97633, 4.5339, 8.1674, 2.79325, 2.1332, 2.37632, 2.5667, 1.31518], "share_direct": [61.19, 65.85, 55.01, 59.62, 65.97, 57.67, 63.53, 63.49, 69.2, 79.17, 59.27, 58.94, 66.09, 69.22, 61.73, 61.65, 70.62, 59.51, 63.44, 61.02, 62.63, 58.27, 60.9, 62.36, 59.48, 65.42, 59.85, 60.93, 65.82, 55.27, 62.62, 58.61, 27.4, 49.35, 55.15, 59.12, 56.21, 59.98, 51.43, 54.88, 63.85, 50.44, 55.38, 56.38, 55.2, 51.07, 53.42, 54.44, 56.96, 54.24, 43.35, 56.55, 58.05, 50.51, 53.72, 58.8, 53.2, 47.8, 53.67, 50.76, 46.12, 52.22, 48.34, 48.82, 59.28, 50.78, 52.84, 56.03], "share_pair": [68.41, 73.29, 62.83, 66.16, 72.51, 65.53, 70.71, 71.12, 76.25, 84.26, 63.89, 64.64, 72.7, 75.35, 67.02, 67.02, 76.52, 66.23, 71.16, 70.25, 70.9, 67.82, 66.75, 69.3, 68.17, 72.88, 66.21, 67.71, 73.28, 62.95, 72.25, 65.96, 29.26, 55.29, 61.25, 68.57, 65.35, 69.6, 59.64, 63.3, 71.88, 59.81, 67.41, 67.78, 63.78, 59.53, 60.78, 62.2, 65.64, 62.98, 48.16, 63.79, 66.5, 57.34, 62.56, 67.78, 62.36, 57.06, 60.8, 58.79, 54.3, 60.39, 55.35, 57.14, 66.56, 58.09, 61.39, 64.0]}, "annual": {"years": ["2021", "2022", "2023", "2024", "2025"], "brand_api": {"2021": 52.4311, "2022": 42.5493, "2023": 32.3235, "2024": 19.9017, "2025": 14.1415}, "brand_daily": {"2021": 8.503, "2022": 6.903, "2023": 5.251, "2024": 3.228, "2025": 2.302}, "brand_daily_yoy": {"2022": -18.8, "2023": -23.9, "2024": -38.5, "2025": -28.7}, "jeju_ratio": {"2021": 0.34, "2022": 0.42, "2023": 0.5, "2024": 0.53, "2025": 0.52}, "product_ratio": {"2021": 1.07, "2022": 2.89, "2023": 8.3, "2024": 12.35, "2025": 11.67}, "share_direct": {"2021": 64.1, "2022": 63.4, "2023": 55.7, "2024": 55.4, "2025": 53.1}, "share_pair": {"2021": 70.8, "2022": 70.3, "2023": 62.3, "2024": 64.4, "2025": 60.9}, "share_all4": {"2021": 56.0, "2022": 53.5, "2023": 46.9, "2024": 41.3, "2025": 37.4}, "competitors": {"이니스프리": {"2021": 52.431, "2022": 42.549, "2023": 32.323, "2024": 19.902, "2025": 14.142}, "미샤": {"2021": 21.624, "2022": 17.982, "2023": 19.585, "2024": 10.984, "2025": 9.073}, "3CE": {"2021": 7.736, "2022": 6.578, "2023": 6.13, "2024": 5.006, "2025": 3.439}, "토니모리": {"2021": 11.811, "2022": 12.388, "2023": 10.869, "2024": 12.244, "2025": 11.153}, "에뛰드": {"2021": 8.152, "2022": 8.648, "2023": 6.883, "2024": 6.826, "2025": 4.218}}}}, "fixed": {"stores": {"2021": 400, "2022": 324, "2023": 234, "2024": 190, "_note": "공정위 정보공개서 · 2024년말 190개가 인용 가능한 최신 공식치. 147개는 2025 가맹점협의회 주장치(비공식)"}, "ad_spend": {"2021": 261.3, "2022": 243.6, "2023": 344.9, "2024": 273.9, "2025": 247.6, "_note": "DART 감사보고서 주석21 · 억원. 광고선전비는 전체 마케팅비가 아님"}, "correlation": {"store_brand": 0.98, "ad_brand": -0.03, "ad_product": 0.69, "_note": "n=4~5로 표본이 작다. 상관이지 인과가 아니며 역인과 배제 안 됨"}, "reputation": [{"p": "2021~2022", "rank": 2}, {"p": "2023-02", "rank": 3}, {"p": "2023 하반기", "rank": 2}, {"p": "2024H2~2025", "rank": 3}, {"_note": "버즈량 지표이지 선호도 아님 · 결측월 많아 분기 경향으로만 인용"}], "meta_ads": {"이니스프리": 220, "토니모리": 64, "미샤": 4, "3CE": 10, "_note": "브랜드 스토리텔링 광고는 네 브랜드 모두 0건"}}, "events": [{"date": "2023-02", "label": "리브랜딩 발표", "kind": "major", "desc": "제주 → THE NEW ISLE 세계관 전환, 로고·컬러·용기·매장 전면 교체"}, {"date": "2023-04", "label": "그린티 캠페인 피크", "kind": "minor", "desc": "2022 연평균 대비 2.73배"}, {"date": "2024-01", "label": "광고선전비 −20.6%", "kind": "major", "desc": "증액 1년 만에 철회 · 같은 해 브랜드 검색 최대 낙폭"}, {"date": "2024-07", "label": "PDRN 앰플 출시", "kind": "minor", "desc": "출시 당일 올리브영 판매 1위(회사 발표 기준)"}, {"date": "2026-02", "label": "토니모리 레벨 시프트", "kind": "warn", "desc": "대조군 붕괴 · 검색량 대조군을 미샤·3CE로 대체(2026-08-19 확정)"}]};</script>
+<script>
+/* 이니스프리 브랜드 인지도 대시보드 — 렌더러
+   외부 차트 라이브러리 없이 인라인 SVG로 그린다(오프라인·파일 열기로도 동작).
+   데이터는 data/dashboard_data.json (build_data.py 산출물). */
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fmt = (v, d = 1) => (v === null || v === undefined) ? '—' : Number(v).toFixed(d);
+const sign = v => (v > 0 ? '+' : '') + fmt(v);
+
+let D = null;
+let DIRECT_SET = new Set(['이니스프리', '미샤', '3CE']);
+
+/* ── 차트 헬퍼 ─────────────────────────────── */
+/* viewBox 폭보다 과하게 확대되면 차트 안 글자가 커지므로 상한(1.25배)을 건다 */
+function svg(vb, inner, cls = '') {
+  const w = parseFloat(vb.split(/\s+/)[2]) || 0;
+  const cap = w ? ` style="max-width:${Math.round(w * 1.25)}px"` : '';
+  return `<svg viewBox="${vb}" class="${cls}"${cap} preserveAspectRatio="xMidYMid meet" role="img">${inner}</svg>`;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function scale(vals, lo, hi, invert = true) {
+  const mn = Math.min(...vals), mx = Math.max(...vals), sp = (mx - mn) || 1;
+  return v => invert ? hi - ((v - mn) / sp) * (hi - lo) : lo + ((v - mn) / sp) * (hi - lo);
+}
+
+/* 라인 차트 (다계열) */
+function lineChart({ labels, series, w = 540, h = 150, pad = { l: 34, r: 12, t: 16, b: 22 }, marks = [] }) {
+  const xs = i => pad.l + i * (w - pad.l - pad.r) / Math.max(1, labels.length - 1);
+  let out = `<line x1="${pad.l}" y1="${h - pad.b}" x2="${w - pad.r}" y2="${h - pad.b}" stroke="#E8E2D6"/>`;
+  marks.forEach(m => {
+    const x = xs(m.i);
+    out += `<line x1="${x}" y1="${pad.t - 6}" x2="${x}" y2="${h - pad.b}" stroke="#C97C86" stroke-width="1" stroke-dasharray="2 3" opacity=".7"/>
+            <text x="${x}" y="${pad.t - 9}" text-anchor="middle" font-size="8.5" fill="#8E4A52" font-weight="700">${esc(m.label)}</text>`;
+  });
+  series.forEach(s => {
+    const y = scale(s.values.filter(v => v != null), pad.t, h - pad.b);
+    const pts = s.values.map((v, i) => v == null ? null : `${xs(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(' ');
+    out += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="${s.w || 2}"
+             ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`;
+    if (s.label) out += `<text x="${pad.l + 2}" y="${s.labelY}" font-size="9" font-weight="500" fill="${s.color}">${esc(s.label)}</text>`;
+  });
+  labels.forEach((l, i) => {
+    if (l) out += `<text x="${xs(i)}" y="${h - 6}" text-anchor="middle" font-size="8.5" opacity=".45">${esc(l)}</text>`;
+  });
+  return svg(`0 0 ${w} ${h}`, out);
+}
+
+/* 막대 차트 */
+function barChart({ labels, values, color = '#3B5D48', hiIdx = -1, w = 230, h = 145, unit = '' }) {
+  const pad = { l: 20, r: 12, t: 14, b: 26 };
+  const mx = Math.max(...values), bw = (w - pad.l - pad.r) / values.length * .58;
+  const step = (w - pad.l - pad.r) / values.length;
+  let out = `<line x1="${pad.l - 4}" y1="${h - pad.b}" x2="${w - pad.r}" y2="${h - pad.b}" stroke="#E8E2D6"/>`;
+  values.forEach((v, i) => {
+    const bh = (v / mx) * (h - pad.t - pad.b);
+    const x = pad.l + i * step + (step - bw) / 2, y = h - pad.b - bh;
+    const isHi = i === hiIdx;
+    out += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}"
+             fill="${isHi ? '#24382C' : color}" opacity="${isHi ? 1 : (.45 + i * .1).toFixed(2)}"/>
+            <text x="${(x + bw / 2).toFixed(1)}" y="${(y - 4).toFixed(1)}" text-anchor="middle" font-size="${isHi ? 9.5 : 8.5}"
+             font-weight="${isHi ? 700 : 400}" fill="#22241F" opacity="${isHi ? 1 : .62}">${v}${unit}</text>
+            <text x="${(x + bw / 2).toFixed(1)}" y="${h - 8}" text-anchor="middle" font-size="8.5" opacity=".45">${esc(labels[i])}</text>`;
+  });
+  return svg(`0 0 ${w} ${h}`, out);
+}
+
+/* 산점도 + 추세선 */
+function scatter({ pts, w = 250, h = 138, trend = true, color = '#24382C', trendColor = '#9FB89A', xlab, ylab }) {
+  const pad = { l: 26, r: 14, t: 14, b: 26 };
+  const xv = pts.map(p => p.x), yv = pts.map(p => p.y);
+  const xmn = Math.min(...xv), xmx = Math.max(...xv), ymn = Math.min(...yv), ymx = Math.max(...yv);
+  const X = v => pad.l + (v - xmn) / ((xmx - xmn) || 1) * (w - pad.l - pad.r);
+  const Y = v => (h - pad.b) - (v - ymn) / ((ymx - ymn) || 1) * (h - pad.t - pad.b);
+  let out = `<line x1="${pad.l - 4}" y1="${h - pad.b}" x2="${w - pad.r}" y2="${h - pad.b}" stroke="#E8E2D6"/>`;
+  if (trend) {
+    const n = pts.length, sx = xv.reduce((a, b) => a + b, 0), sy = yv.reduce((a, b) => a + b, 0);
+    const sxy = pts.reduce((a, p) => a + p.x * p.y, 0), sxx = pts.reduce((a, p) => a + p.x * p.x, 0);
+    const b = (n * sxy - sx * sy) / ((n * sxx - sx * sx) || 1), a = (sy - b * sx) / n;
+    out += `<line x1="${X(xmn)}" y1="${Y(a + b * xmn)}" x2="${X(xmx)}" y2="${Y(a + b * xmx)}"
+             stroke="${trendColor}" stroke-width="1.3" stroke-dasharray="4 3"/>`;
+  }
+  pts.forEach(p => {
+    out += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="4.2" fill="${color}"><title>${esc(p.t || '')}</title></circle>`;
+    if (p.note) out += `<text x="${X(p.x).toFixed(1)}" y="${(Y(p.y) - 8).toFixed(1)}" text-anchor="middle" font-size="8" opacity=".5">${esc(p.note)}</text>`;
+  });
+  if (xlab) out += `<text x="${w - pad.r}" y="${h - 6}" text-anchor="end" font-size="8" opacity=".4">${esc(xlab)}</text>`;
+  if (ylab) out += `<text x="${pad.l - 4}" y="${pad.t - 3}" font-size="8" opacity=".4">${esc(ylab)}</text>`;
+  return svg(`0 0 ${w} ${h}`, out);
+}
+
+/* 스파크라인 — 기능①: 구간 안에 이벤트가 있으면 세로 마커를 함께 찍는다 */
+function spark(values, color = '#3B5D48', w = 150, h = 26, months = null) {
+  const idx = values.map((v, i) => v == null ? null : i).filter(i => i !== null);
+  const v = idx.map(i => values[i]);
+  if (!v.length) return svg(`0 0 ${w} ${h}`, '');
+  const y = scale(v, 3, h - 3);
+  const X = j => 2 + j * (w - 4) / Math.max(1, v.length - 1);
+  const pts = v.map((val, j) => `${X(j).toFixed(1)},${y(val).toFixed(1)}`).join(' ');
+  let marks = '';
+  if (months && D && D.events) {
+    D.events.forEach(e => {
+      const pos = idx.indexOf(months.indexOf(e.date));
+      if (pos >= 0) marks += `<line x1="${X(pos).toFixed(1)}" y1="0" x2="${X(pos).toFixed(1)}" y2="${h}"
+        stroke="${e.kind === 'warn' ? '#C97C86' : '#B3A98F'}" stroke-width="1" stroke-dasharray="2 2" opacity=".8"><title>${esc(e.date)} ${esc(e.label)}</title></line>`;
+    });
+  }
+  return svg(`0 0 ${w} ${h}`, marks + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6"/>`);
+}
+
+/* ── 렌더 ──────────────────────────────────── */
+function renderMeta() {
+  const m = D.meta;
+  $('#stamp').innerHTML = `<b><span class="dot"></span>${esc(m.generated_at)}</b>
+    ${m.source_mode === 'live' ? 'API 라이브 갱신' : '저장소 데이터'} · ${esc(m.coverage)}`;
+  $('#defBox').innerHTML = `‘제주’ 연상 = <b>제주 단독</b><br>점유율 판정 = <b>2사 기준</b><br>지수 = 월간 API 계열`;
+  $('#srcBox').innerHTML = m.sources.map(esc).join('<br>');
+  $('#sideFoot').innerHTML = `${esc(m.coverage)}<br>갱신 ${esc(m.generated_at)}<br>공개 데이터 기반 학습용 분석`;
+}
+
+/* 기능③ — 임계값 경보 배너 */
+function renderAlerts() {
+  const a = D.alerts || [];
+  const box = $('#alertBox');
+  if (!a.length) { box.innerHTML = `<div class="alert ok">현재 게이트를 벗어난 지표가 없습니다.</div>`; return; }
+  const order = { high: 0, mid: 1, info: 2 };
+  box.innerHTML = [...a].sort((x, y) => order[x.level] - order[y.level]).map(x => `
+    <div class="alert ${esc(x.level)}">
+      <span class="tag">${x.level === 'high' ? '주의' : x.level === 'mid' ? '점검' : '참고'}</span>
+      <div><b>${esc(x.kpi)}</b> — ${esc(x.msg)}
+        <span class="act">→ ${esc(x.action)}</span></div>
+    </div>`).join('');
+}
+
+/* 기능② — 직전 스냅샷 대비 변화 */
+function renderDiff() {
+  const d = D.diff || {};
+  const box = $('#diffBox');
+  if (!d.base || !d.rows?.length) {
+    box.innerHTML = `<div class="src">직전 스냅샷이 없습니다. 다음 갱신부터 변화가 표시됩니다.</div>`;
+    return;
+  }
+  box.innerHTML = `<div class="src">기준: ${esc(d.base)} 스냅샷 대비</div>
+    <div class="tblwrap"><table><thead><tr><th>지표</th><th>이전</th><th>현재</th><th>변화</th></tr></thead>
+    <tbody>${d.rows.map(r => {
+      const same = Math.abs(r.delta) < 0.005;
+      return `<tr><td class="hi" style="text-align:left">${esc(r.label)}</td>
+        <td>${r.prev}${esc(r.unit)}</td><td>${r.cur}${esc(r.unit)}</td>
+        <td class="${same ? '' : (r.delta > 0 ? 'up' : 'dn')}">${same ? '변화 없음' : (r.delta > 0 ? '+' : '') + r.delta + esc(r.unit)}</td></tr>`;
+    }).join('')}</tbody></table></div>
+    <div class="cap"><b>왜 필요한가</b> 이 프로젝트의 가장 큰 사고는 “정의가 바뀐 걸 모른 채 옛 수치를 인용한 것”이었다. 갱신 때마다 무엇이 어떻게 움직였는지 남겨 같은 사고를 막는다.</div>`;
+}
+
+function renderKPI() {
+  const k = D.kpi, s = D.series.monthly;
+  const M = s.months;
+  const last24 = a => a.slice(-24), last24m = M.slice(-24);
+  $('#kpiStrip').innerHTML = `
+    <div>
+      <div class="lab">브랜드 검색지수</div>
+      <div class="num">${sign(k.brand_search.yoy)}%</div>
+      <div class="sub">${esc(D.meta.ytd_window)} · <span class="neg">하락 지속</span><br>5년 누적 ${fmt(k.brand_search.cum5y)}%</div>
+      ${spark(last24(s.brand), '#9C4A42', 150, 26, last24m)}
+      <div class="gatestrip"><div class="tr"><i style="width:32%"></i></div><em>90일 32%</em></div>
+    </div>
+    <div>
+      <div class="lab">‘제주’ 연상 비중 <i>(제주 단독)</i></div>
+      <div class="num">${fmt(k.jeju_ratio.current, 2)}%</div>
+      <div class="sub"><span class="hold">보합</span> · ${esc(k.jeju_ratio.peak_year)}년 ${fmt(k.jeju_ratio.peak, 2)}% 정점<br>절대 지수 ${fmt(k.jeju_ratio.abs_yoy)}% 동반 판정</div>
+      ${spark(last24(s.jeju), '#3B5D48', 150, 26, last24m)}
+      <div class="gatestrip"><div class="tr"><i style="width:48%"></i></div><em>180일 48%</em></div>
+    </div>
+    <div>
+      <div class="lab">제품 ↔ 브랜드 Gap</div>
+      <div class="num">${sign(k.gap.ytd)}<span class="u">%p</span></div>
+      <div class="sub">제품 ${fmt(k.gap.product_yoy)}% · 브랜드 ${fmt(k.gap.brand_yoy)}%<br>구간 따라 부호 반전 · KR1 종속</div>
+      ${spark(last24(s.product), '#C97C86', 150, 26, last24m)}
+      <div class="gatestrip"><div class="tr"><i style="width:20%"></i></div><em>가드 발동</em></div>
+    </div>
+    <div>
+      <div class="lab">경쟁 검색 점유율 <i>(직접경쟁 3사)</i></div>
+      <div class="num">${fmt(k.share.direct)}%</div>
+      <div class="sub">이니스프리·미샤·3CE · <span class="neg">하락 중</span>(전년 ${fmt(k.share.direct_prev)}%)<br>4사(+토니모리) ${fmt(k.share.all4)}%는 붕괴 착시</div>
+      ${spark(last24(s.share_direct || s.brand), '#3B5D48', 150, 26, last24m)}
+      <div class="gatestrip"><div class="tr"><i style="width:38%"></i></div><em>360일 38%</em></div>
+    </div>`;
+
+  const a = D.kpi.aeo;
+  $('#aeoBox').innerHTML = `
+    <div><div class="k">실행 지표 · AEO / SEO</div><div class="n">${a.score} / ${a.total}</div></div>
+    <ul>${a.items.map(i => `<li><span class="chk ${i.ok === true ? 'y' : i.ok === false ? 'n' : 'q'}">${i.ok === true ? '●' : i.ok === false ? '○' : '◐'}</span><b>${esc(i.k)}</b> — ${esc(i.note)}</li>`).join('')}</ul>`;
+}
+
+function renderScreen1() {
+  const an = D.series.annual, f = D.fixed, ev = D.events;
+  const years = an.years;
+
+  /* 브랜드 vs 제품군 (월간, 이벤트 마킹) */
+  const m = D.series.monthly, mi = m.months;
+  const markIdx = ev.filter(e => e.kind !== 'minor').map(e => ({ i: mi.indexOf(e.date), label: e.label }))
+    .filter(x => x.i >= 0);
+  $('#chartTrend').innerHTML = lineChart({
+    labels: mi.map((x, i) => (i % 12 === 0 ? x.slice(0, 4) : '')),
+    marks: markIdx,
+    series: [
+      { values: m.brand, color: '#24382C', w: 2, label: '브랜드', labelY: 26 },
+      { values: m.product, color: '#C97C86', w: 1.8, dash: '5 3', label: '제품군', labelY: 116 },
+    ],
+  });
+
+  /* 제주 단독 비중 */
+  const jr = years.map(y => an.jeju_ratio[y]);
+  $('#chartJeju').innerHTML = barChart({
+    labels: years, values: jr, hiIdx: jr.indexOf(Math.max(...jr)), unit: '',
+  });
+
+  /* 매장 ↔ 검색 */
+  const st = f.stores;
+  $('#chartStore').innerHTML = scatter({
+    pts: Object.keys(st).filter(k => !k.startsWith('_')).map(y => ({
+      x: st[y], y: an.brand_daily[y], t: `${y} · 매장 ${st[y]}개 · 지수 ${an.brand_daily[y]}`,
+      note: y === '2021' ? '400개' : (y === '2024' ? '190개' : ''),
+    })), xlab: '매장 수 →', ylab: '↑ 브랜드 검색',
+  });
+
+  /* 광고비 ↔ 검색 */
+  const ad = f.ad_spend;
+  $('#chartAd').innerHTML = scatter({
+    pts: Object.keys(ad).filter(k => !k.startsWith('_')).map(y => ({
+      x: ad[y], y: an.brand_daily[y], t: `${y} · 광고비 ${ad[y]}억 · 지수 ${an.brand_daily[y]}`,
+      note: y === '2023' ? '2023 345억' : '',
+    })), trendColor: '#C97C86', xlab: '광고선전비 →', ylab: '↑ 브랜드 검색',
+  });
+
+  /* 브랜드평판 순위 */
+  const rep = f.reputation.filter(r => r.rank);
+  let repSvg = `<text x="26" y="46" font-size="9" opacity=".45">2위</text><text x="26" y="92" font-size="9" opacity=".45">3위</text>
+    <line x1="48" y1="42" x2="240" y2="42" stroke="#E8E2D6" stroke-dasharray="2 3"/>
+    <line x1="48" y1="88" x2="240" y2="88" stroke="#E8E2D6" stroke-dasharray="2 3"/>`;
+  const stepX = 190 / rep.length;
+  let path = [];
+  rep.forEach((r, i) => {
+    const x0 = 50 + i * stepX, x1 = 50 + (i + 1) * stepX, y = r.rank === 2 ? 42 : 88;
+    path.push(`${x0},${y} ${x1},${y}`);
+  });
+  repSvg += `<polyline points="${path.join(' ')}" fill="none" stroke="#24382C" stroke-width="2.2"/>`;
+  const idx3 = rep.findIndex(r => r.rank === 3);
+  if (idx3 >= 0) {
+    const cx = 50 + idx3 * stepX + stepX / 2;
+    repSvg += `<circle cx="${cx.toFixed(1)}" cy="88" r="4.2" fill="#C97C86"/>
+      <text x="${cx.toFixed(1)}" y="106" text-anchor="middle" font-size="8.5" font-weight="700" fill="#8E4A52">${esc(rep[idx3].p)}</text>
+      <text x="${cx.toFixed(1)}" y="117" text-anchor="middle" font-size="8" opacity=".5">첫 3위 이탈</text>`;
+  }
+  $('#chartRep').innerHTML = svg('0 0 250 138', repSvg);
+
+  /* 점유율 — 직접경쟁 3사(판정) vs 2사·4사(참고) */
+  $('#chartShare').innerHTML = lineChart({
+    labels: years, w: 320, h: 150,
+    series: [
+      { values: years.map(y => an.share_direct[y]), color: '#24382C', w: 2.4, label: '직접 3사(판정)', labelY: 26 },
+      { values: years.map(y => an.share_pair[y]), color: '#9FB89A', w: 1.6, dash: '4 3', label: '2사(참고)', labelY: 38 },
+      { values: years.map(y => an.share_all4[y]), color: '#C97C86', w: 1.6, dash: '2 3', label: '4사(+토니모리)', labelY: 124 },
+    ],
+  });
+
+  /* 기능⑤ — 경쟁 브랜드 검색량 추이 (3CE 직접경쟁 편입) */
+  const comp = an.competitors || {};
+  const palette = { '이니스프리': '#24382C', '미샤': '#C97C86', '3CE': '#3B5D48', '토니모리': '#B3A98F', '에뛰드': '#C6D4C2' };
+  $('#chartComp').innerHTML = lineChart({
+    labels: years, w: 320, h: 150,
+    series: Object.keys(comp).map((n, i) => ({
+      values: years.map(y => comp[n][y] ?? null),
+      color: palette[n] || '#9FB89A',
+      w: DIRECT_SET.has(n) ? 2.2 : 1.4,
+      dash: DIRECT_SET.has(n) ? null : '3 3',
+      label: n, labelY: 26 + i * 12,
+    })),
+  });
+  $('#compTbl').innerHTML = `<table><thead><tr><th>브랜드</th><th>구분</th>
+    ${years.map(y => `<th>${y}</th>`).join('')}<th>5년 변화</th></tr></thead><tbody>
+    ${Object.keys(comp).map(n => {
+      const v = years.map(y => comp[n][y]);
+      const first = v.find(x => x != null), last = [...v].reverse().find(x => x != null);
+      const chg = (first && last) ? ((last - first) / first * 100) : null;
+      return `<tr><td class="hi" style="text-align:left">${esc(n)}</td>
+        <td style="text-align:left">${DIRECT_SET.has(n) ? '<b>직접경쟁</b>' : (n === '토니모리' ? '제외(붕괴)' : '참고')}</td>
+        ${v.map(x => `<td>${x ?? '—'}</td>`).join('')}
+        <td class="${chg < 0 ? 'dn' : 'up'}">${chg == null ? '—' : fmt(chg) + '%'}</td></tr>`;
+    }).join('')}</tbody></table>`;
+
+  /* 연도별 표 */
+  $('#tblAnnual').innerHTML = `
+    <table><thead><tr><th>연도</th><th>브랜드 지수<br><small>일간 정밀</small></th><th>YoY</th>
+      <th>제주 비중<br><small>단독</small></th><th>제품군 비중</th><th>점유율<br><small>직접 3사</small></th><th>매장 수</th><th>광고선전비</th></tr></thead>
+    <tbody>${years.map(y => `<tr>
+      <td class="hi">${y}</td>
+      <td>${an.brand_daily[y] ?? '—'}</td>
+      <td>${an.brand_daily_yoy[y] != null ? fmt(an.brand_daily_yoy[y]) + '%' : '—'}</td>
+      <td>${fmt(an.jeju_ratio[y], 2)}%</td>
+      <td>${an.product_ratio[y] != null ? fmt(an.product_ratio[y], 2) + '%' : '—'}</td>
+      <td>${an.share_direct[y] != null ? fmt(an.share_direct[y]) + '%' : '—'}</td>
+      <td>${D.fixed.stores[y] ?? '—'}</td>
+      <td>${D.fixed.ad_spend[y] ? D.fixed.ad_spend[y] + '억' : '—'}</td></tr>`).join('')}</tbody></table>`;
+
+  /* 이벤트 타임라인 (분석 재현 · 변화 이력 두 곳에 동일 목록) */
+  const evHtml = ev.map(e => `<tr>
+    <td class="hi">${esc(e.date)}</td><td style="text-align:left">${esc(e.label)}</td>
+    <td style="text-align:left;font-weight:300;opacity:.75">${esc(e.desc)}</td></tr>`).join('');
+  $('#eventList').innerHTML = evHtml;
+  const ev2 = $('#eventList2'); if (ev2) ev2.innerHTML = evHtml;
+}
+
+/* ── 네비게이션 ────────────────────────────── */
+function go(id, push = true) {
+  const target = id || 'monitor';
+  $$('section').forEach(s => { s.hidden = (s.dataset.view !== target); });
+  $$('.nav a').forEach(a => a.classList.toggle('on', a.dataset.go === target));
+  if (push && location.hash !== '#' + target) history.pushState(null, '', '#' + target);
+  $('aside').classList.remove('open'); $('.scrim').classList.remove('on');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function toast(html, ms = 4200) {
+  const t = $('#toast'); t.innerHTML = html; t.classList.add('on');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), ms);
+}
+
+/* ── 기능④: 내보내기 ───────────────────────── */
+/* 차트 SVG를 PNG로 저장 — 발표 자료 만들 때 수동 캡처로 생기는 수치 어긋남을 막는다 */
+function exportChart(box, name) {
+  const src = box.querySelector('svg');
+  if (!src) return;
+  const clone = src.cloneNode(true);
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const vb = (clone.getAttribute('viewBox') || '0 0 600 300').split(/\s+/).map(Number);
+  const S = 3; // 3배 해상도
+  clone.setAttribute('width', vb[2] * S); clone.setAttribute('height', vb[3] * S);
+  // 인라인 스타일 주입(외부 CSS는 이미지로 안 따라온다)
+  const st = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+  st.textContent = `text{font-family:'Noto Sans KR','Malgun Gothic',system-ui,sans-serif}`;
+  clone.insertBefore(st, clone.firstChild);
+  const blob = new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = vb[2] * S; c.height = vb[3] * S;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    c.toBlob(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = `${name}_${(D.meta.generated_at || '').slice(0, 10)}.png`;
+      a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast(`<b>${esc(name)}.png</b> 저장했습니다. 발표 자료에 그대로 넣으세요 — 수동 캡처보다 수치가 어긋날 위험이 없습니다.`);
+    });
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast('이미지 변환에 실패했습니다. 인쇄(PDF)를 이용해 주세요.'); };
+  img.src = url;
+}
+
+function attachExports() {
+  $$('.p').forEach(p => {
+    const box = p.querySelector('.chartbox');
+    const h = p.querySelector('h3');
+    if (!box || !h || h.querySelector('.exp')) return;
+    const b = document.createElement('button');
+    b.className = 'exp'; b.type = 'button'; b.textContent = 'PNG';
+    b.title = '이 차트를 PNG로 저장';
+    b.addEventListener('click', () => exportChart(box, h.textContent.trim().replace(/[\\/:*?"<>|]/g, '')));
+    h.appendChild(b);
+  });
+}
+
+/* ── 부팅 ──────────────────────────────────── */
+async function boot() {
+  try {
+    if (window.__DATA__) {           // 공유용 단일 HTML — 데이터가 인라인돼 있다
+      D = window.__DATA__;
+    } else {
+      const r = await fetch('data/dashboard_data.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      D = await r.json();
+    }
+  } catch (e) {
+    $('#kpiStrip').innerHTML = `<div style="padding:20px;grid-column:1/-1;font-size:12px;line-height:1.8">
+      <b>데이터를 불러오지 못했습니다.</b><br>
+      로컬 파일로 직접 열면 브라우저 보안정책(CORS)에 막힙니다. 아래처럼 로컬 서버로 여세요:<br>
+      <code style="background:#E8E2D6;padding:3px 7px;display:inline-block;margin-top:8px">python -m http.server 8000</code>
+      <span style="opacity:.6"> → http://localhost:8000</span></div>`;
+    return;
+  }
+  if (D.kpi?.share?.members) DIRECT_SET = new Set(D.kpi.share.members);
+  // 한 렌더러가 실패해도 나머지 화면은 살린다 (조용한 전체 중단 방지)
+  [['meta', renderMeta], ['alerts', renderAlerts], ['diff', renderDiff],
+   ['kpi', renderKPI], ['screens', renderScreen1], ['export', attachExports]]
+    .forEach(([name, fn]) => {
+      try { fn(); } catch (err) {
+        console.error(`[render:${name}]`, err);
+        toast(`<b>일부 화면을 그리지 못했습니다.</b><br>${esc(name)} — ${esc(err.message)}`, 9000);
+      }
+    });
+  go(location.hash.slice(1) || 'monitor', false);
+
+  $$('.nav a').forEach(a => a.addEventListener('click', ev => { ev.preventDefault(); go(a.dataset.go); }));
+  window.addEventListener('popstate', () => go(location.hash.slice(1) || 'monitor', false));
+  $('.burger').addEventListener('click', () => {
+    $('aside').classList.toggle('open'); $('.scrim').classList.toggle('on');
+  });
+  $('.scrim').addEventListener('click', () => { $('aside').classList.remove('open'); $('.scrim').classList.remove('on'); });
+  $('#liveBtn').addEventListener('click', () => {
+    toast(`<b>API 갱신은 로컬에서 실행합니다.</b><br>
+      <code style="display:block;margin-top:6px;font-size:10px">python build_data.py --live</code>
+      실행 후 이 페이지를 새로고침하면 최신 월까지 반영됩니다. (브라우저에서 직접 호출하면 API 키가 노출됩니다)`, 7000);
+  });
+  const pb = $('#printBtn');
+  if (pb) pb.addEventListener('click', () => {
+    $$('section').forEach(s => s.hidden = false);   // 인쇄 시 전 화면 포함
+    setTimeout(() => { window.print(); go(location.hash.slice(1) || 'monitor', false); }, 60);
+  });
+}
+boot();
+
+</script>
+</body>
+</html>

@@ -6,9 +6,10 @@
 <title>이니스프리 브랜드 인지도 진단·모니터링 대시보드</title>
 <meta name="description" content="공개 데이터 기반 이니스프리 브랜드 인지도 진단 및 KPI 모니터링 대시보드">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260819c">
+<link rel="stylesheet" href="assets/style.css?v=20260819g">
 </head>
 <body>
+<div class="app">
 
 <button class="burger" aria-label="메뉴 열기">☰</button>
 <div class="scrim"></div>
@@ -18,16 +19,20 @@
 
   <div class="nav">
     <div class="grp">화면</div>
-    <a href="#monitor" data-go="monitor" class="on"><span class="idx">01</span>KPI 모니터링</a>
-    <a href="#analysis" data-go="analysis"><span class="idx">02</span>분석 재현</a>
-    <a href="#table" data-go="table"><span class="idx">03</span>연도별 원표</a>
-    <a href="#method" data-go="method"><span class="idx">04</span>정의 · 방법론</a>
+    <a href="#monitor" data-go="monitor" class="on">KPI 모니터링</a>
+    <a href="#analysis" data-go="analysis">분석 재현</a>
+    <a href="#compete" data-go="compete">경쟁 벤치마크</a>
+    <a href="#table" data-go="table">연도별 원표</a>
+    <a href="#changes" data-go="changes">변화 이력</a>
+    <a href="#method" data-go="method">정의 · 방법론</a>
   </div>
 
   <div class="blk"><div class="k">지표 정의</div><div class="v" id="defBox">불러오는 중…</div></div>
   <div class="blk"><div class="k">데이터 소스</div><div class="v" id="srcBox">불러오는 중…</div></div>
+  <div class="blk"><div class="k">문서 성격</div><div class="v"><b>캡스톤 학습용 · 비공식</b><br>이니스프리·아모레퍼시픽과 무관한 가상 기획</div></div>
 
   <button class="livebtn" id="liveBtn">↻ API 갱신 방법</button>
+  <button class="livebtn" id="printBtn">⎙ 전체 인쇄 · PDF</button>
   <div class="sidefoot" id="sideFoot"></div>
 </aside>
 
@@ -42,17 +47,20 @@
 
   <!-- ── 화면 1: KPI 모니터링 ─────────────────── -->
   <section data-view="monitor">
-    <div class="sec">핵심 성과 지표 <small>90 / 180 / 360일 게이트 · 판정 기준은 사이드바 정의 참고</small></div>
+    <div class="sec">경보 <small>게이트 이탈·급변 자동 감지</small></div>
+    <div id="alertBox"></div>
+
+    <div class="sec">핵심 성과 지표 <small>90 / 180 / 360일 게이트 · 스파크라인의 세로 점선은 개입 시점</small></div>
     <div class="strip" id="kpiStrip"></div>
     <div class="aeo" id="aeoBox"></div>
 
-    <div class="sec">경쟁 검색 점유율 <small>3사·2사 병기 · 게이트 판정은 2사 기준(2026-08-19 확정)</small></div>
+    <div class="sec">경쟁 검색 점유율 <small>직접경쟁 3사(이니스프리·미샤·3CE) 기준 판정 · 2026-08-19 확정</small></div>
     <div class="two">
       <div class="p">
-        <h3>점유율 추이 — 2사 vs 3사</h3>
+        <h3>점유율 추이 — 구성별</h3>
         <div class="src">NAVER 데이터랩 · 동일 척도 그룹 조회 · 연평균</div>
         <div class="chartbox" id="chartShare"></div>
-        <div class="cap"><b>왜 두 선인가</b> 3사(이니스프리+미샤+토니모리)는 2026년에 올라 보이지만, 이는 토니모리가 2026-02부터 붕괴(YoY −53.5%)한 착시다. 2사 기준으로 보면 여전히 하락 중이다.</div>
+        <div class="cap"><b>왜 세 선인가</b> 토니모리를 넣은 4사 기준은 2026년에 올라 보이지만, 이는 토니모리가 2026-02부터 붕괴(YoY −53.5%)한 착시다. 판정은 <b>직접경쟁 3사</b>로 하고 나머지는 참고로만 본다.</div>
       </div>
       <div class="p">
         <h3>‘제주’ 연상 비중 — 단독 정의</h3>
@@ -109,6 +117,40 @@
     </div>
   </section>
 
+  <!-- ── 경쟁 벤치마크 ────────────────────────── -->
+  <section data-view="compete" hidden>
+    <div class="sec">경쟁 벤치마크 <small>3CE 직접경쟁 편입(2026-08-19) · 토니모리 제외</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>경쟁 브랜드 검색량 추이</h3>
+        <div class="src">NAVER 데이터랩 · 한 요청 안에서 동일 척도로 조회 · 연평균</div>
+        <div class="chartbox" id="chartComp"></div>
+        <div class="cap"><b>실선 = 직접경쟁 / 점선 = 참고</b> 같은 요청 안에서 조회했으므로 브랜드 간 크기 비교가 가능하다. 다른 조회의 값과는 절대 비교하지 말 것.</div>
+      </div>
+      <div class="p">
+        <h3>3CE를 직접경쟁으로 편입한 근거</h3>
+        <div class="src">2026-08-19 검색 데이터 실사 결과</div>
+        <div class="cap" style="border-left-color:var(--sage)">
+          <b>데이터 품질</b> 2021-01~2026-08 전 구간 <b>결측 0</b>. 규모도 미샤와 비교 가능한 수준이라 점유율 분모로 쓸 수 있다.
+        </div>
+        <div class="cap" style="margin-top:8px;border-left-color:var(--sage)">
+          <b>오염 검증</b> 메타 광고 라이브러리에서는 “3CE” 단독 검색이 전세계 무관 광고로 오염됐지만, 네이버 데이터랩은 <b>국내 검색어</b>라 사정이 다르다.
+          제품 키워드(3CE 틴트·립·쿠션)와의 비율이 자연스러워 브랜드 검색으로서 신뢰할 수 있다.
+        </div>
+        <div class="cap" style="margin-top:8px">
+          <b>맥락별 구분</b> 메타 광고 <b>패턴 비교</b>에서는 원자료 규정대로 <b>참고군</b> 라벨을 유지한다(로드샵 채널 경쟁이 아니므로).
+          <b>검색 점유율</b>은 “소비자가 어떤 브랜드를 찾는가”를 재는 다른 질문이므로 직접경쟁으로 편입한다.
+        </div>
+      </div>
+    </div>
+    <div class="p" style="margin-top:12px">
+      <h3>브랜드별 연도 지표</h3>
+      <div class="src">동일 척도 · 5년 변화는 2021 대비</div>
+      <div class="tblwrap" id="compTbl"></div>
+      <div class="cap"><b>대조군 다변화</b> 판정을 미샤 하나에 걸면 미샤가 토니모리처럼 무너질 때 같은 문제가 반복된다. 3CE·에뛰드를 함께 추적해 대조군이 깨지는 것을 조기에 감지한다.</div>
+    </div>
+  </section>
+
   <!-- ── 화면 3: 연도별 원표 ──────────────────── -->
   <section data-view="table" hidden>
     <div class="sec">연도별 원표 <small>인용 시 이 표를 기준으로 · 계열 혼용 금지</small></div>
@@ -117,6 +159,21 @@
       <div class="src">브랜드 지수는 일간 정밀 계열(1,826일 참평균) · 비중·점유율은 월간 API 계열</div>
       <div class="tblwrap" id="tblAnnual"></div>
       <div class="cap"><b>계열 주의</b> 브랜드 지수는 집계 방식에 따라 값이 갈린다(일간 정밀 −38.5% / 월간 API −38.4% / 단순평균 −38.6%). 문서 간 통일 기준은 <code>02_수집자료/검색지수_표준수치표_2021-2026.md</code>를 따른다.</div>
+    </div>
+  </section>
+
+  <!-- ── 변화 이력 ────────────────────────────── -->
+  <section data-view="changes" hidden>
+    <div class="sec">변화 이력 <small>갱신할 때마다 스냅샷을 남기고 직전과 비교</small></div>
+    <div class="p">
+      <h3>직전 갱신 대비 변화</h3>
+      <div id="diffBox"></div>
+    </div>
+    <div class="p" style="margin-top:12px">
+      <h3>개입 시점 타임라인</h3>
+      <div class="src">KR 판정의 기준선 — 모든 차트의 세로 점선과 같은 목록</div>
+      <div class="tblwrap"><table><tbody id="eventList2"></tbody></table></div>
+      <div class="cap">KR1·2·4는 전부 “자연 추세 대비 <b>초과분</b>만 성과로 인정”하도록 설계돼 있다. 개입 시점을 함께 보지 않으면 초과분 판정 자체가 불가능하다.</div>
     </div>
   </section>
 
@@ -168,7 +225,8 @@
   </div>
 </main>
 
+</div><!-- /.app -->
 <div class="toast" id="toast"></div>
-<script src="assets/app.js?v=20260819c"></script>
+<script src="assets/app.js?v=20260819g"></script>
 </body>
 </html>

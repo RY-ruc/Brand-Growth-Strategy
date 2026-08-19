@@ -8,6 +8,7 @@ const fmt = (v, d = 1) => (v === null || v === undefined) ? '—' : Number(v).to
 const sign = v => (v > 0 ? '+' : '') + fmt(v);
 
 let D = null;
+let DIRECT_SET = new Set(['이니스프리', '미샤', '3CE']);
 
 /* ── 차트 헬퍼 ─────────────────────────────── */
 /* viewBox 폭보다 과하게 확대되면 차트 안 글자가 커지므로 상한(1.25배)을 건다 */
@@ -88,12 +89,23 @@ function scatter({ pts, w = 250, h = 138, trend = true, color = '#24382C', trend
   return svg(`0 0 ${w} ${h}`, out);
 }
 
-/* 스파크라인 */
-function spark(values, color = '#3B5D48', w = 150, h = 26) {
-  const v = values.filter(x => x != null);
+/* 스파크라인 — 기능①: 구간 안에 이벤트가 있으면 세로 마커를 함께 찍는다 */
+function spark(values, color = '#3B5D48', w = 150, h = 26, months = null) {
+  const idx = values.map((v, i) => v == null ? null : i).filter(i => i !== null);
+  const v = idx.map(i => values[i]);
+  if (!v.length) return svg(`0 0 ${w} ${h}`, '');
   const y = scale(v, 3, h - 3);
-  const pts = v.map((val, i) => `${(2 + i * (w - 4) / (v.length - 1)).toFixed(1)},${y(val).toFixed(1)}`).join(' ');
-  return svg(`0 0 ${w} ${h}`, `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6"/>`);
+  const X = j => 2 + j * (w - 4) / Math.max(1, v.length - 1);
+  const pts = v.map((val, j) => `${X(j).toFixed(1)},${y(val).toFixed(1)}`).join(' ');
+  let marks = '';
+  if (months && D && D.events) {
+    D.events.forEach(e => {
+      const pos = idx.indexOf(months.indexOf(e.date));
+      if (pos >= 0) marks += `<line x1="${X(pos).toFixed(1)}" y1="0" x2="${X(pos).toFixed(1)}" y2="${h}"
+        stroke="${e.kind === 'warn' ? '#C97C86' : '#B3A98F'}" stroke-width="1" stroke-dasharray="2 2" opacity=".8"><title>${esc(e.date)} ${esc(e.label)}</title></line>`;
+    });
+  }
+  return svg(`0 0 ${w} ${h}`, marks + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6"/>`);
 }
 
 /* ── 렌더 ──────────────────────────────────── */
@@ -106,36 +118,70 @@ function renderMeta() {
   $('#sideFoot').innerHTML = `${esc(m.coverage)}<br>갱신 ${esc(m.generated_at)}<br>공개 데이터 기반 학습용 분석`;
 }
 
+/* 기능③ — 임계값 경보 배너 */
+function renderAlerts() {
+  const a = D.alerts || [];
+  const box = $('#alertBox');
+  if (!a.length) { box.innerHTML = `<div class="alert ok">현재 게이트를 벗어난 지표가 없습니다.</div>`; return; }
+  const order = { high: 0, mid: 1, info: 2 };
+  box.innerHTML = [...a].sort((x, y) => order[x.level] - order[y.level]).map(x => `
+    <div class="alert ${esc(x.level)}">
+      <span class="tag">${x.level === 'high' ? '주의' : x.level === 'mid' ? '점검' : '참고'}</span>
+      <div><b>${esc(x.kpi)}</b> — ${esc(x.msg)}
+        <span class="act">→ ${esc(x.action)}</span></div>
+    </div>`).join('');
+}
+
+/* 기능② — 직전 스냅샷 대비 변화 */
+function renderDiff() {
+  const d = D.diff || {};
+  const box = $('#diffBox');
+  if (!d.base || !d.rows?.length) {
+    box.innerHTML = `<div class="src">직전 스냅샷이 없습니다. 다음 갱신부터 변화가 표시됩니다.</div>`;
+    return;
+  }
+  box.innerHTML = `<div class="src">기준: ${esc(d.base)} 스냅샷 대비</div>
+    <div class="tblwrap"><table><thead><tr><th>지표</th><th>이전</th><th>현재</th><th>변화</th></tr></thead>
+    <tbody>${d.rows.map(r => {
+      const same = Math.abs(r.delta) < 0.005;
+      return `<tr><td class="hi" style="text-align:left">${esc(r.label)}</td>
+        <td>${r.prev}${esc(r.unit)}</td><td>${r.cur}${esc(r.unit)}</td>
+        <td class="${same ? '' : (r.delta > 0 ? 'up' : 'dn')}">${same ? '변화 없음' : (r.delta > 0 ? '+' : '') + r.delta + esc(r.unit)}</td></tr>`;
+    }).join('')}</tbody></table></div>
+    <div class="cap"><b>왜 필요한가</b> 이 프로젝트의 가장 큰 사고는 “정의가 바뀐 걸 모른 채 옛 수치를 인용한 것”이었다. 갱신 때마다 무엇이 어떻게 움직였는지 남겨 같은 사고를 막는다.</div>`;
+}
+
 function renderKPI() {
   const k = D.kpi, s = D.series.monthly;
-  const last24 = a => a.slice(-24);
+  const M = s.months;
+  const last24 = a => a.slice(-24), last24m = M.slice(-24);
   $('#kpiStrip').innerHTML = `
     <div>
       <div class="lab">브랜드 검색지수</div>
       <div class="num">${sign(k.brand_search.yoy)}%</div>
       <div class="sub">${esc(D.meta.ytd_window)} · <span class="neg">하락 지속</span><br>5년 누적 ${fmt(k.brand_search.cum5y)}%</div>
-      ${spark(last24(s.brand), '#9C4A42')}
+      ${spark(last24(s.brand), '#9C4A42', 150, 26, last24m)}
       <div class="gatestrip"><div class="tr"><i style="width:32%"></i></div><em>90일 32%</em></div>
     </div>
     <div>
       <div class="lab">‘제주’ 연상 비중 <i>(제주 단독)</i></div>
       <div class="num">${fmt(k.jeju_ratio.current, 2)}%</div>
       <div class="sub"><span class="hold">보합</span> · ${esc(k.jeju_ratio.peak_year)}년 ${fmt(k.jeju_ratio.peak, 2)}% 정점<br>절대 지수 ${fmt(k.jeju_ratio.abs_yoy)}% 동반 판정</div>
-      ${spark(last24(s.jeju), '#3B5D48')}
+      ${spark(last24(s.jeju), '#3B5D48', 150, 26, last24m)}
       <div class="gatestrip"><div class="tr"><i style="width:48%"></i></div><em>180일 48%</em></div>
     </div>
     <div>
       <div class="lab">제품 ↔ 브랜드 Gap</div>
       <div class="num">${sign(k.gap.ytd)}<span class="u">%p</span></div>
       <div class="sub">제품 ${fmt(k.gap.product_yoy)}% · 브랜드 ${fmt(k.gap.brand_yoy)}%<br>구간 따라 부호 반전 · KR1 종속</div>
-      ${spark(last24(s.product), '#C97C86')}
+      ${spark(last24(s.product), '#C97C86', 150, 26, last24m)}
       <div class="gatestrip"><div class="tr"><i style="width:20%"></i></div><em>가드 발동</em></div>
     </div>
     <div>
-      <div class="lab">경쟁 검색 점유율 <i>(2사 판정)</i></div>
-      <div class="num">${fmt(k.share.two)}%</div>
-      <div class="sub">2사 · <span class="neg">하락 중</span>(전년 ${fmt(k.share.two_prev)}%)<br>3사 ${fmt(k.share.three)}%는 토니모리 붕괴 착시</div>
-      ${spark(last24(s.share2 || s.brand), '#3B5D48')}
+      <div class="lab">경쟁 검색 점유율 <i>(직접경쟁 3사)</i></div>
+      <div class="num">${fmt(k.share.direct)}%</div>
+      <div class="sub">이니스프리·미샤·3CE · <span class="neg">하락 중</span>(전년 ${fmt(k.share.direct_prev)}%)<br>4사(+토니모리) ${fmt(k.share.all4)}%는 붕괴 착시</div>
+      ${spark(last24(s.share_direct || s.brand), '#3B5D48', 150, 26, last24m)}
       <div class="gatestrip"><div class="tr"><i style="width:38%"></i></div><em>360일 38%</em></div>
     </div>`;
 
@@ -207,34 +253,61 @@ function renderScreen1() {
   }
   $('#chartRep').innerHTML = svg('0 0 250 138', repSvg);
 
-  /* 점유율 3사 vs 2사 */
-  const s3 = years.map(y => an.share3[y]), s2 = years.map(y => an.share2[y]);
+  /* 점유율 — 직접경쟁 3사(판정) vs 2사·4사(참고) */
   $('#chartShare').innerHTML = lineChart({
-    labels: years, w: 300, h: 150,
+    labels: years, w: 320, h: 150,
     series: [
-      { values: s2, color: '#24382C', w: 2.2, label: '2사(판정)', labelY: 26 },
-      { values: s3, color: '#9FB89A', w: 1.8, dash: '4 3', label: '3사(참고)', labelY: 120 },
+      { values: years.map(y => an.share_direct[y]), color: '#24382C', w: 2.4, label: '직접 3사(판정)', labelY: 26 },
+      { values: years.map(y => an.share_pair[y]), color: '#9FB89A', w: 1.6, dash: '4 3', label: '2사(참고)', labelY: 38 },
+      { values: years.map(y => an.share_all4[y]), color: '#C97C86', w: 1.6, dash: '2 3', label: '4사(+토니모리)', labelY: 124 },
     ],
   });
+
+  /* 기능⑤ — 경쟁 브랜드 검색량 추이 (3CE 직접경쟁 편입) */
+  const comp = an.competitors || {};
+  const palette = { '이니스프리': '#24382C', '미샤': '#C97C86', '3CE': '#3B5D48', '토니모리': '#B3A98F', '에뛰드': '#C6D4C2' };
+  $('#chartComp').innerHTML = lineChart({
+    labels: years, w: 320, h: 150,
+    series: Object.keys(comp).map((n, i) => ({
+      values: years.map(y => comp[n][y] ?? null),
+      color: palette[n] || '#9FB89A',
+      w: DIRECT_SET.has(n) ? 2.2 : 1.4,
+      dash: DIRECT_SET.has(n) ? null : '3 3',
+      label: n, labelY: 26 + i * 12,
+    })),
+  });
+  $('#compTbl').innerHTML = `<table><thead><tr><th>브랜드</th><th>구분</th>
+    ${years.map(y => `<th>${y}</th>`).join('')}<th>5년 변화</th></tr></thead><tbody>
+    ${Object.keys(comp).map(n => {
+      const v = years.map(y => comp[n][y]);
+      const first = v.find(x => x != null), last = [...v].reverse().find(x => x != null);
+      const chg = (first && last) ? ((last - first) / first * 100) : null;
+      return `<tr><td class="hi" style="text-align:left">${esc(n)}</td>
+        <td style="text-align:left">${DIRECT_SET.has(n) ? '<b>직접경쟁</b>' : (n === '토니모리' ? '제외(붕괴)' : '참고')}</td>
+        ${v.map(x => `<td>${x ?? '—'}</td>`).join('')}
+        <td class="${chg < 0 ? 'dn' : 'up'}">${chg == null ? '—' : fmt(chg) + '%'}</td></tr>`;
+    }).join('')}</tbody></table>`;
 
   /* 연도별 표 */
   $('#tblAnnual').innerHTML = `
     <table><thead><tr><th>연도</th><th>브랜드 지수<br><small>일간 정밀</small></th><th>YoY</th>
-      <th>제주 비중<br><small>단독</small></th><th>제품군 비중</th><th>점유율 2사</th><th>매장 수</th><th>광고선전비</th></tr></thead>
+      <th>제주 비중<br><small>단독</small></th><th>제품군 비중</th><th>점유율<br><small>직접 3사</small></th><th>매장 수</th><th>광고선전비</th></tr></thead>
     <tbody>${years.map(y => `<tr>
       <td class="hi">${y}</td>
       <td>${an.brand_daily[y] ?? '—'}</td>
       <td>${an.brand_daily_yoy[y] != null ? fmt(an.brand_daily_yoy[y]) + '%' : '—'}</td>
       <td>${fmt(an.jeju_ratio[y], 2)}%</td>
-      <td>${fmt(an.product_ratio[y], 2)}%</td>
-      <td>${fmt(an.share2[y])}%</td>
+      <td>${an.product_ratio[y] != null ? fmt(an.product_ratio[y], 2) + '%' : '—'}</td>
+      <td>${an.share_direct[y] != null ? fmt(an.share_direct[y]) + '%' : '—'}</td>
       <td>${D.fixed.stores[y] ?? '—'}</td>
       <td>${D.fixed.ad_spend[y] ? D.fixed.ad_spend[y] + '억' : '—'}</td></tr>`).join('')}</tbody></table>`;
 
-  /* 이벤트 타임라인 */
-  $('#eventList').innerHTML = ev.map(e => `<tr>
+  /* 이벤트 타임라인 (분석 재현 · 변화 이력 두 곳에 동일 목록) */
+  const evHtml = ev.map(e => `<tr>
     <td class="hi">${esc(e.date)}</td><td style="text-align:left">${esc(e.label)}</td>
     <td style="text-align:left;font-weight:300;opacity:.75">${esc(e.desc)}</td></tr>`).join('');
+  $('#eventList').innerHTML = evHtml;
+  const ev2 = $('#eventList2'); if (ev2) ev2.innerHTML = evHtml;
 }
 
 /* ── 네비게이션 ────────────────────────────── */
@@ -252,12 +325,65 @@ function toast(html, ms = 4200) {
   clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), ms);
 }
 
+/* ── 기능④: 내보내기 ───────────────────────── */
+/* 차트 SVG를 PNG로 저장 — 발표 자료 만들 때 수동 캡처로 생기는 수치 어긋남을 막는다 */
+function exportChart(box, name) {
+  const src = box.querySelector('svg');
+  if (!src) return;
+  const clone = src.cloneNode(true);
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const vb = (clone.getAttribute('viewBox') || '0 0 600 300').split(/\s+/).map(Number);
+  const S = 3; // 3배 해상도
+  clone.setAttribute('width', vb[2] * S); clone.setAttribute('height', vb[3] * S);
+  // 인라인 스타일 주입(외부 CSS는 이미지로 안 따라온다)
+  const st = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+  st.textContent = `text{font-family:'Noto Sans KR','Malgun Gothic',system-ui,sans-serif}`;
+  clone.insertBefore(st, clone.firstChild);
+  const blob = new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = vb[2] * S; c.height = vb[3] * S;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    c.toBlob(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = `${name}_${(D.meta.generated_at || '').slice(0, 10)}.png`;
+      a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast(`<b>${esc(name)}.png</b> 저장했습니다. 발표 자료에 그대로 넣으세요 — 수동 캡처보다 수치가 어긋날 위험이 없습니다.`);
+    });
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast('이미지 변환에 실패했습니다. 인쇄(PDF)를 이용해 주세요.'); };
+  img.src = url;
+}
+
+function attachExports() {
+  $$('.p').forEach(p => {
+    const box = p.querySelector('.chartbox');
+    const h = p.querySelector('h3');
+    if (!box || !h || h.querySelector('.exp')) return;
+    const b = document.createElement('button');
+    b.className = 'exp'; b.type = 'button'; b.textContent = 'PNG';
+    b.title = '이 차트를 PNG로 저장';
+    b.addEventListener('click', () => exportChart(box, h.textContent.trim().replace(/[\\/:*?"<>|]/g, '')));
+    h.appendChild(b);
+  });
+}
+
 /* ── 부팅 ──────────────────────────────────── */
 async function boot() {
   try {
-    const r = await fetch('data/dashboard_data.json', { cache: 'no-store' });
-    if (!r.ok) throw new Error(r.status);
-    D = await r.json();
+    if (window.__DATA__) {           // 공유용 단일 HTML — 데이터가 인라인돼 있다
+      D = window.__DATA__;
+    } else {
+      const r = await fetch('data/dashboard_data.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      D = await r.json();
+    }
   } catch (e) {
     $('#kpiStrip').innerHTML = `<div style="padding:20px;grid-column:1/-1;font-size:12px;line-height:1.8">
       <b>데이터를 불러오지 못했습니다.</b><br>
@@ -266,7 +392,16 @@ async function boot() {
       <span style="opacity:.6"> → http://localhost:8000</span></div>`;
     return;
   }
-  renderMeta(); renderKPI(); renderScreen1();
+  if (D.kpi?.share?.members) DIRECT_SET = new Set(D.kpi.share.members);
+  // 한 렌더러가 실패해도 나머지 화면은 살린다 (조용한 전체 중단 방지)
+  [['meta', renderMeta], ['alerts', renderAlerts], ['diff', renderDiff],
+   ['kpi', renderKPI], ['screens', renderScreen1], ['export', attachExports]]
+    .forEach(([name, fn]) => {
+      try { fn(); } catch (err) {
+        console.error(`[render:${name}]`, err);
+        toast(`<b>일부 화면을 그리지 못했습니다.</b><br>${esc(name)} — ${esc(err.message)}`, 9000);
+      }
+    });
   go(location.hash.slice(1) || 'monitor', false);
 
   $$('.nav a').forEach(a => a.addEventListener('click', ev => { ev.preventDefault(); go(a.dataset.go); }));
@@ -279,6 +414,11 @@ async function boot() {
     toast(`<b>API 갱신은 로컬에서 실행합니다.</b><br>
       <code style="display:block;margin-top:6px;font-size:10px">python build_data.py --live</code>
       실행 후 이 페이지를 새로고침하면 최신 월까지 반영됩니다. (브라우저에서 직접 호출하면 API 키가 노출됩니다)`, 7000);
+  });
+  const pb = $('#printBtn');
+  if (pb) pb.addEventListener('click', () => {
+    $$('section').forEach(s => s.hidden = false);   // 인쇄 시 전 화면 포함
+    setTimeout(() => { window.print(); go(location.hash.slice(1) || 'monitor', false); }, 60);
   });
 }
 boot();

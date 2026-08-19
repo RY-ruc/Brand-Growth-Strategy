@@ -6,18 +6,21 @@ build_data.py — 대시보드 데이터 빌더
 `--live` 옵션을 주면 NAVER 데이터랩 API를 호출해 최신 월까지 시계열을 연장한 뒤 빌드한다.
 
 사용법
-    python build_data.py           # 저장소 CSV만으로 빌드 (오프라인, 기본)
-    python build_data.py --live    # API 재조회 후 빌드 (.env 필요)
+    python build_data.py             # 저장소 CSV만으로 빌드 (오프라인, 기본)
+    python build_data.py --live      # API 재조회 후 빌드 (.env 필요)
+    python build_data.py --standalone  # 공유용 단일 HTML(artifact) 함께 생성
 
-지표 정의는 2026-08-19 팀 확정 기준을 따른다.
+지표 정의 (2026-08-19 팀 확정 + 2026-08-19 3CE 편입)
   - '제주' 연상 비중 = `이니스프리 제주` 단독 ÷ 브랜드   (합산 금지)
-  - 경쟁 검색 점유율 = 3사·2사 병기, 게이트 판정은 2사
+  - 경쟁 검색 점유율 = 직접경쟁 3사(이니스프리·미샤·3CE) 기준으로 판정.
+      토니모리는 2026-02 레벨 시프트로 제외. 2사·4사는 참고 병기.
   - 지수 계열 = 일간 정밀(과거 확정) + 월간 API(라이브) 병기
 자세한 근거: 02_수집자료/검색지수_표준수치표_2021-2026.md
 """
 from __future__ import annotations
 
 import argparse
+import calendar
 import csv
 import json
 import sys
@@ -28,16 +31,19 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 SRC = REPO / "02_수집자료"
 OUT = HERE / "data" / "dashboard_data.json"
+SNAPDIR = HERE / "data" / "snapshots"
 
 KST = timezone(timedelta(hours=9))
-
-# 라이브 조회에 쓰는 API 클라이언트 위치 (팀 공용 키 보관처)
 API_APP = Path(r"C:\Users\EZ\Downloads\naver_api_streamlit_dashboard")
+
+# 경쟁 검색 점유율 구성 (2026-08-19 확정)
+DIRECT = ["이니스프리", "미샤", "3CE"]          # 직접경쟁 — 게이트 판정 기준
+PAIR = ["이니스프리", "미샤"]                    # 참고: 최소 구성
+ALL4 = ["이니스프리", "미샤", "3CE", "토니모리"]  # 참고: 토니모리 포함(붕괴 착시 주의)
 
 
 # ── 원자료 로더 ────────────────────────────────────────────────
 def load_monthly_api() -> dict[str, dict[str, float]]:
-    """naver_datalab_2021-2026_월간.csv → {그룹: {기간: 값}}  (월간 API 계열)"""
     out: dict[str, dict[str, float]] = {}
     with open(SRC / "naver_datalab_2021-2026_월간.csv", encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
@@ -47,7 +53,6 @@ def load_monthly_api() -> dict[str, dict[str, float]]:
 
 
 def load_daily_summary() -> dict[str, dict[str, float]]:
-    """naver_datalab_일간원자료_월간요약.csv → {계열: {기간: 값}}  (일간 계열)"""
     out: dict[str, dict[str, float]] = {}
     with open(SRC / "naver_datalab_일간원자료_월간요약.csv", encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
@@ -60,80 +65,72 @@ def load_daily_summary() -> dict[str, dict[str, float]]:
 
 
 # ── 집계 헬퍼 ─────────────────────────────────────────────────
-def months_of(series: dict[str, float], year: int, upto: str | None = None) -> list[str]:
-    ms = [m for m in series if m.startswith(str(year))]
-    if upto:
-        ms = [m for m in ms if m <= upto]
-    return sorted(ms)
+def mean(v: list[float]) -> float | None:
+    return sum(v) / len(v) if v else None
 
 
-def mean(vals: list[float]) -> float | None:
-    return sum(vals) / len(vals) if vals else None
+def annual(s: dict[str, float], y: int) -> float | None:
+    ms = [m for m in s if m.startswith(str(y))]
+    return mean([s[m] for m in ms]) if len(ms) == 12 else None
 
 
-def annual(series: dict[str, float], year: int) -> float | None:
-    ms = months_of(series, year)
-    return mean([series[m] for m in ms]) if len(ms) == 12 else None
+def ytd(s: dict[str, float], y: int, upto: int) -> float | None:
+    ms = [f"{y}-{m:02d}" for m in range(1, upto + 1)]
+    v = [s[m] for m in ms if m in s]
+    return mean(v) if len(v) == upto else None
 
 
-def ytd(series: dict[str, float], year: int, upto_month: int) -> float | None:
-    ms = [f"{year}-{m:02d}" for m in range(1, upto_month + 1)]
-    vals = [series[m] for m in ms if m in series]
-    return mean(vals) if len(vals) == upto_month else None
-
-
-def pct(a: float | None, b: float | None) -> float | None:
-    if a in (None, 0) or b is None:
-        return None
-    return round((b - a) / a * 100, 1)
+def pct(a, b):
+    return None if a in (None, 0) or b is None else round((b - a) / a * 100, 1)
 
 
 # ── 라이브 갱신 ────────────────────────────────────────────────
+CALLS = {
+    "1_내부_그룹합산": [
+        {"groupName": "브랜드", "keywords": ["이니스프리"]},
+        {"groupName": "제주_그린티계", "keywords": ["이니스프리 제주", "이니스프리 그린티"]},
+        {"groupName": "제주_화산송이계", "keywords": ["이니스프리 제주", "이니스프리 화산송이"]},
+        {"groupName": "제품군", "keywords": ["이니스프리 레티놀", "이니스프리 앰플"]},
+        {"groupName": "리브랜딩", "keywords": ["이니스프리 리뉴얼", "이니스프리 로고"]},
+    ],
+    "2_경쟁사비교": [
+        {"groupName": "이니스프리", "keywords": ["이니스프리"]},
+        {"groupName": "미샤", "keywords": ["미샤"]},
+        {"groupName": "3CE", "keywords": ["3CE"]},
+        {"groupName": "토니모리", "keywords": ["토니모리"]},
+        {"groupName": "에뛰드", "keywords": ["에뛰드"]},
+    ],
+    "3_키워드분해": [
+        {"groupName": "브랜드", "keywords": ["이니스프리"]},
+        {"groupName": "제주", "keywords": ["이니스프리 제주"]},
+        {"groupName": "그린티", "keywords": ["이니스프리 그린티"]},
+        {"groupName": "화산송이", "keywords": ["이니스프리 화산송이"]},
+        {"groupName": "레티놀", "keywords": ["이니스프리 레티놀"]},
+    ],
+}
+
+
 def refresh_live() -> str:
-    """NAVER 데이터랩 재조회 → 02_수집자료 CSV 갱신. 성공 시 마지막 월 반환."""
     sys.path.insert(0, str(API_APP))
     try:
         from naver_api import NaverClient  # type: ignore
     except ImportError as e:
         raise SystemExit(f"[live] API 클라이언트를 찾을 수 없습니다: {API_APP}\n  {e}")
 
-    env: dict[str, str] = {}
     env_file = API_APP / ".env"
     if not env_file.exists():
         raise SystemExit(f"[live] .env가 없습니다: {env_file}")
+    env = {}
     for line in env_file.read_text(encoding="utf-8").splitlines():
         if "=" in line and not line.strip().startswith("#"):
             k, v = line.split("=", 1)
             env[k.strip()] = v.strip().strip('"').strip("'")
 
     cli = NaverClient(client_id=env["NAVER_CLIENT_ID"], client_secret=env["NAVER_CLIENT_SECRET"])
-    today = datetime.now(KST).date()
-    start, end = "2021-01-01", today.isoformat()
-
-    calls = {
-        "1_내부_그룹합산": [
-            {"groupName": "브랜드", "keywords": ["이니스프리"]},
-            {"groupName": "제주_그린티계", "keywords": ["이니스프리 제주", "이니스프리 그린티"]},
-            {"groupName": "제주_화산송이계", "keywords": ["이니스프리 제주", "이니스프리 화산송이"]},
-            {"groupName": "제품군", "keywords": ["이니스프리 레티놀", "이니스프리 앰플"]},
-            {"groupName": "리브랜딩", "keywords": ["이니스프리 리뉴얼", "이니스프리 로고"]},
-        ],
-        "2_경쟁사비교": [
-            {"groupName": "이니스프리", "keywords": ["이니스프리"]},
-            {"groupName": "토니모리", "keywords": ["토니모리"]},
-            {"groupName": "미샤", "keywords": ["미샤"]},
-        ],
-        "3_키워드분해": [
-            {"groupName": "브랜드", "keywords": ["이니스프리"]},
-            {"groupName": "제주", "keywords": ["이니스프리 제주"]},
-            {"groupName": "그린티", "keywords": ["이니스프리 그린티"]},
-            {"groupName": "화산송이", "keywords": ["이니스프리 화산송이"]},
-            {"groupName": "레티놀", "keywords": ["이니스프리 레티놀"]},
-        ],
-    }
+    start, end = "2021-01-01", datetime.now(KST).date().isoformat()
 
     rows, raw, last = [], {}, ""
-    for call, groups in calls.items():
+    for call, groups in CALLS.items():
         res = cli.datalab_search(start_date=start, end_date=end, time_unit="month", keyword_groups=groups)
         raw[call] = res
         for r in res["results"]:
@@ -155,153 +152,213 @@ def refresh_live() -> str:
     return last
 
 
-# ── 빌드 ──────────────────────────────────────────────────────
-def build(live: bool = False) -> dict:
-    if live:
-        print("[1/3] NAVER 데이터랩 라이브 재조회")
-        refresh_live()
-    else:
-        print("[1/3] 저장소 CSV 사용 (오프라인)")
+# ── 경보 규칙 ─────────────────────────────────────────────────
+def make_alerts(k: dict, prev: dict | None) -> list[dict]:
+    """KPI가 게이트를 벗어나거나 직전 스냅샷 대비 크게 움직이면 경보."""
+    a: list[dict] = []
 
-    print("[2/3] 집계")
+    if (k["brand_search"]["yoy"] or 0) < -25:
+        a.append({"level": "high", "kpi": "브랜드 검색지수",
+                  "msg": f'YoY {k["brand_search"]["yoy"]}% — 90일 게이트(낙폭 축소) 미달, 하락 지속',
+                  "action": "KR1 게이트 재판정 · 개입 시점 대비 초과분 확인 필요"})
+
+    jr = k["jeju_ratio"]
+    if (jr["abs_yoy"] or 0) <= (k["brand_search"]["yoy"] or 0):
+        a.append({"level": "high", "kpi": "‘제주’ 연상",
+                  "msg": f'제주 절대 지수 {jr["abs_yoy"]}%가 브랜드 {k["brand_search"]["yoy"]}%보다 빠르게 하락',
+                  "action": "‘브랜드보다 오래 버틴다’는 우위가 소멸 — 헤리티지 캠페인 우선순위 상향"})
+    if jr["current"] < jr["peak"]:
+        a.append({"level": "mid", "kpi": "‘제주’ 연상",
+                  "msg": f'{jr["peak_year"]}년 {jr["peak"]}% 정점 이후 {jr["current"]}%로 정체',
+                  "action": "비중만 보지 말고 절대 지수와 함께 판정"})
+
+    s = k["share"]
+    if s["direct"] < s["direct_prev"]:
+        a.append({"level": "high", "kpi": "경쟁 검색 점유율",
+                  "msg": f'직접경쟁 3사 기준 {s["direct_prev"]}% → {s["direct"]}% 하락',
+                  "action": "KR4 게이트 미달 — 3CE·미샤 대비 상대 위치 점검"})
+    if s["all4"] is not None and s["all4"] > s["all4_prev"]:
+        a.append({"level": "info", "kpi": "경쟁 검색 점유율",
+                  "msg": f'토니모리 포함 4사 기준은 {s["all4_prev"]}% → {s["all4"]}%로 상승(착시)',
+                  "action": "토니모리 붕괴 효과 — 이 수치를 성과로 인용하지 말 것"})
+
+    if k["aeo"]["score"] < k["aeo"]["total"]:
+        a.append({"level": "mid", "kpi": "AEO/SEO",
+                  "msg": f'{k["aeo"]["score"]}/{k["aeo"]["total"]} 충족 — 미완료 항목 존재',
+                  "action": "랜딩페이지 신규 제작(Part 5 30~90일)과 연동"})
+
+    if prev:
+        pk = prev.get("kpi", {})
+        pb = (pk.get("brand_search") or {}).get("yoy")
+        cb = k["brand_search"]["yoy"]
+        if pb is not None and cb is not None and abs(cb - pb) >= 3:
+            a.append({"level": "info", "kpi": "변화 감지",
+                      "msg": f'직전 갱신 대비 브랜드 YoY {pb}% → {cb}% ({cb-pb:+.1f}%p)',
+                      "action": "구간·정의 변경 여부 먼저 확인 후 해석"})
+    return a
+
+
+# ── 스냅샷 ────────────────────────────────────────────────────
+def load_prev_snapshot() -> dict | None:
+    if not SNAPDIR.exists():
+        return None
+    files = sorted(SNAPDIR.glob("*.json"))
+    if not files:
+        return None
+    try:
+        return json.loads(files[-1].read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def diff_vs(prev: dict | None, cur: dict) -> dict:
+    if not prev:
+        return {"base": None, "rows": []}
+    fields = [
+        ("브랜드 검색 YoY", ["kpi", "brand_search", "yoy"], "%"),
+        ("‘제주’ 연상 비중", ["kpi", "jeju_ratio", "current"], "%"),
+        ("제품↔브랜드 Gap", ["kpi", "gap", "ytd"], "%p"),
+        ("점유율(직접 3사)", ["kpi", "share", "direct"], "%"),
+        ("AEO 충족", ["kpi", "aeo", "score"], "/4"),
+    ]
+    rows = []
+    for label, path, unit in fields:
+        def dig(d):
+            for p in path:
+                d = (d or {}).get(p) if isinstance(d, dict) else None
+            return d
+        a, b = dig(prev), dig(cur)
+        if a is None or b is None:
+            continue
+        rows.append({"label": label, "prev": a, "cur": b,
+                     "delta": round(b - a, 2), "unit": unit})
+    return {"base": prev.get("meta", {}).get("generated_at"), "rows": rows}
+
+
+# ── 빌드 ──────────────────────────────────────────────────────
+def build(live=False, standalone=False) -> dict:
+    print("[1/4] " + ("NAVER 데이터랩 라이브 재조회" if live else "저장소 CSV 사용 (오프라인)"))
+    if live:
+        refresh_live()
+
+    print("[2/4] 집계")
     api = load_monthly_api()
     daily = load_daily_summary()
 
-    brand = api["3:브랜드"]
-    jeju = api["3:제주"]
-    greentea = api["3:그린티"]
-    volcanic = api["3:화산송이"]
+    brand, jeju = api["3:브랜드"], api["3:제주"]
+    greentea, volcanic = api["3:그린티"], api["3:화산송이"]
     product = api["1:제품군"]
-    inn = api["2:이니스프리"]
-    tony = api["2:토니모리"]
-    misha = api["2:미샤"]
+    comp = {n: api.get(f"2:{n}") for n in ["이니스프리", "미샤", "3CE", "토니모리", "에뛰드"]}
+    comp = {k: v for k, v in comp.items() if v}
+    has3ce = "3CE" in comp
 
     all_months = sorted(brand)
-    last_full = max(m for m in all_months if len(months_of(brand, int(m[:4]))) >= int(m[5:7]))
-    # 미완월 판정: 마지막 월은 조회일 기준 진행 중일 수 있음 → 집계에서 제외
-    latest = all_months[-1]
-    complete = all_months[:-1] if len(all_months) > 1 else all_months
-    ytd_month = int(complete[-1][5:7]) if complete[-1].startswith(complete[-1][:4]) else 7
-    cur_year = int(complete[-1][:4])
+    complete = all_months[:-1]
+    cur_year, ytd_month = int(complete[-1][:4]), int(complete[-1][5:7])
     prev_year = cur_year - 1
-    if ytd_month == 12:
-        ytd_month = 12
+    full_years = [y for y in sorted({int(m[:4]) for m in all_months}) if annual(brand, y) is not None]
 
-    # 연도별 시계열 (월간 API 계열)
-    years = sorted({int(m[:4]) for m in all_months})
-    full_years = [y for y in years if annual(brand, y) is not None]
+    jeju_ratio = {str(y): round(annual(jeju, y) / annual(brand, y) * 100, 2) for y in full_years}
 
-    def annual_series(s):
-        return {str(y): round(annual(s, y), 4) for y in full_years if annual(s, y) is not None}
+    def share_of(names, y, use_ytd=False):
+        f = (lambda s: ytd(s, y, ytd_month)) if use_ytd else (lambda s: annual(s, y))
+        vs = {n: f(comp[n]) for n in names if n in comp}
+        if len(vs) != len(names) or any(v is None for v in vs.values()):
+            return None
+        return round(vs["이니스프리"] / sum(vs.values()) * 100, 1)
 
-    # 제주 단독 비중
-    jeju_ratio = {str(y): round(annual(jeju, y) / annual(brand, y) * 100, 2)
-                  for y in full_years}
-    product_ratio = {str(y): round(annual(product, y) / annual(brand, y) * 100, 2)
-                     for y in full_years}
+    share_direct = {str(y): share_of(DIRECT, y) for y in full_years}
+    share_pair = {str(y): share_of(PAIR, y) for y in full_years}
+    share_all4 = {str(y): share_of(ALL4, y) for y in full_years}
 
-    # 점유율 3사 / 2사
-    share3, share2 = {}, {}
-    for y in full_years:
-        i, t, m = annual(inn, y), annual(tony, y), annual(misha, y)
-        share3[str(y)] = round(i / (i + t + m) * 100, 1)
-        share2[str(y)] = round(i / (i + m) * 100, 1)
-
-    # YTD 동일구간 비교 (계절성 통제)
     ytd_cur = {k: ytd(s, cur_year, ytd_month) for k, s in
-               dict(brand=brand, jeju=jeju, product=product, inn=inn, tony=tony, misha=misha).items()}
+               dict(brand=brand, jeju=jeju, product=product).items()}
     ytd_prev = {k: ytd(s, prev_year, ytd_month) for k, s in
-                dict(brand=brand, jeju=jeju, product=product, inn=inn, tony=tony, misha=misha).items()}
-
-    def ytd_share(d):
-        return round(d["inn"] / (d["inn"] + d["misha"]) * 100, 1), \
-               round(d["inn"] / (d["inn"] + d["tony"] + d["misha"]) * 100, 1)
-
-    s2_cur, s3_cur = ytd_share(ytd_cur)
-    s2_prev, s3_prev = ytd_share(ytd_prev)
+                dict(brand=brand, jeju=jeju, product=product).items()}
 
     brand_yoy = pct(ytd_prev["brand"], ytd_cur["brand"])
     product_yoy = pct(ytd_prev["product"], ytd_cur["product"])
-    jeju_ratio_cur = round(ytd_cur["jeju"] / ytd_cur["brand"] * 100, 2)
-    jeju_ratio_prev = round(ytd_prev["jeju"] / ytd_prev["brand"] * 100, 2)
-    # Gap은 반올림값끼리 빼면 오차가 누적되므로 원값으로 계산한 뒤 반올림한다
     gap = None
     if None not in (ytd_prev["product"], ytd_cur["product"], ytd_prev["brand"], ytd_cur["brand"]):
         gap = round((ytd_cur["product"] - ytd_prev["product"]) / ytd_prev["product"] * 100
                     - (ytd_cur["brand"] - ytd_prev["brand"]) / ytd_prev["brand"] * 100, 1)
 
-    # 월별 2사 점유율 (KPI 카드 스파크라인용)
-    share2_monthly = [
-        round(inn[m] / (inn[m] + misha[m]) * 100, 2) if inn.get(m) and misha.get(m) else None
-        for m in all_months
-    ]
+    # 월별 점유율 (스파크라인)
+    def monthly_share(names):
+        out = []
+        for m in all_months:
+            vs = [comp[n].get(m) for n in names if n in comp]
+            out.append(round(vs[0] / sum(vs) * 100, 2) if len(vs) == len(names) and all(vs) else None)
+        return out
 
-    # ── 일간 정밀 계열 (표준수치표 기준) ──────────────────────────
-    # 월간요약 CSV의 값은 '월평균'이므로, 그냥 12개를 평균하면 월 길이가 무시된
-    # 단순평균 계열(8.515·YoY -38.6%)이 나온다. 이는 2026-08-19에 폐기된 계열이다.
-    # 각 월평균에 그 달의 일수를 가중해야 1,826일 참평균(8.503·YoY -38.5%)이 재현된다.
-    import calendar
-
-    def daily_annual(col: str, year: int) -> float | None:
+    # 일간 정밀 계열 (월평균에 일수 가중 → 1,826일 참평균 재현)
+    def daily_annual(col, year):
         num = den = 0.0
         for mth in range(1, 13):
             key = f"{year}-{mth:02d}"
             if key not in daily.get(col, {}):
                 return None
-            days = calendar.monthrange(year, mth)[1]
-            num += daily[col][key] * days
-            den += days
+            d = calendar.monthrange(year, mth)[1]
+            num += daily[col][key] * d
+            den += d
         return num / den if den else None
 
-    DAILY_YEARS = range(2021, 2026)
+    DY = range(2021, 2026)
     daily_brand = {str(y): round(daily_annual("이니스프리", y), 3)
-                   for y in DAILY_YEARS if daily_annual("이니스프리", y) is not None}
+                   for y in DY if daily_annual("이니스프리", y) is not None}
     daily_yoy = {}
     ys = sorted(daily_brand)
     for a, b in zip(ys, ys[1:]):
         daily_yoy[b] = round((daily_brand[b] - daily_brand[a]) / daily_brand[a] * 100, 1)
-
-    # 제품군 비중도 같은 계열로 산출해 표준수치표(1.07% → 11.67%)와 일치시킨다
     daily_product_ratio = {}
-    for y in DAILY_YEARS:
+    for y in DY:
         b, p = daily_annual("이니스프리", y), daily_annual("기능성", y)
         if b and p:
             daily_product_ratio[str(y)] = round(p / b * 100, 2)
 
-    print("[3/3] JSON 출력")
+    kpi = {
+        "brand_search": {"yoy": brand_yoy,
+                         "cum5y": pct(annual(brand, full_years[0]), annual(brand, full_years[-1]))},
+        "jeju_ratio": {"current": round(ytd_cur["jeju"] / ytd_cur["brand"] * 100, 2),
+                       "prev": round(ytd_prev["jeju"] / ytd_prev["brand"] * 100, 2),
+                       "peak_year": max(jeju_ratio, key=lambda k: jeju_ratio[k]),
+                       "peak": max(jeju_ratio.values()),
+                       "abs_yoy": pct(ytd_prev["jeju"], ytd_cur["jeju"])},
+        "gap": {"ytd": gap, "brand_yoy": brand_yoy, "product_yoy": product_yoy},
+        "share": {
+            "direct": share_of(DIRECT, cur_year, True), "direct_prev": share_of(DIRECT, prev_year, True),
+            "pair": share_of(PAIR, cur_year, True), "pair_prev": share_of(PAIR, prev_year, True),
+            "all4": share_of(ALL4, cur_year, True), "all4_prev": share_of(ALL4, prev_year, True),
+            "members": DIRECT,
+        },
+        "aeo": {"score": 1, "total": 4, "checked": "2026-08-19", "items": [
+            {"k": "llms.txt", "ok": True, "note": "200 OK · 2026-08-19 신규 생성(8/18에는 404)"},
+            {"k": "robots.txt AI 크롤러 규칙", "ok": False, "note": "범용 규칙만 존재"},
+            {"k": "FAQPage 스키마(JSON-LD)", "ok": None, "note": "정적 조회 한계 · 판정 보류"},
+            {"k": "FAQ형 콘텐츠 비중", "ok": False, "note": "제품나열형 구조"},
+        ]},
+    }
+
+    prev_snap = load_prev_snapshot()
     data = {
         "meta": {
             "generated_at": datetime.now(KST).strftime("%Y-%m-%d %H:%M KST"),
             "source_mode": "live" if live else "repo",
             "coverage": f"{all_months[0]} ~ {all_months[-1]}",
-            "latest_partial_month": latest,
+            "latest_partial_month": all_months[-1],
             "ytd_window": f"{cur_year} 1~{ytd_month}월 vs {prev_year} 동기",
             "definitions": {
                 "jeju": "'이니스프리 제주' 단독 ÷ 브랜드 (2026-08-19 확정 · 합산 금지)",
-                "share": "3사·2사 병기, 게이트 판정은 2사(이니스프리+미샤)",
+                "share": "직접경쟁 3사(이니스프리·미샤·3CE) 기준 판정 · 2사·4사 참고 병기",
                 "index": "월간 API 계열(라이브) · 과거 확정치는 일간 정밀 계열 병기",
                 "standard_doc": "02_수집자료/검색지수_표준수치표_2021-2026.md",
             },
             "sources": ["NAVER 데이터랩 검색어트렌드", "DART 감사보고서", "공정거래위원회 정보공개서",
                         "한국기업평판연구소", "Meta 광고 라이브러리"],
         },
-        "kpi": {
-            "brand_search": {"yoy": brand_yoy, "cum5y": pct(annual(brand, full_years[0]),
-                                                            annual(brand, full_years[-1]))},
-            "jeju_ratio": {"current": jeju_ratio_cur, "prev": jeju_ratio_prev,
-                           "peak_year": max(jeju_ratio, key=lambda k: jeju_ratio[k]),
-                           "peak": max(jeju_ratio.values()),
-                           "abs_yoy": pct(ytd_prev["jeju"], ytd_cur["jeju"])},
-            "gap": {"ytd": gap, "brand_yoy": brand_yoy, "product_yoy": product_yoy},
-            "share": {"two": s2_cur, "two_prev": s2_prev, "three": s3_cur, "three_prev": s3_prev},
-            "aeo": {"score": 1, "total": 4, "checked": "2026-08-19",
-                    "items": [
-                        {"k": "llms.txt", "ok": True, "note": "200 OK · 2026-08-19 신규 생성(8/18에는 404)"},
-                        {"k": "robots.txt AI 크롤러 규칙", "ok": False, "note": "범용 규칙만 존재"},
-                        {"k": "FAQPage 스키마(JSON-LD)", "ok": None, "note": "정적 조회 한계 · 판정 보류"},
-                        {"k": "FAQ형 콘텐츠 비중", "ok": False, "note": "제품나열형 구조"},
-                    ]},
-        },
+        "kpi": kpi,
+        "alerts": make_alerts(kpi, prev_snap),
+        "diff": diff_vs(prev_snap, {"kpi": kpi}),
         "series": {
             "monthly": {"months": all_months,
                         "brand": [brand[m] for m in all_months],
@@ -309,19 +366,17 @@ def build(live: bool = False) -> dict:
                         "greentea": [greentea.get(m) for m in all_months],
                         "volcanic": [volcanic.get(m) for m in all_months],
                         "product": [product.get(m) for m in all_months],
-                        "tony": [tony.get(m) for m in all_months],
-                        "misha": [misha.get(m) for m in all_months],
-                        "share2": share2_monthly},
+                        **{f"c_{n}": [comp[n].get(m) for m in all_months] for n in comp},
+                        "share_direct": monthly_share(DIRECT),
+                        "share_pair": monthly_share(PAIR)},
             "annual": {"years": [str(y) for y in full_years],
-                       "brand_api": annual_series(brand),
-                       "brand_daily": daily_brand,
-                       "brand_daily_yoy": daily_yoy,
-                       "jeju_ratio": jeju_ratio,
-                       "product_ratio": daily_product_ratio,
-                       "product_ratio_api": product_ratio,
-                       "share3": share3, "share2": share2},
+                       "brand_api": {str(y): round(annual(brand, y), 4) for y in full_years},
+                       "brand_daily": daily_brand, "brand_daily_yoy": daily_yoy,
+                       "jeju_ratio": jeju_ratio, "product_ratio": daily_product_ratio,
+                       "share_direct": share_direct, "share_pair": share_pair, "share_all4": share_all4,
+                       "competitors": {n: {str(y): round(annual(comp[n], y), 3)
+                                           for y in full_years if annual(comp[n], y)} for n in comp}},
         },
-        # 저장소 문서에서 확정된 비검색 지표 (출처 주석 포함)
         "fixed": {
             "stores": {"2021": 400, "2022": 324, "2023": 234, "2024": 190,
                        "_note": "공정위 정보공개서 · 2024년말 190개가 인용 가능한 최신 공식치. 147개는 2025 가맹점협의회 주장치(비공식)"},
@@ -333,31 +388,76 @@ def build(live: bool = False) -> dict:
                            {"p": "2023 하반기", "rank": 2}, {"p": "2024H2~2025", "rank": 3},
                            {"_note": "버즈량 지표이지 선호도 아님 · 결측월 많아 분기 경향으로만 인용"}],
             "meta_ads": {"이니스프리": 220, "토니모리": 64, "미샤": 4, "3CE": 10,
-                         "_note": "브랜드 스토리텔링 광고는 네 브랜드 모두 0건. 3CE는 참고군(로레알·색조 전문)"},
+                         "_note": "브랜드 스토리텔링 광고는 네 브랜드 모두 0건"},
         },
         "events": [
             {"date": "2023-02", "label": "리브랜딩 발표", "kind": "major",
              "desc": "제주 → THE NEW ISLE 세계관 전환, 로고·컬러·용기·매장 전면 교체"},
             {"date": "2023-04", "label": "그린티 캠페인 피크", "kind": "minor",
              "desc": "2022 연평균 대비 2.73배"},
-            {"date": "2024-01", "label": "광고선전비 -20.6%", "kind": "major",
+            {"date": "2024-01", "label": "광고선전비 −20.6%", "kind": "major",
              "desc": "증액 1년 만에 철회 · 같은 해 브랜드 검색 최대 낙폭"},
             {"date": "2024-07", "label": "PDRN 앰플 출시", "kind": "minor",
              "desc": "출시 당일 올리브영 판매 1위(회사 발표 기준)"},
             {"date": "2026-02", "label": "토니모리 레벨 시프트", "kind": "warn",
-             "desc": "대조군 붕괴 · 검색량 대조군을 미샤로 대체(2026-08-19 확정)"},
+             "desc": "대조군 붕괴 · 검색량 대조군을 미샤·3CE로 대체(2026-08-19 확정)"},
         ],
     }
 
+    print("[3/4] JSON·스냅샷 출력")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"완료 → {OUT.relative_to(REPO)}  ({OUT.stat().st_size/1024:.0f} KB)")
+    SNAPDIR.mkdir(parents=True, exist_ok=True)
+    (SNAPDIR / f"{datetime.now(KST):%Y-%m-%d}.json").write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    print("[4/4] " + ("공유용 단일 HTML 생성" if standalone else "완료"))
+    if standalone:
+        make_standalone(data)
+
+    print(f"→ {OUT.relative_to(REPO)}  ({OUT.stat().st_size/1024:.0f} KB)")
     print(f"  기간 {data['meta']['coverage']} · 모드 {data['meta']['source_mode']}")
-    print(f"  브랜드 YoY {brand_yoy}% · 제주 {jeju_ratio_cur}% · 점유율(2사) {s2_cur}%")
+    print(f"  브랜드 YoY {brand_yoy}% · 제주 {kpi['jeju_ratio']['current']}% · "
+          f"점유율(직접3사) {kpi['share']['direct']}% · 경보 {len(data['alerts'])}건")
+    if has3ce:
+        print(f"  3CE 편입됨 — 직접경쟁 {DIRECT}")
     return data
+
+
+def make_standalone(data: dict):
+    """공유용 단일 HTML — 데이터·CSS·JS를 한 파일에 인라인(외부 요청 0)."""
+    html = (HERE / "index.html").read_text(encoding="utf-8")
+    css = (HERE / "assets" / "style.css").read_text(encoding="utf-8")
+    js = (HERE / "assets" / "app.js").read_text(encoding="utf-8")
+    import re
+    # 치환 문자열에 JS/CSS의 백슬래시(정규식 \s 등)가 그대로 들어가므로 람다로 넘긴다
+    html = re.sub(r'<link rel="stylesheet" href="assets/style\.css[^"]*">',
+                  lambda _: f"<style>\n{css}\n</style>", html)
+    payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    html = re.sub(r'<script src="assets/app\.js[^"]*"></script>',
+                  lambda _: (f'<script>window.__DATA__={payload};</script>\n'
+                             f'<script>\n{js}\n</script>'), html)
+    # 외부 폰트 제거 (공유 환경의 CSP 차단 대비) — 시스템 한글 폰트로 대체
+    html = html.replace(
+        '<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">',
+        '<!-- 공유본: 외부 폰트 대신 시스템 한글 폰트 사용 -->')
+    out = HERE / "share" / "dashboard_share.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(html, encoding="utf-8")
+    print(f"  공유본 → {out.relative_to(REPO)}  ({out.stat().st_size/1024:.0f} KB)")
+
+    # 웹 게시(Artifact)용 조각 — 문서 골격은 게시 측이 감싸므로 body 내용만 남긴다
+    body = re.search(r"<body[^>]*>(.*)</body>", html, re.S)
+    style = re.search(r"<style>.*?</style>", html, re.S)
+    frag = (style.group(0) if style else "") + "\n" + (body.group(1) if body else html)
+    frag_out = HERE / "share" / "artifact.html"
+    frag_out.write_text(frag, encoding="utf-8")
+    print(f"  게시용 조각 → {frag_out.relative_to(REPO)}  ({frag_out.stat().st_size/1024:.0f} KB)")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="대시보드 데이터 빌드")
     ap.add_argument("--live", action="store_true", help="NAVER API 재조회 후 빌드")
-    build(live=ap.parse_args().live)
+    ap.add_argument("--standalone", action="store_true", help="공유용 단일 HTML 생성")
+    a = ap.parse_args()
+    build(live=a.live, standalone=a.standalone)
