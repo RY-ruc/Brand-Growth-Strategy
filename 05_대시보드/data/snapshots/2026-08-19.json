@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated_at": "2026-08-19 16:28 KST",
+  "generated_at": "2026-08-19 16:50 KST",
   "source_mode": "repo",
   "coverage": "2021-01 ~ 2026-08",
   "latest_partial_month": "2026-08",
@@ -116,7 +116,7 @@
   }
  ],
  "diff": {
-  "base": "2026-08-19 16:24 KST",
+  "base": "2026-08-19 16:28 KST",
   "rows": [
    {
     "label": "브랜드 검색 YoY",
