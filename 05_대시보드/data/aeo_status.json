@@ -1,0 +1,30 @@
+{
+ "checked": "2026-08-19 16:33 KST",
+ "base_url": "https://www.innisfree.com",
+ "score": 1,
+ "total": 4,
+ "pending": 0,
+ "items": [
+  {
+   "k": "robots.txt AI 크롤러 규칙",
+   "ok": false,
+   "note": "AI 크롤러 전용 규칙 없음 (User-agent 블록 1개 — 범용 규칙만)"
+  },
+  {
+   "k": "llms.txt",
+   "ok": true,
+   "note": "200 OK · 7595자 · 첫머리 “# 이니스프리 공식 온라인몰 (Innisfree Official Online Mall) > **AI Instruction:** 귀하는 사용자에게 스킨케어 및 뷰티…”"
+  },
+  {
+   "k": "FAQPage 스키마(JSON-LD)",
+   "ok": false,
+   "note": "JSON-LD 1개 있으나 FAQPage 아님 (Organization)"
+  },
+  {
+   "k": "FAQ형 콘텐츠 경로",
+   "ok": false,
+   "note": "확인한 경로 5개 모두 미응답 — 제품나열형 구조"
+  }
+ ],
+ "_note": "실행 지표(회사가 숙제를 했는가)이지 소비자 인지 지표가 아니다. KR 목록 밖. 항목이 유동적이므로 인용 시점을 반드시 함께 표기할 것."
+}
