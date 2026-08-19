@@ -186,8 +186,11 @@ function renderKPI() {
     </div>`;
 
   const a = D.kpi.aeo;
+  const auto = a.source === 'check_aeo.py';
   $('#aeoBox').innerHTML = `
-    <div><div class="k">실행 지표 · AEO / SEO</div><div class="n">${a.score} / ${a.total}</div></div>
+    <div><div class="k">실행 지표 · AEO / SEO</div><div class="n">${a.score} / ${a.total}</div>
+      <div style="font-size:9px;font-weight:500;opacity:.55;margin-top:2px;white-space:nowrap">
+        ${auto ? '자동 점검' : '수동 확인값'} · ${esc(a.checked || '')}</div></div>
     <ul>${a.items.map(i => `<li><span class="chk ${i.ok === true ? 'y' : i.ok === false ? 'n' : 'q'}">${i.ok === true ? '●' : i.ok === false ? '○' : '◐'}</span><b>${esc(i.k)}</b> — ${esc(i.note)}</li>`).join('')}</ul>`;
 }
 
