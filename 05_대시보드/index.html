@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이니스프리 브랜드 인지도 진단·모니터링 대시보드</title>
+<meta name="description" content="공개 데이터 기반 이니스프리 브랜드 인지도 진단 및 KPI 모니터링 대시보드">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=20260819c">
+</head>
+<body>
+
+<button class="burger" aria-label="메뉴 열기">☰</button>
+<div class="scrim"></div>
+
+<aside>
+  <div class="mark">innisfree<span>AWARENESS MONITOR</span></div>
+
+  <div class="nav">
+    <div class="grp">화면</div>
+    <a href="#monitor" data-go="monitor" class="on"><span class="idx">01</span>KPI 모니터링</a>
+    <a href="#analysis" data-go="analysis"><span class="idx">02</span>분석 재현</a>
+    <a href="#table" data-go="table"><span class="idx">03</span>연도별 원표</a>
+    <a href="#method" data-go="method"><span class="idx">04</span>정의 · 방법론</a>
+  </div>
+
+  <div class="blk"><div class="k">지표 정의</div><div class="v" id="defBox">불러오는 중…</div></div>
+  <div class="blk"><div class="k">데이터 소스</div><div class="v" id="srcBox">불러오는 중…</div></div>
+
+  <button class="livebtn" id="liveBtn">↻ API 갱신 방법</button>
+  <div class="sidefoot" id="sideFoot"></div>
+</aside>
+
+<main>
+  <div class="top">
+    <div>
+      <h1>브랜드 인지도 진단·모니터링</h1>
+      <p>과거 데이터로 문제를 진단하고, 동일 KPI를 지속 모니터링하여 브랜드 인지도의 회복 여부를 확인합니다.</p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </div>
+
+  <!-- ── 화면 1: KPI 모니터링 ─────────────────── -->
+  <section data-view="monitor">
+    <div class="sec">핵심 성과 지표 <small>90 / 180 / 360일 게이트 · 판정 기준은 사이드바 정의 참고</small></div>
+    <div class="strip" id="kpiStrip"></div>
+    <div class="aeo" id="aeoBox"></div>
+
+    <div class="sec">경쟁 검색 점유율 <small>3사·2사 병기 · 게이트 판정은 2사 기준(2026-08-19 확정)</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>점유율 추이 — 2사 vs 3사</h3>
+        <div class="src">NAVER 데이터랩 · 동일 척도 그룹 조회 · 연평균</div>
+        <div class="chartbox" id="chartShare"></div>
+        <div class="cap"><b>왜 두 선인가</b> 3사(이니스프리+미샤+토니모리)는 2026년에 올라 보이지만, 이는 토니모리가 2026-02부터 붕괴(YoY −53.5%)한 착시다. 2사 기준으로 보면 여전히 하락 중이다.</div>
+      </div>
+      <div class="p">
+        <h3>‘제주’ 연상 비중 — 단독 정의</h3>
+        <div class="src">확정 2026-08-19 · 화산송이·그린티 합산 금지</div>
+        <div class="chartbox" id="chartJeju"></div>
+        <div class="cap"><b>읽는 법</b> 비중이 오른 것은 제주가 늘어서가 아니라 분모(브랜드 검색)가 더 빨리 무너졌기 때문이다. 2024년 정점 이후 보합이며, 2025년부터는 제주 절대 검색도 브랜드만큼 빠진다.</div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="q">회사는 제주를 뗐지만,<br>소비자는 아직 제주로 브랜드를 기억한다.</div>
+      <div class="a">브랜드 검색이 5년간 −72.9% 빠지는 동안 ‘제주’ 연상 비중은 0.34%에서 0.52%로 버텼다. 다만 이 비중은 제주가 늘어서가 아니라 분모가 더 빨리 무너져 생긴 것이며, 2025년부터는 제주 절대 검색도 브랜드만큼 빠지기 시작했다 — 쓸 수 있는 동안 써야 하는 자산이다.</div>
+    </div>
+  </section>
+
+  <!-- ── 화면 2: 분석 재현 ────────────────────── -->
+  <section data-view="analysis" hidden>
+    <div class="sec">분석 재현 <small>제안 근거로 쓴 데이터를 그대로 확인 · 2021–2025 확정 데이터</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>브랜드 검색 vs 제품군 검색 (월간)</h3>
+        <div class="src">NAVER 데이터랩 · 월간 API 계열 · 세로 점선은 주요 이벤트</div>
+        <div class="chartbox" id="chartTrend"></div>
+        <div class="cap"><b>스케일 주의</b> 두 계열은 절대 크기 차이가 커서 <b>각자의 축</b>으로 그렸다 — 선의 높낮이를 서로 비교하지 말고 <b>기울기(방향)만</b> 볼 것. 실제로 제품군은 브랜드의 1/10 규모다.</div>
+        <div class="cap">리브랜딩 해에 브랜드는 −23.9%, 제품군은 +118.5%로 정반대로 움직였다. 광고선전비를 41.6% 늘린 바로 그 해다. <b>돈이 만든 것은 브랜드가 아니라 제품 한 줄이었다.</b></div>
+      </div>
+      <div class="p">
+        <h3>브랜드평판 순위</h3>
+        <div class="src">한국기업평판연구소 · 화장품전문점 카테고리(1위는 항상 올리브영)</div>
+        <div class="chartbox" id="chartRep"></div>
+        <div class="cap"><b>주의</b> 버즈량(언급량) 지표이지 소비자 선호도가 아니다. 결측월이 많아 분기 단위 경향으로만 인용하고, 순위 하락에서 미샤 상승 기여를 분리해 설명해야 한다.</div>
+      </div>
+    </div>
+
+    <div class="three">
+      <div class="p">
+        <h3>매장 수 ↔ 브랜드 검색</h3>
+        <div class="src">공정위 정보공개서 · r = 0.98 (R²=0.97)</div>
+        <div class="chartbox" id="chartStore"></div>
+        <div class="cap"><b>주의</b> 상관이지 인과가 아니다. 연간 n=4로 표본이 작고, 역인과(수요 감소 → 채산성 악화 → 폐점)를 배제하지 못한다. “매장을 늘리면 검색이 는다”로 읽지 말 것.</div>
+      </div>
+      <div class="p">
+        <h3>광고선전비 ↔ 브랜드 검색</h3>
+        <div class="src">DART 감사보고서 주석21 · r = −0.03</div>
+        <div class="chartbox" id="chartAd"></div>
+        <div class="cap"><b>주의</b> 무상관(r≈0)을 “광고가 무의미하다”로 단정하지 않는다. n=5, 채널별 반응 시차 미반영. 같은 돈이 제품 검색과는 r=+0.69로 연결됐다.</div>
+      </div>
+      <div class="p">
+        <h3>이벤트 타임라인</h3>
+        <div class="src">개입 시점 — KR 판정의 기준선</div>
+        <div class="tblwrap"><table><tbody id="eventList"></tbody></table></div>
+        <div class="cap">모든 KR이 “자연 추세 대비 초과분”으로 판정되도록 설계돼 있어, 개입 시점을 함께 보지 않으면 성과 판정이 불가능하다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 화면 3: 연도별 원표 ──────────────────── -->
+  <section data-view="table" hidden>
+    <div class="sec">연도별 원표 <small>인용 시 이 표를 기준으로 · 계열 혼용 금지</small></div>
+    <div class="p">
+      <h3>2021–2025 통합 지표</h3>
+      <div class="src">브랜드 지수는 일간 정밀 계열(1,826일 참평균) · 비중·점유율은 월간 API 계열</div>
+      <div class="tblwrap" id="tblAnnual"></div>
+      <div class="cap"><b>계열 주의</b> 브랜드 지수는 집계 방식에 따라 값이 갈린다(일간 정밀 −38.5% / 월간 API −38.4% / 단순평균 −38.6%). 문서 간 통일 기준은 <code>02_수집자료/검색지수_표준수치표_2021-2026.md</code>를 따른다.</div>
+    </div>
+  </section>
+
+  <!-- ── 화면 4: 정의·방법론 ──────────────────── -->
+  <section data-view="method" hidden>
+    <div class="sec">지표 정의 · 방법론 <small>2026-08-19 팀 확정</small></div>
+    <div class="p">
+      <h3>KPI 정의</h3>
+      <div class="src">각 지표의 산식·데이터 출처·주의사항</div>
+      <div class="tblwrap"><table>
+        <thead><tr><th>KPI</th><th style="text-align:left">정의 · 산식</th><th style="text-align:left">주의</th></tr></thead>
+        <tbody>
+          <tr><td class="hi">브랜드 검색지수</td><td style="text-align:left">데이터랩에 <code>이니스프리</code> 단일 키워드 조회 → 월간 상대지수</td><td style="text-align:left">요청 단위로 재정규화되므로 다른 조회와 절대값 비교 불가</td></tr>
+          <tr><td class="hi">‘제주’ 연상 비중</td><td style="text-align:left"><code>이니스프리 제주</code> <b>단독</b> ÷ <code>이니스프리</code> (같은 요청 안에서)</td><td style="text-align:left"><b>합산 금지.</b> 화산송이·그린티를 합치면 같은 구간이 상승·하락·보합으로 갈린다</td></tr>
+          <tr><td class="hi">제품↔브랜드 Gap</td><td style="text-align:left">제품군 YoY − 브랜드 YoY (%p)</td><td style="text-align:left">비교 구간에 따라 부호가 뒤집힌다. 단독 인용 금지, 두 성장률 병기</td></tr>
+          <tr><td class="hi">AEO/SEO 대응</td><td style="text-align:left">robots.txt·llms.txt·FAQPage 스키마 등 4항목 Boolean 충족률</td><td style="text-align:left">소비자 인지가 아니라 <b>실행 지표</b>. KR 목록 밖. 항목 자체가 유동적</td></tr>
+          <tr><td class="hi">경쟁 검색 점유율</td><td style="text-align:left">2사 = 이니 ÷ (이니+미샤) · 3사 = ÷ (이니+미샤+토니모리)</td><td style="text-align:left">게이트 판정은 <b>2사</b>. 토니모리는 2026-02 붕괴로 검색량 대조군에서 제외</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="p" style="margin-top:12px">
+      <h3>데이터 파이프라인</h3>
+      <div class="src">저장소 연결 · API 갱신</div>
+      <div class="cap" style="border-left-color:var(--sage)">
+        <b>저장소 연결</b> — <code>build_data.py</code>가 <code>02_수집자료/</code>의 원자료 CSV(데이터랩 월간·일간)를 읽어
+        <code>data/dashboard_data.json</code> 하나로 집계합니다. 매장 수·광고선전비·상관계수·평판 순위 등
+        비검색 지표는 공정위·DART 확정치를 출처 주석과 함께 담습니다.
+      </div>
+      <div class="cap" style="margin-top:8px;border-left-color:var(--sage)">
+        <b>API 갱신</b> — <code>python build_data.py --live</code> 를 실행하면 NAVER 데이터랩을 최신 월까지 재조회해
+        <code>02_수집자료/</code> CSV·JSON을 갱신하고 대시보드 데이터를 다시 만듭니다.
+        API 키는 <code>.env</code>에만 두고 브라우저로 내보내지 않습니다.
+      </div>
+      <div class="cap" style="margin-top:8px">
+        <b>주의</b> 마지막 월은 조회 시점에 진행 중일 수 있어 모든 집계에서 제외합니다.
+        YoY는 <b>같은 달끼리</b>(1~N월 vs 전년 1~N월) 비교해 계절성을 구조적으로 통제합니다.
+      </div>
+    </div>
+  </section>
+
+  <div class="foothint">
+    <b>이니스프리 브랜드 인지도 진단·모니터링 대시보드</b> · 시안 3 「그린티 필드」 스타일 —
+    리브랜딩 무드보드(베이잘트·리파인드 포레스트·스톤 베이지·동백 로즈)와 캠페인 무드보드(세이지) 팔레트 결합.<br>
+    타이포 규칙 준수: 헤드라인·수치는 Noto Sans KR Black(자간 −0.05em), UI 본문은 Regular/Light,
+    세리프(Gowun Batang)는 브랜드 스토리 블록 한 곳으로 한정.<br>
+    공개된 감사보고서·공정거래위원회 정보공개서·네이버 데이터랩·언론보도를 근거로 한 학습용 분석이며,
+    이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획입니다.
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="assets/app.js?v=20260819c"></script>
+</body>
+</html>
