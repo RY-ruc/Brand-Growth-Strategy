@@ -257,6 +257,57 @@ function renderDecay(d) {
   }
 }
 
+/* 롱테일 기회 — 고유명사가 일반명사보다 크다는 실측.
+   회사가 이미 '노세범'(고유 라인명)을 타겟 질의어로 걸어 성공했다는 것이 핵심 근거다. */
+function renderLongtail(lt) {
+  if (!lt || !lt.calls) { $('#ltSec')?.remove(); $('#ltWrap')?.remove(); return; }
+  const A = lt.calls['A']?.items || [], B = lt.calls['B']?.items || [];
+  const own = A.map(i => ({ ...i, kind: 'own' }));
+  const gen = B.filter(i => /일반/.test(i.name)).map(i => ({ ...i, kind: 'gen' }));
+  const rows = [...own, ...gen].sort((a, b) => b.value - a.value);
+
+  /* 가로 막대 — 고유(진한 초록) vs 일반(회색) */
+  const W = 330, rowH = 21, pad = { l: 108, r: 40, t: 8, b: 6 };
+  const H = pad.t + rows.length * rowH + pad.b;
+  const mx = Math.max(...rows.map(r => r.value)) || 1;
+  let s = '';
+  rows.forEach((r, i) => {
+    const y = pad.t + i * rowH, w = (r.value / mx) * (W - pad.l - pad.r);
+    const own = r.kind === 'own';
+    s += `<text x="${pad.l - 6}" y="${y + 11}" text-anchor="end" font-size="9"
+           font-weight="${own ? 700 : 400}" fill="${own ? '#24382C' : '#8A7F66'}">${esc(r.name)}</text>
+          <rect x="${pad.l}" y="${y + 3}" width="${w.toFixed(1)}" height="11" rx="1"
+           fill="${own ? '#3B5D48' : '#C9C2B4'}"><title>${esc(r.keywords)}</title></rect>
+          <text x="${(pad.l + w + 5).toFixed(1)}" y="${y + 12}" font-size="8.5"
+           font-weight="${own ? 700 : 400}" fill="#22241F" opacity="${own ? 1 : .55}">${r.value}</text>`;
+  });
+  $('#chartLT').innerHTML = svg(`0 0 ${W} ${H}`, s);
+
+  const sm = lt.summary || {};
+  const top = sm.own_top || {};
+  $('#capLT').innerHTML = `
+    <b>${esc(top.name || '노세범')} ${top.value}가 일반명사 ‘선크림’(${sm.generic?.['선크림']})보다 크다.</b>
+    고유 자산 축 합계는 <b>${sm.own_total}</b>로 일반명사 카테고리(53~60)의 2.6배다.
+    <b>‘${esc(top.name || '노세범')}’은 회사가 이미 llms.txt 타겟 질의어에 걸어둔 고유명사다</b> —
+    고유명사 전략은 사내에서 이미 통했고, 제주·그린티·화산송이·공병에만 적용이 안 됐다.
+    <br>초록 = 이니스프리 고유 자산 / 회색 = 일반명사`;
+
+  /* 건 것 vs 안 건 것 */
+  const ms = sm.missed || {};
+  const keys = Object.keys(ms);
+  if (keys.length === 2) {
+    $('#chartMiss').innerHTML = barChart({
+      labels: ['회사가 건 것', '비워둔 것'],
+      values: [ms[keys[0]], ms[keys[1]]],
+      hiIdx: 1, w: 200, h: 140, color: '#C9C2B4',
+    });
+    $('#capMiss').innerHTML = `
+      회사가 화산송이 클렌징에 건 질의어는 <code>폼클렌징 추천 · 딥클렌징 · 피지 제거 모공 클렌징</code>(${ms[keys[0]]}).
+      정작 <b>화산송이·브랜드 결합(${ms[keys[1]]})이 그보다 크다</b>.
+      <b>작은 것을 걸고 큰 것을 비워뒀다.</b> 제주·그린티·공병은 아예 0개다.`;
+  }
+}
+
 function renderScreen1() {
   const an = D.series.annual, f = D.fixed, ev = D.events;
   const years = an.years;
@@ -331,6 +382,7 @@ function renderScreen1() {
 
   /* 헤리티지 자산 감가 — 제주 vs 브랜드 YoY 역전 */
   renderDecay(an.decay);
+  renderLongtail(an.longtail);
 
   /* 기능⑤ — 경쟁 브랜드 검색량 추이 (3CE 직접경쟁 편입) */
   const comp = an.competitors || {};

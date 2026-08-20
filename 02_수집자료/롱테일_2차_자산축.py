@@ -7,9 +7,12 @@
 그래서 '이니스프리 고유 자산 키워드'가 일반명사 대비 어느 정도 규모인지,
 그리고 회사가 이미 쓰고 있는 고유명사가 있는지 확인한다.
 """
-import sys, time
+import json, sys, time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+KST = timezone(timedelta(hours=9))
+OUT = Path(__file__).resolve().parent / "롱테일_실측.json"
 BASE = Path(r"C:\Users\EZ\Downloads\naver_api_streamlit_dashboard")
 sys.path.insert(0, str(BASE))
 sys.stdout.reconfigure(encoding="utf-8")
@@ -25,6 +28,9 @@ cli = NaverClient(client_id=env["NAVER_CLIENT_ID"], client_secret=env["NAVER_CLI
 START, END = "2025-08-01", "2026-08-18"
 
 
+DUMP: dict = {"_메모": "", "window": f"{START} ~ {END}", "calls": {}}
+
+
 def run(title, groups, note=""):
     res = cli.datalab_search(start_date=START, end_date=END, time_unit="month",
                              keyword_groups=groups)
@@ -32,6 +38,11 @@ def run(title, groups, note=""):
     for r in res["results"]:
         v = [d["ratio"] for d in r["data"]]
         rows.append((r["title"], sum(v) / len(v) if v else 0, len(v), ", ".join(r["keywords"])))
+    DUMP["calls"][title.split(".")[0].strip()] = {
+        "title": title, "note": note,
+        "items": [{"name": t, "value": round(a, 3), "months": n, "keywords": kw}
+                  for t, a, n, kw in sorted(rows, key=lambda x: -x[1])],
+    }
     mx = max((a for _, a, _, _ in rows), default=1) or 1
     print("=" * 82)
     print(title)
@@ -76,3 +87,19 @@ tot = sum(A.get(k, 0) for k in ["노세범", "화산송이", "그린티(이니�
 print(f"\n  고유 자산 키워드 합계   : {tot:.3f}")
 print(f"  (비교) 선크림 일반      : {B.get('선크림(일반)', 0):.3f}")
 print(f"  (비교) 폼클렌징 일반    : {B.get('폼클렌징(일반)', 0):.3f}")
+
+DUMP["_메모"] = (
+    "데이터랩 지수는 요청 단위로 재정규화된다 — A 표와 B 표의 값을 서로 비교하지 말 것. "
+    "각 항목은 묶음 조회이므로 인용 시 구성 키워드를 함께 밝힐 것."
+)
+DUMP["summary"] = {
+    "own_total": round(tot, 3),
+    "own_top": {"name": "노세범", "value": round(A.get("노세범", 0), 3)},
+    "generic": {"선크림": round(B.get("선크림(일반)", 0), 3),
+                "폼클렌징": round(B.get("폼클렌징(일반)", 0), 3)},
+    "missed": {"회사가 건 것(모공·딥클렌징)": round(B.get("모공 클렌징", 0), 3),
+               "안 건 것(화산송이·브랜드)": round(B.get("화산송이 클렌징", 0), 3)},
+    "checked": datetime.now(KST).strftime("%Y-%m-%d %H:%M KST"),
+}
+OUT.write_text(json.dumps(DUMP, ensure_ascii=False, indent=1), encoding="utf-8")
+print(f"\n  → {OUT.name} 저장 (대시보드가 읽는다)")

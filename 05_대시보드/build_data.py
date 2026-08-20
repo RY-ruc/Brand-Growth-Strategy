@@ -84,6 +84,25 @@ def pct(a, b):
     return None if a in (None, 0) or b is None else round((b - a) / a * 100, 1)
 
 
+LONGTAIL_FILE = SRC / "롱테일_실측.json"
+
+
+def load_longtail() -> dict | None:
+    """02_수집자료/롱테일_2차_자산축.py 산출물을 읽는다.
+
+    조회 구간(2025-08~2026-08)이 본 시계열과 달라 별도 파일로 둔다.
+    없으면 대시보드에서 해당 섹션을 그리지 않는다.
+    """
+    if not LONGTAIL_FILE.exists():
+        print("  [메모] 롱테일_실측.json 없음 — 롱테일 섹션 생략")
+        return None
+    try:
+        return json.loads(LONGTAIL_FILE.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"  [경고] 롱테일_실측.json 읽기 실패: {e}")
+        return None
+
+
 # ── 라이브 갱신 ────────────────────────────────────────────────
 CALLS = {
     "1_내부_그룹합산": [
@@ -391,7 +410,7 @@ def build(live=False, standalone=False) -> dict:
                        "brand_api": {str(y): round(annual(brand, y), 4) for y in full_years},
                        "brand_daily": daily_brand, "brand_daily_yoy": daily_yoy,
                        "jeju_ratio": jeju_ratio, "product_ratio": daily_product_ratio,
-                       "decay": decay,
+                       "decay": decay, "longtail": load_longtail(),
                        "share_direct": share_direct, "share_pair": share_pair, "share_all4": share_all4,
                        "competitors": {n: {str(y): round(annual(comp[n], y), 3)
                                            for y in full_years if annual(comp[n], y)} for n in comp}},
