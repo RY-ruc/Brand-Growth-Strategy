@@ -56,6 +56,11 @@ input[type=text],input[type=number]{font:inherit;font-size:11px;padding:5px 7px;
   border-radius:3px;background:var(--paper);width:100%;color:var(--ink)}
 input:focus{outline:2px solid var(--sage);outline-offset:-1px}
 input:disabled{background:var(--off);opacity:.45}
+textarea.raw{font:inherit;font-size:10.5px;line-height:1.5;padding:6px 7px;border:1px solid var(--stone);
+  border-radius:3px;background:var(--paper);color:var(--ink);width:100%;height:34px;resize:vertical;transition:height .15s}
+textarea.raw:focus{outline:2px solid var(--sage);outline-offset:-1px;height:150px}
+.auto{font-size:9.5px;line-height:1.5;margin-top:4px;opacity:.8}
+.auto b.y{color:var(--forest)} .auto b.n{color:var(--neg)}
 .w-rank{width:62px} .w-prod{min-width:150px} .w-comp{min-width:150px} .w-memo{min-width:130px}
 
 /* 버튼 */
@@ -116,16 +121,22 @@ input:disabled{background:var(--off);opacity:.45}
       <li><b>AI 하나를 고릅니다</b> (ChatGPT → Perplexity → Gemini 순서 추천). 한 AI를 끝내고 다음으로 갑니다.</li>
       <li><b>반드시 새 대화창에서</b> 시작합니다. 앞 대화가 남아 있으면 답이 오염됩니다.</li>
       <li>표의 질의어를 <b>글자 그대로 복사해서</b> 입력합니다. <b>“이니스프리”를 절대 먼저 언급하지 마세요.</b></li>
-      <li>답변이 나오면 <b>전체 화면을 캡처</b>합니다. 파일명은 <code>AI_질의번호_회차.png</code> (예: <code>chatgpt_A1_1.png</code>).</li>
-      <li>표에 기록합니다 — 언급 <b>있음/없음</b>, 있으면 <b>몇 번째로</b> 나왔는지, <b>어떤 제품</b>인지, <b>함께 나온 경쟁 브랜드</b>.</li>
+      <li>답변이 나오면 <b>답변 전체를 드래그해서 복사</b>합니다 (<code>Ctrl+A</code>가 안 되면 답변만 드래그 → <code>Ctrl+C</code>).</li>
+      <li>맨 오른쪽 <b>“AI 답변 붙여넣기”</b> 칸에 <code>Ctrl+V</code>. <b>언급 여부·등장 순서·경쟁 브랜드가 자동으로 채워집니다.</b>
+          자동 판정이 틀렸으면 왼쪽 칸을 직접 고치면 됩니다.</li>
       <li>같은 질의를 <b>2회차</b>도 합니다. 반드시 <b>새 대화창</b>에서.</li>
       <li>12개 질의 × 2회를 끝내면 다음 AI로 넘어갑니다.</li>
-      <li>다 끝나면 <b>CSV 내보내기</b>를 눌러 저장하고, 캡처 파일과 함께 이 폴더에 넣습니다.</li>
+      <li>다 끝나면 <b>CSV 내보내기</b>. 답변 원문까지 함께 저장됩니다.</li>
     </ol>
+    <div class="warn" style="border-left-color:var(--sage)">
+      <b>캡처는 전부 뜰 필요 없습니다.</b> 답변 원문을 붙여넣으면 그게 곧 증거가 되고, 검색·인용·재검증까지 됩니다.
+      <b>발표 슬라이드에 넣을 것만</b> 골라서 캡처하세요 — A군 안 나온 화면 1~2장, B군 나온 화면 1~2장이면 충분합니다.
+      (<code>Win + Shift + S</code>로 원하는 영역만 캡처할 수 있습니다.)
+    </div>
     <div class="warn">
       <b>주의</b> — AI 답변은 같은 질문에도 매번 다릅니다. 그래서 2회씩 하는 겁니다.
       한 번 나왔다고 “나온다”, 한 번 안 나왔다고 “안 나온다”로 쓰면 안 됩니다.
-      <b>발표에 쓸 캡처는 반드시 미리 찍어두세요.</b> 무대에서 라이브로만 하면 안 나올 때 논지가 무너집니다.
+      <b>무대에서 라이브로만 하면 안 나올 때 논지가 무너집니다.</b> 캡처를 미리 확보해두세요.
     </div>
   </details>
 
@@ -135,7 +146,7 @@ input:disabled{background:var(--off);opacity:.45}
       <thead><tr>
         <th style="width:210px">질의어</th><th style="width:88px">AI</th><th style="width:44px">회차</th>
         <th style="width:120px">이니스프리 언급</th><th style="width:70px">몇 번째</th>
-        <th>언급된 제품</th><th>함께 나온 경쟁 브랜드</th><th>메모 · 캡처파일</th>
+        <th>언급된 제품</th><th>함께 나온 경쟁 브랜드</th><th style="width:120px">메모</th><th style="width:230px">AI 답변 붙여넣기 (자동 판정)</th>
       </tr></thead>
       <tbody id="tb"></tbody>
     </table>
@@ -176,13 +187,49 @@ const QUERIES = [
   {id:'B5', g:'B', q:'화장품 공병 수거하는 브랜드 추천', why:'공병·그린사이클 축 26.0 — 회사가 안 건 자산'},
   {id:'B6', g:'B', q:'노세범 선크림 추천',         why:'노세범 축 70.1 — 회사가 유일하게 건 고유명사 · <b>대조 확인용</b>'},
 ];
+/* 자동 판정용 브랜드 사전 — 답변을 붙여넣으면 등장 순서까지 자동으로 잡는다.
+   캡처를 일일이 뜨는 것보다 빠르고, 원문이 남아 인용·재검증이 된다. */
+const BRANDS = [
+  '이니스프리','innisfree','라네즈','설화수','헤라','마몽드','한율','아이오페','프리메라','에뛰드','아리따움',
+  '미샤','토니모리','3CE','스타일난다','클리오','롬앤','페리페라','스킨푸드','더페이스샵',
+  '토리든','라운드랩','아누아','닥터지','마녀공장','넘버즈인','코스알엑스','구달','조선미녀','비플레인',
+  '유세린','세타필','아벤느','키엘','에스티로더','랑콤','시세이도','바이오더마','라로슈포제','달바','에이지투웨니스',
+];
+const OWN = /이니스프리|innisfree/i;
+
+function analyze(text){
+  const t = (text || '').trim();
+  if (!t) return null;
+  const found = [];
+  BRANDS.forEach(b => {
+    const i = t.toLowerCase().indexOf(b.toLowerCase());
+    if (i >= 0) found.push({ b, i });
+  });
+  found.sort((x, y) => x.i - y.i);
+  // 같은 브랜드 표기 중복 제거(이니스프리/innisfree)
+  const seen = new Set(), order = [];
+  found.forEach(f => {
+    const k = OWN.test(f.b) ? '이니스프리' : f.b;
+    if (!seen.has(k)) { seen.add(k); order.push(k); }
+  });
+  const hit = order.includes('이니스프리');
+  const rank = hit ? order.indexOf('이니스프리') + 1 : '';
+  // 이니스프리가 언급된 문장 → 제품명 추정
+  let sentence = '';
+  if (hit) {
+    const s = t.split(/(?<=[.!?。\n])\s*/).find(x => OWN.test(x));
+    sentence = (s || '').replace(/\s+/g, ' ').trim().slice(0, 90);
+  }
+  return { hit, rank, sentence, comp: order.filter(b => b !== '이니스프리').slice(0, 6).join(', ') };
+}
+
 const AIS = ['ChatGPT','Perplexity','Gemini'];
 const TRIES = [1,2];
 const KEY = 'ai_citation_test_v1';
 
 const rows = [];
 QUERIES.forEach(q => AIS.forEach(ai => TRIES.forEach(t =>
-  rows.push({key:`${q.id}|${ai}|${t}`, ...q, ai, t, hit:null, rank:'', prod:'', comp:'', memo:''}))));
+  rows.push({key:`${q.id}|${ai}|${t}`, ...q, ai, t, hit:null, rank:'', prod:'', comp:'', memo:'', raw:''}))));
 
 const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
 rows.forEach(r => Object.assign(r, saved[r.key] || {}));
@@ -192,9 +239,10 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 
 function save(){
   const o = {};
-  rows.forEach(r => { if(r.hit!==null||r.rank||r.prod||r.comp||r.memo)
-    o[r.key]={hit:r.hit,rank:r.rank,prod:r.prod,comp:r.comp,memo:r.memo}; });
-  localStorage.setItem(KEY, JSON.stringify(o));
+  rows.forEach(r => { if(r.hit!==null||r.rank||r.prod||r.comp||r.memo||r.raw)
+    o[r.key]={hit:r.hit,rank:r.rank,prod:r.prod,comp:r.comp,memo:r.memo,raw:r.raw}; });
+  try { localStorage.setItem(KEY, JSON.stringify(o)); }
+  catch(e){ toast('저장 공간이 찼습니다 — CSV로 내보낸 뒤 답변 원문을 지우세요.'); }
   stats();
 }
 function stats(){
@@ -225,8 +273,33 @@ rows.forEach((r,i) => {
     <td><input type="number" min="1" max="20" class="w-rank" value="${esc(r.rank)}" ${r.hit?'':'disabled'} placeholder="–"></td>
     <td><input type="text" class="w-prod" value="${esc(r.prod)}" ${r.hit?'':'disabled'} placeholder="예: 그린티 수분크림"></td>
     <td><input type="text" class="w-comp" value="${esc(r.comp)}" placeholder="예: 라네즈, 토리든"></td>
-    <td><input type="text" class="w-memo" value="${esc(r.memo)}" placeholder="chatgpt_A1_1.png / 시크릿"></td>`;
+    <td><input type="text" class="w-memo" value="${esc(r.memo)}" placeholder="시크릿·비로그인"></td>
+    <td><textarea class="raw" placeholder="AI 답변을 여기에 붙여넣으세요 (Ctrl+A → Ctrl+C → Ctrl+V)">${esc(r.raw)}</textarea>
+        <div class="auto" ${r.raw ? '' : 'hidden'}></div></td>`;
   const [rank, prod, comp, memo] = tr.querySelectorAll('input');
+  const ta = tr.querySelector('textarea'), auto = tr.querySelector('.auto');
+
+  /* 답변을 붙여넣으면 언급 여부·순위·경쟁 브랜드를 자동으로 채운다.
+     자동 판정은 초안이고, 위 칸을 직접 고치면 그 값이 우선한다. */
+  function applyAuto(){
+    r.raw = ta.value;
+    const a = analyze(ta.value);
+    if(!a){ auto.hidden = true; save(); return; }
+    r.hit = a.hit; r.rank = a.rank; r.comp = a.comp;
+    if(a.sentence) r.prod = a.sentence;
+    tr.querySelectorAll('.yn button').forEach(x => x.classList.remove('on'));
+    tr.querySelector(a.hit ? '.yn button.y' : '.yn button.n').classList.add('on');
+    [rank, prod].forEach(el => el.disabled = !a.hit);
+    rank.value = a.rank; prod.value = a.hit ? a.sentence : ''; comp.value = a.comp;
+    tr.classList.add('done');
+    auto.hidden = false;
+    auto.innerHTML = a.hit
+      ? `자동 판정: <b class="y">언급 있음</b> · 브랜드 등장 순서 <b>${a.rank}번째</b>${a.comp ? ` · 함께: ${esc(a.comp)}` : ''}`
+      : `자동 판정: <b class="n">언급 없음</b>${a.comp ? ` · 대신 언급된 브랜드: ${esc(a.comp)}` : ''}`;
+    save();
+  }
+  ta.addEventListener('input', applyAuto);
+  if(r.raw) applyAuto();
   tr.querySelectorAll('.yn button').forEach(b => b.addEventListener('click', () => {
     const v = b.dataset.h === '1';
     r.hit = (r.hit === v) ? null : v;
@@ -246,9 +319,9 @@ stats();
 function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),2600); }
 
 $('#exp').addEventListener('click', () => {
-  const head = ['구분','질의ID','질의어','AI','회차','이니스프리 언급','몇 번째','언급된 제품','함께 나온 경쟁 브랜드','메모/캡처'];
+  const head = ['구분','질의ID','질의어','AI','회차','이니스프리 언급','몇 번째','언급된 제품','함께 나온 경쟁 브랜드','메모','AI 답변 원문'];
   const body = rows.map(r => [r.g+'군', r.id, r.q, r.ai, r.t+'회',
-    r.hit===null?'':(r.hit?'있음':'없음'), r.rank, r.prod, r.comp, r.memo]);
+    r.hit===null?'':(r.hit?'있음':'없음'), r.rank, r.prod, r.comp, r.memo, r.raw]);
   const csv = [head, ...body].map(l => l.map(c => `"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
   const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});   // BOM — Excel 한글 깨짐 방지
   const a = document.createElement('a');
