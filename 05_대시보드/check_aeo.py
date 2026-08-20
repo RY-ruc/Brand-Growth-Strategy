@@ -11,7 +11,7 @@ check_aeo.py — AEO/SEO 대응 상태 자동 점검
     python check_aeo.py --no-apply # 점검만, 대시보드는 건드리지 않음
 
 왜 자동화하는가
-    llms.txt는 2026-08-18에 404였다가 08-19에 200 OK로 생겼다. 하루 만에 바뀌는
+    llms.txt는 팀 08-18 점검 때 404였는데 재조회에서는 200 OK다. 이렇게 바뀌는
     유동 항목이라 수동 점검 결과를 문서에 박아두면 금방 낡는다.
 
 점검 항목 (KPI 4위 · 실행 지표)
@@ -33,6 +33,7 @@ import ssl
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -49,6 +50,24 @@ AI_BOTS = ["GPTBot", "ClaudeBot", "anthropic-ai", "PerplexityBot",
            "CCBot", "Google-Extended", "Applebot-Extended", "Bytespider"]
 
 FAQ_PATHS = ["/faq", "/support/faq", "/cs/faq", "/help", "/customer/faq"]
+
+
+def fetch_h(url: str) -> tuple[int, str, dict | None]:
+    """(status, body, headers) — 헤더까지 필요한 경우"""
+    req = urllib.request.Request(url, headers={
+        "User-Agent": UA,
+        "Accept": "text/html,application/xhtml+xml,text/plain,*/*",
+        "Accept-Language": "ko-KR,ko;q=0.9",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT, context=ssl.create_default_context()) as r:
+            raw = r.read(600_000)
+            enc = r.headers.get_content_charset() or "utf-8"
+            return r.status, raw.decode(enc, errors="replace"), dict(r.headers)
+    except urllib.error.HTTPError as e:
+        return e.code, "", (dict(e.headers) if e.headers else None)
+    except Exception as e:
+        return 0, f"{type(e).__name__}: {e}", None
 
 
 def fetch(url: str) -> tuple[int, str]:
@@ -85,11 +104,27 @@ def check_robots() -> dict:
 
 
 def check_llms() -> dict:
-    st, body = fetch(f"{BASE}/llms.txt")
+    """llms.txt — Last-Modified로 '언제 만들어졌는지'까지 기록한다.
+
+    서버 Last-Modified는 2026-08-18 14:16:45 KST다. 다만 이 헤더는 '그 시각에
+    파일이 쓰였다'만 증명하고 신규 생성과 기존 파일 갱신을 구분하지 못한다.
+    웨이백·archive.today 스냅샷이 0건이라 이전 존재 여부도 확인 불가.
+    → '신설'로 단정하지 말고 '최종 갱신 시각'으로만 인용할 것.
+    """
+    st, body, hdr = fetch_h(f"{BASE}/llms.txt")
     if st == 200 and body.strip():
-        head = " ".join(body.split())[:90]
+        lm = hdr.get("Last-Modified") if hdr else None
+        when = ""
+        if lm:
+            try:
+                dt = parsedate_to_datetime(lm).astimezone(KST)
+                when = f" · 최종 갱신 {dt:%Y-%m-%d %H:%M} KST(서버 기준)"
+            except Exception:
+                when = f" · Last-Modified {lm}"
+        head = " ".join(body.split())[:70]
         return {"k": "llms.txt", "ok": True,
-                "note": f"200 OK · {len(body)}자 · 첫머리 “{head}…”"}
+                "note": f"200 OK · {len(body):,}자{when} · 첫머리 “{head}…”",
+                "last_modified": lm}
     if st == 404:
         return {"k": "llms.txt", "ok": False, "note": "404 — 파일 없음"}
     return {"k": "llms.txt", "ok": None, "note": f"판정 보류 (status {st})"}

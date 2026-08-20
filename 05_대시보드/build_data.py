@@ -89,7 +89,7 @@ AEO_FALLBACK = {
     "score": 1, "total": 4, "checked": "2026-08-19 (수동 확인)",
     "items": [
         {"k": "robots.txt AI 크롤러 규칙", "ok": False, "note": "범용 규칙만 존재"},
-        {"k": "llms.txt", "ok": True, "note": "200 OK · 2026-08-19 신규 생성(8/18에는 404)"},
+        {"k": "llms.txt", "ok": True, "note": "200 OK · 서버 Last-Modified 2026-08-18 14:16 KST(신설 여부는 확정 불가)"},
         {"k": "FAQPage 스키마(JSON-LD)", "ok": None, "note": "정적 조회 한계 · 판정 보류"},
         {"k": "FAQ형 콘텐츠 경로", "ok": False, "note": "제품나열형 구조"},
     ],

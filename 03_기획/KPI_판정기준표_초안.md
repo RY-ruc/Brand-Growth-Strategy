@@ -72,7 +72,7 @@
 
 | 항목 | 상태 |
 |---|---|
-| llms.txt | ✅ 200 OK · 7,595자 (08-18에는 404 — 하루 만에 신설) |
+| llms.txt | ✅ 200 OK · 서버 Last-Modified **2026-08-18 14:16 KST**. 팀 08-18 점검은 404였으나 **신설 여부는 확정 불가**(Last-Modified는 생성/갱신을 구분하지 못하고, 아카이브 스냅샷도 0건) |
 | robots.txt AI 크롤러 전용 규칙 | ❌ 없음 (범용 User-agent 1블록만) |
 | FAQPage 스키마(JSON-LD) | ❌ 없음 — JSON-LD는 있으나 타입이 Organization |
 | FAQ형 콘텐츠 경로 | ❌ 확인한 5개 경로 모두 미응답 |

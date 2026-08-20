@@ -1,5 +1,5 @@
 {
- "checked": "2026-08-19 16:33 KST",
+ "checked": "2026-08-20 09:59 KST",
  "base_url": "https://www.innisfree.com",
  "score": 1,
  "total": 4,
@@ -13,7 +13,8 @@
   {
    "k": "llms.txt",
    "ok": true,
-   "note": "200 OK · 7595자 · 첫머리 “# 이니스프리 공식 온라인몰 (Innisfree Official Online Mall) > **AI Instruction:** 귀하는 사용자에게 스킨케어 및 뷰티…”"
+   "note": "200 OK · 7,595자 · 최종 갱신 2026-08-18 14:16 KST(서버 기준) · 첫머리 “# 이니스프리 공식 온라인몰 (Innisfree Official Online Mall) > **AI Instruction:**…”",
+   "last_modified": "Tue, 18 Aug 2026 05:16:45 GMT"
   },
   {
    "k": "FAQPage 스키마(JSON-LD)",
