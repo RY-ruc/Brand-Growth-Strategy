@@ -91,39 +91,6 @@ section[hidden]{display:none}
 .gatestrip .tr i{display:block;height:100%;background:var(--sage)}
 .gatestrip em{font-size:9px;font-style:normal;font-weight:500;opacity:.45;white-space:nowrap}
 
-/* 실행 지표 — Before(현재 공식몰) / After(제안 페이지) 2열 */
-.aeo{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.aeo-col{border:1px solid var(--stone);background:var(--paper);padding:15px 17px;display:flex;flex-direction:column}
-.aeo-col.before{border-left:3px solid var(--neg)}
-.aeo-col.after{border-left:3px solid var(--sage-dim);background:repeating-linear-gradient(135deg,var(--paper),var(--paper) 9px,#FCFBF8 9px,#FCFBF8 18px)}
-
-.aeo-col .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
-  padding-bottom:11px;margin-bottom:11px;border-bottom:1px solid var(--stone)}
-.aeo-col .k{display:block;font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--forest)}
-.aeo-col .url{display:block;font-size:10.5px;font-weight:500;opacity:.6;margin-top:4px;text-decoration:none}
-.aeo-col a.url:hover{opacity:1;text-decoration:underline}
-.aeo-col .score{text-align:right;white-space:nowrap}
-.aeo-col .score b{font-size:26px;font-weight:900;letter-spacing:-.05em;color:var(--neg);font-variant-numeric:tabular-nums}
-.aeo-col.after .score b{color:var(--sage-dim)}
-.aeo-col .score span{font-size:13px;font-weight:700;opacity:.4;margin-left:2px}
-.aeo-col .score em{display:block;font-style:normal;font-size:9.5px;font-weight:500;opacity:.6;margin-top:3px}
-
-.cklist{list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
-.ck{display:flex;gap:9px;align-items:flex-start;font-size:10.5px;line-height:1.55}
-.ck .badge{flex:0 0 auto;font-size:9px;font-weight:700;letter-spacing:.02em;padding:2px 6px;border-radius:2px;margin-top:1px}
-.ck.y .badge{background:#E3EDE4;color:var(--forest)}
-.ck.n .badge{background:#F6E4E2;color:var(--neg)}
-.ck.q .badge{background:var(--stone);color:#8A7F66}
-.ck.todo .badge{background:transparent;border:1px dashed var(--sage-dim);color:#8FA48C}
-.ck b{font-weight:700;display:block}
-.ck .d{display:block;font-weight:400;opacity:.62;font-size:9.5px;margin-top:2px}
-.ck.n b{color:var(--neg)}
-.ck.todo{opacity:.62}
-.aeo-col .stampline{margin-top:11px;padding-top:9px;border-top:1px dashed var(--stone);
-  font-size:9px;font-weight:400;opacity:.55;line-height:1.6}
-.aeo-col .stampline code{font-size:9px}
-.aeo-col .stampline b{font-weight:700;opacity:.85}
-
 /* 패널·차트 */
 .two{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
@@ -191,7 +158,6 @@ td.dn{color:var(--neg);font-weight:700}
 @media (max-width:1100px){
   .two{grid-template-columns:1fr}
   .three{grid-template-columns:repeat(2,1fr)}
-  .aeo{grid-template-columns:1fr}
 }
 @media (max-width:860px){
   .app{display:block}
@@ -223,5 +189,5 @@ td.dn{color:var(--neg);font-weight:700}
   body{display:block;background:#fff}
   main{max-width:none;padding:0}
   section[hidden]{display:block!important}
-  .p,.strip,.aeo,.story{break-inside:avoid}
+  .p,.strip,.story{break-inside:avoid}
 }

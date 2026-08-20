@@ -84,34 +84,6 @@ def pct(a, b):
     return None if a in (None, 0) or b is None else round((b - a) / a * 100, 1)
 
 
-AEO_FILE = HERE / "data" / "aeo_status.json"
-AEO_FALLBACK = {
-    "score": 1, "total": 4, "checked": "2026-08-19 (수동 확인)",
-    "items": [
-        {"k": "robots.txt AI 크롤러 규칙", "ok": False, "note": "범용 규칙만 존재"},
-        {"k": "llms.txt", "ok": True, "note": "200 OK · 서버 Last-Modified 2026-08-18 14:16 KST(신설 여부는 확정 불가)"},
-        {"k": "FAQPage 스키마(JSON-LD)", "ok": None, "note": "정적 조회 한계 · 판정 보류"},
-        {"k": "FAQ형 콘텐츠 경로", "ok": False, "note": "제품나열형 구조"},
-    ],
-}
-
-
-def load_aeo() -> dict:
-    """check_aeo.py가 만든 실측 결과를 우선 사용한다.
-    파일이 없을 때만 마지막 수동 확인값으로 대체하고, 그 사실을 화면에 드러낸다."""
-    if AEO_FILE.exists():
-        try:
-            a = json.loads(AEO_FILE.read_text(encoding="utf-8"))
-            return {"score": a["score"], "total": a["total"], "checked": a.get("checked", ""),
-                    "items": a["items"], "source": "check_aeo.py",
-                    "base_url": a.get("base_url", "")}
-        except Exception as e:
-            print(f"  [경고] aeo_status.json 읽기 실패 — 수동값 사용: {e}")
-    else:
-        print("  [경고] aeo_status.json 없음 — 수동값 사용. `python check_aeo.py` 실행 권장")
-    return {**AEO_FALLBACK, "source": "수동(대체값)"}
-
-
 # ── 라이브 갱신 ────────────────────────────────────────────────
 CALLS = {
     "1_내부_그룹합산": [
@@ -191,7 +163,6 @@ def make_alerts(k: dict, prev: dict | None) -> list[dict]:
     의도적으로 뺀 것
       · 제주 '정점 이후 정체'  → KPI 카드에 정점 연도·값이 이미 표시됨
       · 4사 기준 상승(착시)    → 카드 sub와 점유율 차트 캡션에 이미 있음
-      · AEO 미충족            → 바로 아래 AEO 구역에 충족률·항목별 상세가 있음
       · 직전 갱신 대비 변화    → '변화 이력' 화면이 따로 있음
     """
     a: list[dict] = []
@@ -235,7 +206,6 @@ def diff_vs(prev: dict | None, cur: dict) -> dict:
         ("‘제주’ 연상 비중", ["kpi", "jeju_ratio", "current"], "%"),
         ("제품↔브랜드 Gap", ["kpi", "gap", "ytd"], "%p"),
         ("점유율(직접 3사)", ["kpi", "share", "direct"], "%"),
-        ("AEO 충족", ["kpi", "aeo", "score"], "/4"),
     ]
     rows = []
     for label, path, unit in fields:
@@ -347,7 +317,6 @@ def build(live=False, standalone=False) -> dict:
             "all4": share_of(ALL4, cur_year, True), "all4_prev": share_of(ALL4, prev_year, True),
             "members": DIRECT,
         },
-        "aeo": load_aeo(),
     }
 
     prev_snap = load_prev_snapshot()

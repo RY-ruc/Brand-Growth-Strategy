@@ -4,7 +4,8 @@ check_aeo.py — AEO/SEO 대응 상태 자동 점검
 
 이니스프리 공식몰을 직접 조회해 4개 항목을 판정하고 결과를 JSON으로 남긴다.
 `dashboard_data.json`이 있으면 그 안의 kpi.aeo 블록도 실측값으로 교체한다
-(build_data.py를 건드리지 않고 후처리만 한다).
+조사 전용 도구다 — 대시보드에는 연결하지 않는다.
+(랜딩·상세페이지를 제안하는 마당에 대시보드가 "이미 완비"라고 보여주면 제안과 충돌한다.)
 
 사용법
     python check_aeo.py            # 점검 → data/aeo_status.json (+ 대시보드 반영)
@@ -37,8 +38,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "data" / "aeo_status.json"
-DASH = HERE / "data" / "dashboard_data.json"
+OUT = HERE / "aeo_실사" / "aeo_status.json"
+
 KST = timezone(timedelta(hours=9))
 
 BASE = "https://www.innisfree.com"
@@ -225,7 +226,7 @@ def check_faq_content() -> dict:
             "note": f"확인한 경로 {len(FAQ_PATHS)}개 모두 미응답 — 제품나열형 구조"}
 
 
-SNAPDIR = HERE / "data" / "llms_snapshots"
+SNAPDIR = HERE / "aeo_실사" / "llms_snapshots"
 
 
 def snapshot_llms() -> dict:
@@ -275,7 +276,7 @@ def snapshot_llms() -> dict:
     return {"ok": True, "changed": False, "digest": digest, "last_modified": lm}
 
 
-def main(apply_to_dashboard: bool = True) -> dict:
+def main(apply_to_dashboard: bool = False) -> dict:  # 대시보드 연동 없음
     print(f"[AEO] {BASE} 점검 시작")
     snap = snapshot_llms()
     items = [check_robots(), check_llms(), check_faq_schema(), check_faq_content()]
@@ -303,16 +304,6 @@ def main(apply_to_dashboard: bool = True) -> dict:
     print(f"[AEO] {score}/{len(items)} 충족" + (f" (판정 보류 {pending}건)" if pending else ""))
     print(f"  → {OUT.relative_to(HERE)}")
 
-    if apply_to_dashboard and DASH.exists():
-        d = json.loads(DASH.read_text(encoding="utf-8"))
-        d.setdefault("kpi", {})["aeo"] = {
-            "score": score, "total": len(items),
-            "checked": result["checked"].split()[0],
-            "items": items,
-        }
-        d.setdefault("meta", {})["aeo_checked_at"] = result["checked"]
-        DASH.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
-        print(f"  → dashboard_data.json의 kpi.aeo 실측값으로 갱신")
     return result
 
 

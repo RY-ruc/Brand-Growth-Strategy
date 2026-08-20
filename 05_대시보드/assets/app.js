@@ -185,52 +185,8 @@ function renderKPI() {
       <div class="gatestrip"><em>게이트 — 자연 둔화 대비 초과 회복분만 인정</em></div>
     </div>`;
 
-  renderAeo();
 }
 
-/* AEO — Before(기존 이니스프리 공식몰) / After(우리 제안 페이지) 2열 */
-function renderAeo() {
-  const a = D.kpi.aeo;
-  const auto = a.source === 'check_aeo.py';
-  const fail = a.total - a.score;
-
-  const row = i => {
-    const st = i.ok === true ? 'y' : i.ok === false ? 'n' : 'q';
-    const mark = i.ok === true ? '충족' : i.ok === false ? '미충족' : '보류';
-    return `<li class="ck ${st}">
-      <span class="badge">${mark}</span>
-      <div><b>${esc(i.k)}</b><span class="d">${esc(i.note)}</span></div>
-    </li>`;
-  };
-
-  $('#aeoBox').innerHTML = `
-    <div class="aeo-col before">
-      <div class="hd">
-        <div>
-          <span class="k">Before · 현재 이니스프리 공식몰</span>
-          <a class="url" href="https://www.innisfree.com" target="_blank" rel="noopener">www.innisfree.com</a>
-        </div>
-        <div class="score">
-          <b>${a.score}</b><span>/ ${a.total}</span>
-          <em>${fail}개 항목 미충족</em>
-        </div>
-      </div>
-      <ul class="cklist">${a.items.map(row).join('')}</ul>
-      <div class="stampline">${auto ? '자동 점검' : '수동 확인값'} · ${esc(a.checked || '')} · <code>check_aeo.py</code></div>
-    </div>
-
-    <div class="aeo-col after pending">
-      <div class="hd">
-        <div><span class="k">After · 제안 랜딩·상세페이지</span>
-          <span class="url">Part 4-3 · 4-4 (제작 예정)</span></div>
-        <div class="score"><b>—</b><span>/ ${a.total}</span><em>페이지 완성 후 측정</em></div>
-      </div>
-      <ul class="cklist">${a.items.map(i => `<li class="ck todo">
-        <span class="badge">설계 반영</span>
-        <div><b>${esc(i.k)}</b><span class="d">제안 페이지에 포함할 항목</span></div></li>`).join('')}</ul>
-      <div class="stampline">우리가 만드는 페이지는 <b>목업</b>이라 실제 공식몰 점수를 바꾸지 않는다 — 회사가 채택해 적용해야 왼쪽 숫자가 오른다</div>
-    </div>`;
-}
 
 function renderScreen1() {
   const an = D.series.annual, f = D.fixed, ev = D.events;

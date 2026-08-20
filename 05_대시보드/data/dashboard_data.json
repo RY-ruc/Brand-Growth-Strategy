@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated_at": "2026-08-20 10:11 KST",
+  "generated_at": "2026-08-20 10:16 KST",
   "source_mode": "repo",
   "coverage": "2021-01 ~ 2026-08",
   "latest_partial_month": "2026-08",
@@ -48,36 +48,6 @@
     "미샤",
     "3CE"
    ]
-  },
-  "aeo": {
-   "score": 4,
-   "total": 4,
-   "checked": "2026-08-20 10:09 KST",
-   "items": [
-    {
-     "k": "robots.txt — AI 크롤러 접근",
-     "ok": true,
-     "note": "접근 허용 · AI 봇 개별 명시는 없음(= 기본 허용) · 차단 경로는 중복·API 5건뿐 — 전체 차단 없음"
-    },
-    {
-     "k": "llms.txt",
-     "ok": true,
-     "note": "200 OK · 7,595자 · 최종 갱신 2026-08-18 14:16 KST(서버 기준) · 첫머리 “# 이니스프리 공식 온라인몰 (Innisfree Official Online Mall) > **AI Instruction:**…”",
-     "last_modified": "Tue, 18 Aug 2026 05:16:45 GMT"
-    },
-    {
-     "k": "FAQPage 스키마(JSON-LD)",
-     "ok": true,
-     "note": "확인 · /kr/ko/cu/support/faq → JSON-LD 없음 / / → ContactPoint, Organization / /kr/ko/dp/product/103436 → AggregateRating, Answer, Brand, FAQPage, Offer, Organization, Product, PropertyValue, Question"
-    },
-    {
-     "k": "FAQ형 콘텐츠 경로",
-     "ok": true,
-     "note": "존재: /kr/ko/cu/support/faq"
-    }
-   ],
-   "source": "check_aeo.py",
-   "base_url": "https://www.innisfree.com"
   }
  },
  "alerts": [
@@ -101,7 +71,7 @@
   }
  ],
  "diff": {
-  "base": "2026-08-20 10:03 KST",
+  "base": "2026-08-20 10:11 KST",
   "rows": [
    {
     "label": "브랜드 검색 YoY",
@@ -130,13 +100,6 @@
     "cur": 51.2,
     "delta": 0.0,
     "unit": "%"
-   },
-   {
-    "label": "AEO 충족",
-    "prev": 3,
-    "cur": 4,
-    "delta": 1,
-    "unit": "/4"
    }
   ]
  },
