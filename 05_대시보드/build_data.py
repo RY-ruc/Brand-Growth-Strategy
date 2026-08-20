@@ -182,7 +182,18 @@ def refresh_live() -> str:
 
 # ── 경보 규칙 ─────────────────────────────────────────────────
 def make_alerts(k: dict, prev: dict | None) -> list[dict]:
-    """KPI가 게이트를 벗어나거나 직전 스냅샷 대비 크게 움직이면 경보."""
+    """KPI가 게이트를 벗어나면 경보.
+
+    경보는 '화면의 다른 곳에 없는 정보'만 띄운다. 카드·차트 캡션에 이미 쓰여 있는
+    내용을 경보로 중복 표시하면 배너가 KPI를 가려서 대시보드가 못 쓰게 된다.
+    (2026-08-20 정리 — 6건 → 3건)
+
+    의도적으로 뺀 것
+      · 제주 '정점 이후 정체'  → KPI 카드에 정점 연도·값이 이미 표시됨
+      · 4사 기준 상승(착시)    → 카드 sub와 점유율 차트 캡션에 이미 있음
+      · AEO 미충족            → 바로 아래 AEO 구역에 충족률·항목별 상세가 있음
+      · 직전 갱신 대비 변화    → '변화 이력' 화면이 따로 있음
+    """
     a: list[dict] = []
 
     if (k["brand_search"]["yoy"] or 0) < -25:
@@ -195,11 +206,6 @@ def make_alerts(k: dict, prev: dict | None) -> list[dict]:
         a.append({"level": "high", "kpi": "‘제주’ 연상",
                   "msg": f'제주 절대 지수 {jr["abs_yoy"]}%가 브랜드 {k["brand_search"]["yoy"]}%보다 빠르게 하락',
                   "action": "‘브랜드보다 오래 버틴다’는 우위가 소멸 — 헤리티지 캠페인 우선순위 상향"})
-    if jr["current"] < jr["peak"]:
-        a.append({"level": "mid", "kpi": "‘제주’ 연상",
-                  "msg": f'{jr["peak_year"]}년 {jr["peak"]}% 정점 이후 {jr["current"]}%로 정체',
-                  "action": "비중만 보지 말고 절대 지수와 함께 판정"})
-
     s = k["share"]
     if s["direct"] < s["direct_prev"]:
         a.append({"level": "high", "kpi": "경쟁 검색 점유율",

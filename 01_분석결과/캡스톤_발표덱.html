@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이니스프리 브랜딩 성장 전략 — 캡스톤 발표</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --basalt:#1F2623; --deep:#24382C; --forest:#3B5D48; --sage:#9FB89A;
+  --stone:#E8E2D6; --camellia:#C97C86; --camellia-dk:#8E4A52;
+  --offwhite:#FAFAF7; --ink:#22241F; --paper:#fff; --neg:#9C4A42;
+  color-scheme:light;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#151917;color:var(--ink);
+  font-family:'Noto Sans KR','Pretendard','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+svg text{font-family:'Noto Sans KR','Malgun Gothic',system-ui,sans-serif}
+
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:2vh 2vw}
+.slide{
+  width:min(96vw,calc(92vh*16/9));aspect-ratio:16/9;background:var(--offwhite);
+  position:relative;display:none;padding:5.2% 6%;overflow:hidden;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.7);
+}
+.slide.on{display:flex;flex-direction:column}
+.slide.dark{background:var(--basalt);color:var(--stone)}
+.slide.deep{background:var(--deep);color:var(--stone)}
+
+/* 타이포 — 무드보드 규칙: 헤드라인 Black + 좁은 자간, 본문 Regular/Medium */
+.eyebrow{font-size:1.05em;font-weight:700;letter-spacing:.18em;color:var(--forest);margin-bottom:1.1em}
+.dark .eyebrow,.deep .eyebrow{color:var(--sage)}
+h1{font-size:3.3em;font-weight:900;letter-spacing:-.045em;line-height:1.22;text-wrap:balance}
+h2{font-size:2.35em;font-weight:900;letter-spacing:-.04em;line-height:1.28;text-wrap:balance}
+h3{font-size:1.35em;font-weight:700;letter-spacing:-.02em}
+.lead{font-size:1.15em;font-weight:300;line-height:1.85;opacity:.8;margin-top:1.1em;max-width:52em}
+.slide{font-size:clamp(9px,1.32vh,17px)}
+
+.fill{flex:1;display:flex;flex-direction:column;justify-content:center}
+.mt{margin-top:1.6em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.6em}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1em}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:.8em}
+
+.stat{font-size:3.6em;font-weight:900;letter-spacing:-.055em;color:var(--deep);line-height:1;font-variant-numeric:tabular-nums}
+.dark .stat,.deep .stat{color:var(--sage)}
+.stat.neg{color:var(--neg)}
+.statlab{font-size:.95em;font-weight:500;opacity:.62;margin-top:.5em;line-height:1.5}
+
+.card{background:var(--paper);border:1px solid var(--stone);padding:1.3em 1.4em}
+.card.hi{border-left:3px solid var(--forest)}
+.card h3{margin-bottom:.5em}
+.card p{font-size:.98em;font-weight:400;line-height:1.72;opacity:.78}
+
+.quote{font-family:'Gowun Batang',serif;font-size:2.1em;line-height:1.6;color:var(--deep)}
+.dark .quote,.deep .quote{color:var(--stone)}
+
+table{width:100%;border-collapse:collapse;font-size:1em;font-variant-numeric:tabular-nums}
+th,td{padding:.62em .7em;border-bottom:1px solid var(--stone);text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:700;font-size:.9em;opacity:.55;border-bottom:1px solid var(--sage)}
+td.hi{font-weight:700;color:var(--deep)}
+.dark th,.dark td,.deep th,.deep td{border-color:rgba(232,226,214,.2)}
+
+.note{font-size:.88em;font-weight:400;line-height:1.7;background:var(--stone);padding:.75em .95em;border-left:2px solid var(--camellia)}
+.note b{color:var(--camellia-dk);font-weight:700}
+.tag{display:inline-block;font-size:.82em;font-weight:700;letter-spacing:.08em;padding:.28em .7em;background:var(--forest);color:var(--offwhite)}
+.tag.warn{background:var(--camellia-dk)}
+.tag.ghost{background:transparent;color:var(--forest);border:1px solid var(--sage)}
+
+.foot{position:absolute;left:6%;right:6%;bottom:2.6%;display:flex;justify-content:space-between;
+  font-size:.82em;font-weight:400;opacity:.42}
+.pager{position:fixed;right:14px;bottom:10px;color:#8a938d;font-size:12px;font-weight:500;z-index:20;font-variant-numeric:tabular-nums}
+.hint{position:fixed;left:14px;bottom:10px;color:#8a938d;font-size:11px;font-weight:400;z-index:20}
+.backup-mark{position:absolute;right:6%;top:4.4%;font-size:.85em;font-weight:700;letter-spacing:.12em;color:var(--camellia-dk)}
+
+@media print{
+  @page{size:297mm 167mm;margin:0}
+  body{background:#fff;overflow:visible}
+  .stage{position:static;display:block;padding:0}
+  .slide{display:flex!important;width:297mm;height:167mm;aspect-ratio:auto;
+    box-shadow:none;page-break-after:always;break-after:page}
+  .pager,.hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+<!-- 1 표지 -->
+<section class="slide dark">
+  <div class="fill">
+    <div class="eyebrow">CAPSTONE · BRAND MARKETING</div>
+    <h1>이니스프리<br>브랜딩 성장 전략</h1>
+    <p class="lead">2023년 리브랜딩 이후 브랜드 인지도에 무슨 일이 있었는가 —<br>공개 데이터로 진단하고, 같은 지표로 회복을 추적한다.</p>
+  </div>
+  <div class="foot"><span>캡스톤 팀 프로젝트</span><span>2026.08</span></div>
+</section>
+
+<!-- 2 결론 먼저 -->
+<section class="slide deep">
+  <div class="eyebrow">결론부터</div>
+  <div class="fill">
+    <div class="quote">리브랜딩은 화제를 만들었지만<br>브랜드 인지도는 만들지 못했다.</div>
+    <div class="grid3 mt">
+      <div><div class="stat">146<span style="font-size:.5em">배</span></div><div class="statlab">리브랜딩 인지 검색<br>(2023, 6개월 만에 소멸)</div></div>
+      <div><div class="stat neg">−23.9%</div><div class="statlab">같은 해 브랜드 검색<br>화제는 났지만 수요는 아님</div></div>
+      <div><div class="stat neg">−72.9%</div><div class="statlab">5년 누적 브랜드 검색<br>2021 → 2025</div></div>
+    </div>
+  </div>
+  <div class="foot"><span>사람들은 "로고 왜 바꿨어?"를 검색했지 "이니스프리 사야지"를 검색하지 않았다</span><span>2</span></div>
+</section>
+
+<!-- 3 무엇을 바꿨나 -->
+<section class="slide">
+  <div class="eyebrow">2023년 2월 · 무엇을 바꿨나</div>
+  <div class="fill">
+    <h2>이름과 '자연주의'를 빼면<br>거의 전부를 바꿨다</h2>
+    <table class="mt">
+      <thead><tr><th>항목</th><th style="text-align:left">이전</th><th style="text-align:left">이후</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">세계관</td><td style="text-align:left"><b>제주도</b> — 실재하는 섬</td><td style="text-align:left"><b>THE NEW ISLE</b> — 가상의 섬</td></tr>
+        <tr><td class="hi">로고</td><td style="text-align:left">소문자 innisfree</td><td style="text-align:left">대문자 INNISFREE</td></tr>
+        <tr><td class="hi">키 컬러</td><td style="text-align:left">제주 비자림 짙은 녹색</td><td style="text-align:left">액티브 그린</td></tr>
+        <tr><td class="hi">타깃</td><td style="text-align:left">자연주의 선호 2030</td><td style="text-align:left">해외 + Gen Z</td></tr>
+      </tbody>
+    </table>
+    <div class="note mt">20년 이상 유지한 제주 정체성을 가상의 섬으로 대체한 것이 핵심. 용기·라인업·모델·매장 인테리어까지 전면 교체.</div>
+  </div>
+  <div class="foot"><span>출처 — 리브랜딩 자료 및 복수 매체</span><span>3</span></div>
+</section>
+
+<!-- 4 진단 예고 -->
+<section class="slide">
+  <div class="eyebrow">진단</div>
+  <div class="fill">
+    <h2>브랜드 인지도에서 확인된 문제 5개</h2>
+    <p class="lead">매출·수익성이 아니라 <b>소비자의 인식·검색·연상을 직접 측정한 것</b>만 추렸다.</p>
+    <div class="grid5 mt">
+      <div class="card"><h3>A</h3><p>헤리티지 서사 단절</p></div>
+      <div class="card"><h3>B</h3><p>광고가 인지도로 전환되지 않음</p></div>
+      <div class="card"><h3>C</h3><p>오프라인 접점 소멸</p></div>
+      <div class="card"><h3>D</h3><p>제품↔브랜드 단절</p></div>
+      <div class="card"><h3>E</h3><p>제로클릭 대응 부재</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>재무 지표는 스코프 밖 — 판단 기준은 인지도범위 가이드라인</span><span>4</span></div>
+</section>
+
+<!-- 5 문제 A -->
+<section class="slide">
+  <div class="eyebrow">문제 A</div>
+  <div class="fill">
+    <h2>회사는 제주를 뗐는데,<br>소비자는 안 뗐다</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="stat">0.34% → 0.52%</div>
+        <div class="statlab">브랜드 검색 대비 '이니스프리 제주' 단독 비중 (2021→2025)<br>브랜드 전체보다 <b>오래 버텼다</b></div>
+        <div class="stat neg mt">0 / 220건</div>
+        <div class="statlab">회사가 집행한 메타 광고 중<br>제주·헤리티지를 언급한 광고</div>
+      </div>
+      <div>
+        <div class="card hi"><h3>소비자 반응</h3>
+          <p>"제주 비자림의 짙은 녹음이 사라졌다"<br>"헤리티지가 안 보인다"<br>"IT회사 로고 같다"</p>
+          <p style="margin-top:.6em;opacity:.55">디자인나침반 2023-02 · 매드타임스 2023-06</p></div>
+        <div class="note mt"><b>읽는 법</b> 비중이 오른 건 제주가 늘어서가 아니라 분모(브랜드 검색)가 더 빨리 무너져서다. 제주 절대 검색도 5년간 −59%.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>NAVER 데이터랩 · Meta 광고 라이브러리 전수조사</span><span>5</span></div>
+</section>
+
+<!-- 6 문제 B -->
+<section class="slide">
+  <div class="eyebrow">문제 B</div>
+  <div class="fill">
+    <h2>돈은 브랜드가 아니라<br>제품으로만 갔다</h2>
+    <div class="grid3 mt">
+      <div><div class="stat neg">r = −0.03</div><div class="statlab">광고선전비 ↔ <b>브랜드</b> 검색<br>사실상 무상관</div></div>
+      <div><div class="stat">r = +0.69</div><div class="statlab">광고선전비 ↔ <b>제품</b> 검색<br>뚜렷하게 연결</div></div>
+      <div><div class="stat neg">−20.6%</div><div class="statlab">2024년 광고비<br>+41.6% 증액 <b>1년 만에</b> 철회</div></div>
+    </div>
+    <div class="note mt"><b>그리고</b> 광고비를 줄인 2024년, 브랜드 검색은 −38.5%로 5년 중 가장 크게 빠졌다. 낙폭이 가장 큰 해가 정확히 지원을 끊은 해다.</div>
+  </div>
+  <div class="foot"><span>DART 감사보고서 주석21 · NAVER 데이터랩</span><span>6</span></div>
+</section>
+
+<!-- 7 문제 C -->
+<section class="slide">
+  <div class="eyebrow">문제 C</div>
+  <div class="fill">
+    <h2>매장은 판매 채널이기 전에<br>매일 브랜드를 보여주던 무료 매체였다</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="stat neg">400 → 190</div>
+        <div class="statlab">로드샵 매장 수 (2021 → 2024, 공정위 기준)<br>3년 만에 절반 이하</div>
+        <div class="stat mt">r = 0.98</div>
+        <div class="statlab">매장 수 ↔ 브랜드 검색지수<br>프로젝트 전체에서 가장 강한 연결</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 260 150" width="100%" height="auto">
+          <line x1="30" y1="128" x2="250" y2="128" stroke="#E8E2D6"/>
+          <line x1="42" y1="112" x2="228" y2="36" stroke="#9FB89A" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <circle cx="228" cy="36" r="6" fill="#24382C"/><circle cx="160" cy="60" r="6" fill="#24382C"/>
+          <circle cx="82" cy="86" r="6" fill="#24382C"/><circle cx="42" cy="112" r="6" fill="#24382C"/>
+          <text x="228" y="26" text-anchor="middle" font-size="10" opacity=".55">400개</text>
+          <text x="42" y="126" text-anchor="middle" font-size="10" opacity=".55">190개</text>
+          <text x="248" y="146" text-anchor="end" font-size="9.5" opacity=".4">매장 수 →</text>
+          <text x="26" y="24" font-size="9.5" opacity=".4">↑ 브랜드 검색</text>
+        </svg>
+        <div class="note"><b>주의</b> 상관이지 인과가 아니다. n=4로 표본이 작고, 수요 감소 → 폐점이라는 역인과를 배제하지 못한다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>공정거래위원회 가맹사업거래 정보공개서</span><span>7</span></div>
+</section>
+
+<!-- 8 문제 D -->
+<section class="slide">
+  <div class="eyebrow">문제 D</div>
+  <div class="fill">
+    <h2>제품은 팔리는데,<br>그게 브랜드로 안 쌓인다</h2>
+    <div class="grid2 mt">
+      <div><div class="stat">+118.5%</div><div class="statlab">제품군 검색 (레티놀·앰플)<br>2022 → 2023</div></div>
+      <div><div class="stat neg">−23.9%</div><div class="statlab">같은 기간 브랜드 검색<br>정반대로 움직였다</div></div>
+    </div>
+    <div class="note mt"><b>같은 해에 벌어진 일이다.</b> 브랜드를 새로 세운다며 광고비를 41.6% 늘렸는데, 그 돈이 만든 것은 브랜드가 아니라 제품 한 줄이었다. 제품군 비중은 1.07%(2021) → 11.67%(2025)로 늘었다.</div>
+  </div>
+  <div class="foot"><span>NAVER 데이터랩 · 일간 1,826일 집계</span><span>8</span></div>
+</section>
+
+<!-- 9 문제 E -->
+<section class="slide">
+  <div class="eyebrow">문제 E</div>
+  <div class="fill">
+    <h2>AI가 인용할 수 없는 구조</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="stat neg">1 / 4</div>
+        <div class="statlab">AEO 대응 충족 (2026-08-19 자동 점검)</div>
+        <table class="mt">
+          <tbody>
+            <tr><td style="text-align:left">llms.txt</td><td>✅ 신설 확인</td></tr>
+            <tr><td style="text-align:left">robots.txt AI 크롤러 규칙</td><td>❌ 없음</td></tr>
+            <tr><td style="text-align:left">FAQPage 스키마</td><td>❌ Organization</td></tr>
+            <tr><td style="text-align:left">FAQ형 콘텐츠</td><td>❌ 경로 미응답</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="stat">69%</div>
+        <div class="statlab">검색이 클릭 없이 종료 (zero-click, 업계 참고 지표)</div>
+        <div class="stat mt">95% vs 35%</div>
+        <div class="statlab">FAQ형 콘텐츠의 AI 인용률 vs 홈페이지형</div>
+        <div class="note mt"><b>한계</b> 이건 "영향을 관찰"한 게 아니라 "취약점을 점검"한 것이다. 실제 AI 인용률은 아직 측정하지 않았다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>공식 사이트 자동 점검 · check_aeo.py</span><span>9</span></div>
+</section>
+
+<!-- 10 5개 문제 한 장 -->
+<section class="slide deep">
+  <div class="eyebrow">진단 종합</div>
+  <div class="fill">
+    <h2>다섯 문제가 한 곳으로 모인다</h2>
+    <div class="quote mt">방향을 잘못 잡은 게 아니라,<br>바꾼 뒤에 충분히·오래 닿지 않았다.</div>
+    <p class="lead">헤리티지에 대한 관심은 여전히 살아 있다(문제 A). 방향이 틀렸다는 증거는 오히려 적다.<br>
+    20년 쌓은 자산(제주·매장)을 대체할 새 접점을 만들지 않은 채 기존 접점만 줄인 것이 구조다.</p>
+  </div>
+  <div class="foot"><span>그래서 — 무엇을, 누구에게 다시 보여줄 것인가</span><span>10</span></div>
+</section>
+
+<!-- 11 고객 -->
+<section class="slide">
+  <div class="eyebrow">시장분석 · 고객</div>
+  <div class="fill">
+    <h2>인지 대상이 셋으로 갈라져 있다</h2>
+    <div class="grid3 mt">
+      <div class="card hi"><h3>헤리티지 고객</h3><p><b>국내 · 이탈 중</b><br>제주 연상은 살아있는데 접점이 사라져 멀어지는 층. 헤리티지가 죽은 게 아니라 <b>닿을 방법</b>이 사라졌다.</p></div>
+      <div class="card"><h3>성분 탐색형</h3><p><b>국내 · 현재 주력</b><br>브랜드가 아니라 제품을 산다. 인지도 캠페인 반응이 가장 늦게 나타날 층.</p></div>
+      <div class="card"><h3>해외 Gen Z</h3><p><b>스코프 밖</b><br>반응은 있었으나 매출(재무) 지표뿐 — 인지도를 직접 잰 자료가 없어 다루지 않는다.</p></div>
+    </div>
+    <div class="note mt">헤리티지 고객은 "제주 이야기"를, 성분 탐색형은 "데이터"를 원한다. 지금은 둘 사이 어디에도 서 있지 않다.</div>
+  </div>
+  <div class="foot"><span>NAVER 데이터랩 · 브랜드평판지수</span><span>11</span></div>
+</section>
+
+<!-- 12 경쟁 구도 -->
+<section class="slide">
+  <div class="eyebrow">시장분석 · 경쟁</div>
+  <div class="fill">
+    <h2>네 브랜드 모두<br>브랜드 스토리텔링이 0건이다</h2>
+    <table class="mt">
+      <thead><tr><th>브랜드</th><th>메타 광고</th><th>스토리텔링 광고</th><th style="text-align:left">특징</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">이니스프리</td><td>220건</td><td><b>0건</b></td><td style="text-align:left">순위·재구매율·리뷰수 수치 중심</td></tr>
+        <tr><td class="hi">토니모리</td><td>64건</td><td><b>0건</b></td><td style="text-align:left">할인·콜라보</td></tr>
+        <tr><td class="hi">미샤</td><td>4건</td><td><b>0건</b></td><td style="text-align:left">물량 자체가 적음 — 다른 채널로 성장</td></tr>
+        <tr><td class="hi">3CE <span class="tag ghost">참고군</span></td><td>~10건</td><td><b>0건</b></td><td style="text-align:left">로레알 소유·색조 전문인데도 같은 패턴</td></tr>
+      </tbody>
+    </table>
+    <div class="note mt"><b>이건 이니스프리에게 기회다.</b> 계열·카테고리가 완전히 다른 3CE조차 서사가 0건이라면, 이는 개별 브랜드 문제가 아니라 K뷰티 유통 구조의 공백이다 — <b>업계가 다 안 하는 걸 하나만 해도 차별화가 생긴다.</b></div>
+  </div>
+  <div class="foot"><span>Meta 광고 라이브러리 · 2026-08 조회</span><span>12</span></div>
+</section>
+
+<!-- 13 스위트스팟 -->
+<section class="slide">
+  <div class="eyebrow">시장분석 · 스위트스팟</div>
+  <div class="fill">
+    <h2>두 요구가 겹치는 지점</h2>
+    <div class="grid3 mt" style="align-items:center">
+      <div class="card"><h3>헤리티지 고객</h3><p>제주 이야기<br>"그때 그 브랜드"</p></div>
+      <div class="card hi" style="border-left-width:4px"><h3>겹치는 곳</h3><p><b>입증된 원료<br>+ 검증된 데이터</b></p></div>
+      <div class="card"><h3>성분 탐색형</h3><p>성분·효능 데이터<br>"근거를 보여달라"</p></div>
+    </div>
+    <p class="lead">원산지(제주) + 20년 축적 + 데이터 재입증 — <b>이 셋을 동시에 가진 경쟁자가 확인되지 않는다.</b></p>
+  </div>
+  <div class="foot"><span>3C 교차 분석</span><span>13</span></div>
+</section>
+
+<!-- 14 타깃 -->
+<section class="slide">
+  <div class="eyebrow">시장분석 · 타깃 확정</div>
+  <div class="fill">
+    <h2>헤리티지 이탈 고객 재활성화</h2>
+    <div class="grid2 mt">
+      <div class="card hi"><h3>왜 이쪽인가</h3><p>제주 연상이 아직 살아 있다(문제 A). 브랜드를 새로 설득할 필요가 없고, <b>이미 아는 사람에게 다시 닿는</b> 일이다.</p></div>
+      <div class="card"><h3>이미 있는 자산</h3><p>캠페인 무드보드 "오랜만이에요"(Reactivation)가 이미 제작돼 있다 — <b>신규 제작 없이 착수 가능</b>.</p></div>
+    </div>
+    <div class="note mt"><b>단, 시간이 있는 자산은 아니다.</b> 2025년부터 제주 절대 검색이 브랜드보다 빨리 빠지기 시작했다. "더 오래 버틴다"는 우위는 이미 끝났다 — <b>쓸 수 있을 때 써야 한다.</b></div>
+  </div>
+  <div class="foot"><span>타깃 1개 확정 · Part 2-7</span><span>14</span></div>
+</section>
+
+<!-- 15 포지셔닝 -->
+<section class="slide deep">
+  <div class="eyebrow">제안 전략 · 포지셔닝</div>
+  <div class="fill">
+    <div class="quote">"그때 믿었던 게,<br>지금도 맞았다"</div>
+    <p class="lead" style="opacity:.85">제주 헤리티지를 기억하는 자연주의 소비자에게, 제주 원료 기반 스킨케어인 이니스프리는
+    <b>확신의 회복</b>을 줍니다. 20년 축적된 원산지 자산과 그것을 <b>데이터로 다시 증명</b>하기 때문이고,
+    성분 트렌드만 좇는 경쟁자와 달리 실제 산지 서사와 검증 데이터를 동시에 가집니다.</p>
+    <div class="mt"><span class="tag">한 단어로 — 증명된 헤리티지</span></div>
+  </div>
+  <div class="foot"><span>되돌리기가 아니라 계승</span><span>15</span></div>
+</section>
+
+<!-- 16 3원칙 검증 -->
+<section class="slide">
+  <div class="eyebrow">자체 검증</div>
+  <div class="fill">
+    <h2>THE NEW ISLE이 실패한 그 기준으로<br>우리 문장도 검증한다</h2>
+    <table class="mt">
+      <thead><tr><th>원칙</th><th style="text-align:left">THE NEW ISLE</th><th style="text-align:left">우리 문장</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">차별성</td><td style="text-align:left">다름 — 가상 세계관은 구분됨</td><td style="text-align:left">✅ 원산지+20년+데이터 조합을 가진 경쟁자 없음</td></tr>
+        <tr><td class="hi">관련성</td><td style="text-align:left">❌ 어긋남 — 소비자 제주 연상은 유지</td><td style="text-align:left">✅ 스위트스팟에서 교집합 확인</td></tr>
+        <tr><td class="hi">신뢰성 (RTB)</td><td style="text-align:left">❌ 부재 — 광고 220건 중 0건</td><td style="text-align:left">🔶 데이터는 있으나 <b>아직 보여준 적이 없다</b></td></tr>
+      </tbody>
+    </table>
+    <div class="note mt"><b>세 번째가 Part 4의 존재 이유다.</b> 보여주지 않으면 이 문장도 THE NEW ISLE과 같은 방식으로 신뢰성을 잃는다.</div>
+  </div>
+  <div class="foot"><span>포지셔닝 3원칙 · Part 3-3</span><span>16</span></div>
+</section>
+
+<!-- 17 Part 4 예고 -->
+<section class="slide">
+  <div class="eyebrow">크리에이티브 제안</div>
+  <div class="fill">
+    <h2>문장을 보여줄 화면과 공간 4개</h2>
+    <div class="grid2 mt">
+      <div class="card hi"><h3>이미 있는 자산의 재조명</h3><p><b>무드보드</b> — 브랜드가 어떤 톤으로 말할 것인가<br><b>오프라인 거점</b> — '공병공간' 확장</p></div>
+      <div class="card"><h3>신규 제작</h3><p><b>랜딩페이지</b> — 무엇이 왜 바뀌었는지 선언<br><b>상세페이지</b> — 제품에서 브랜드로 건너가는 다리</p></div>
+    </div>
+    <div class="note mt"><b>절반이 이미 있는 자산이다.</b> 이니스프리에게 부족했던 건 자산이 아니라, 그 자산을 인지도로 연결하는 실행이었다는 진단과 일치한다.</div>
+  </div>
+  <div class="foot"><span>Part 4 · Before / After</span><span>17</span></div>
+</section>
+
+<!-- 18 무드보드 -->
+<section class="slide">
+  <div class="eyebrow">Part 4-1 · 무드보드</div>
+  <div class="fill">
+    <h2>제주를 지우지 않고<br>톤을 다시 세운다</h2>
+    <div class="grid3 mt">
+      <div class="card"><h3>컬러</h3><p>베이잘트 · 리파인드 포레스트 · 스톤 베이지 · 동백 로즈<br><span style="opacity:.6">제주 원료의 근원에서 가져온 팔레트</span></p></div>
+      <div class="card"><h3>타이포</h3><p>헤드라인은 절제된 산세리프로 신뢰감·현대성<br>원료 스토리는 세리프로 감성과 근거를 동시에</p></div>
+      <div class="card"><h3>캠페인 톤</h3><p>"오랜만이에요" — 할인 언어 대신 <b>재회</b>를 연상시키는 카피</p></div>
+    </div>
+    <div class="note mt">무드보드 3종(리브랜딩 · 캠페인 · 현재방향)이 제작돼 있다. 이 발표덱과 대시보드도 같은 팔레트·타이포 규칙으로 만들었다.</div>
+  </div>
+  <div class="foot"><span>00_무드보드/</span><span>18</span></div>
+</section>
+
+<!-- 19 오프라인 거점 -->
+<section class="slide">
+  <div class="eyebrow">Part 4-2 · 오프라인 체험 거점</div>
+  <div class="fill">
+    <h2>이미 있는데,<br>아무도 모른다</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="card hi"><h3>'공병공간'</h3><p>80년 된 한옥 개조 · 내부 70%를 <b>공병 23만 개</b>를 분쇄한 마감재로 장식<br>2003년 시작해 <b>23년째</b> 이어온 그린사이클 캠페인의 일부</p></div>
+      </div>
+      <div>
+        <div class="note" style="background:var(--paper);border:1px solid var(--stone);border-left:3px solid var(--forest)">
+          <b style="color:var(--forest)">헤리티지 + 지속가능성 + 체험</b>을 이미 증명하고 있는 공간이다.
+          일반 소비자가 거의 모른다는 것 자체가 기회 — <b>신규 콘셉트를 만드는 대신 이 실증 사례를 재조명·확장한다.</b></div>
+        <div class="note mt">사라진 매장 노출(문제 C)을 대체할 오프라인 축. 신규 제작이 아니라 <b>있는 것을 앞으로 꺼내는 일</b>이라 설득력이 가장 강한 Before/After가 된다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>언론 3건 교차확인 · 더나은미래 · 아모레스토리 · 뷰티누리</span><span>19</span></div>
+</section>
+
+<!-- 20 랜딩페이지 (목업 대기) -->
+<section class="slide">
+  <div class="eyebrow">Part 4-3 · 랜딩페이지</div>
+  <div class="fill">
+    <h2>첫 화면에서<br>"무엇이 왜 바뀌었는지" 선언</h2>
+    <div class="grid2 mt">
+      <div class="card"><h3>Before</h3><p>제품나열형 구성 · 계승 서사 없음<br>FAQPage 스키마 없음 · robots.txt AI 규칙 없음</p></div>
+      <div class="card hi"><h3>After</h3><p>포지셔닝 문장을 첫 화면에 선언<br>제주 데이터 근거 노출 · <b>FAQ 구조화 데이터 실장</b>으로 AEO 4/4 달성</p></div>
+    </div>
+    <div class="note mt" style="border-left-color:var(--sage)"><b>제작 예정</b> — 무드보드 확정 후 목업 삽입. 문제 E(제로클릭)를 말이 아니라 화면으로 증명하는 자리다.</div>
+  </div>
+  <div class="foot"><span>신규 제작 · 목업 대기</span><span>20</span></div>
+</section>
+
+<!-- 21 상세페이지 (목업 대기) -->
+<section class="slide">
+  <div class="eyebrow">Part 4-4 · 상세페이지</div>
+  <div class="fill">
+    <h2>제품에서 브랜드로<br>건너가는 다리</h2>
+    <div class="grid2 mt">
+      <div class="card"><h3>Before</h3><p>성분·효능 클레임 중심<br>제품을 사도 브랜드로 이어지지 않는다 (문제 D)</p></div>
+      <div class="card hi"><h3>After</h3><p>원료·데이터·헤리티지 근거를 두괄식 배치<br>제품 구매가 <b>브랜드 서사와 연결</b>되도록 설계</p></div>
+    </div>
+    <div class="note mt" style="border-left-color:var(--sage)"><b>제작 예정</b> — 무드보드 확정 후 목업 삽입.</div>
+  </div>
+  <div class="foot"><span>신규 제작 · 목업 대기</span><span>21</span></div>
+</section>
+
+<!-- 22 로드맵 -->
+<section class="slide">
+  <div class="eyebrow">실행 로드맵</div>
+  <div class="fill">
+    <h2>언제, 어떤 순서로</h2>
+    <table class="mt">
+      <thead><tr><th>시점</th><th style="text-align:left">실행 항목</th><th style="text-align:left">대응 문제</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">즉시 (0~30일)</td><td style="text-align:left">자사 채널 전체 감사 · 플랫폼 제휴 기획전 확대</td><td style="text-align:left">E · C</td></tr>
+        <tr><td class="hi">중기 (30~90일)</td><td style="text-align:left">무드보드 확정 + 휴면고객 재활성화 · 랜딩페이지 제작 · 콘텐츠 전문가 검증형 전환</td><td style="text-align:left">A · E</td></tr>
+        <tr><td class="hi">장기</td><td style="text-align:left">오프라인 체험 거점 확장 ('공병공간' 모델)</td><td style="text-align:left">C</td></tr>
+      </tbody>
+    </table>
+    <div class="note mt"><b>예산 원칙 — "더 쓰기"가 아니라 "다르게 쓰기".</b> 2023년의 실패는 돈을 안 써서가 아니라, 쓴 돈이 전부 성과형(BOFU)으로만 갔기 때문이다. 브랜드 인지(TOFU) 전용 예산을 별도로 배정한다.</div>
+  </div>
+  <div class="foot"><span>Part 5 · 난이도별 배치</span><span>22</span></div>
+</section>
+
+<!-- 23 KPI -->
+<section class="slide">
+  <div class="eyebrow">측정 계획</div>
+  <div class="fill">
+    <h2>무엇으로 성공을 판정할 것인가</h2>
+    <table class="mt">
+      <thead><tr><th>KPI</th><th style="text-align:left">정의</th><th>현재값</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">브랜드 검색지수</td><td style="text-align:left">'이니스프리' 단일 키워드</td><td>YoY −31.5%</td></tr>
+        <tr><td class="hi">'제주' 연상 비중</td><td style="text-align:left">'이니스프리 제주' <b>단독</b> ÷ 브랜드</td><td>0.51%</td></tr>
+        <tr><td class="hi">제품↔브랜드 Gap</td><td style="text-align:left">제품군 YoY − 브랜드 YoY</td><td>+9.6%p</td></tr>
+        <tr><td class="hi">경쟁 검색 점유율</td><td style="text-align:left">직접경쟁 3사 (이니스프리+미샤+3CE)</td><td>51.2%</td></tr>
+        <tr><td class="hi">AEO/SEO 대응</td><td style="text-align:left">4항목 충족률 <span class="tag ghost">실행 지표</span></td><td>1 / 4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="foot"><span>2026년 1~7월 실측 · 표준수치표 기준</span><span>23</span></div>
+</section>
+
+<!-- 24 판정 원칙 -->
+<section class="slide deep">
+  <div class="eyebrow">판정 원칙</div>
+  <div class="fill">
+    <div class="quote">목표치를 지어내지 않는다.</div>
+    <p class="lead" style="opacity:.85">"360일에 브랜드 검색 +N%" 같은 절대 숫자를 정하려면 업계 벤치마크가 필요하다.
+    없는 상태에서 지어내면 <b>근거 없는 숫자가 하나 더 느는 것</b>뿐이다.<br><br>
+    대신 <b>"자연 추세 대비 초과분"</b>으로 판정한다 — 개입이 없었어도 일어났을 변화는 성과가 아니다.
+    이 방식은 목표 숫자를 몰라도 성립하고, 데이터가 쌓일수록 정밀해진다.</p>
+    <div class="mt"><span class="tag">예 — 브랜드 검색 낙폭이 "줄었는가"가 아니라 "자연 감속보다 더 줄었는가"</span></div>
+  </div>
+  <div class="foot"><span>KPI 판정 기준표</span><span>24</span></div>
+</section>
+
+<!-- 25 대시보드 -->
+<section class="slide">
+  <div class="eyebrow">모니터링</div>
+  <div class="fill">
+    <h2>제안이 끝나도<br>같은 지표를 계속 본다</h2>
+    <div class="grid2 mt">
+      <div class="card hi"><h3>화면 1 — 분석 재현</h3><p>이 발표의 근거 데이터를 청중이 직접 조작하며 재확인. 상관계수 차트에는 <b>"다른 설명 가능성"</b> 경고가 항상 함께 뜬다.</p></div>
+      <div class="card hi"><h3>화면 2 — KPI 모니터링</h3><p>같은 KPI를 계속 추적. 게이트를 벗어나면 <b>자동 경보</b>, 갱신할 때마다 <b>변화 이력</b>이 남는다.</p></div>
+    </div>
+    <div class="note mt"><b>핵심은 재사용이다.</b> 제안 전에 문제를 진단한 데이터를 버리지 않고, 제안 이후 그대로 성과 측정 지표로 쓴다.<br>
+    <b>ry-ruc.github.io/Brand-Growth-Strategy</b> — 라이브로 접속 가능</div>
+  </div>
+  <div class="foot"><span>05_대시보드 · GitHub Pages 배포</span><span>25</span></div>
+</section>
+
+<!-- 26 마무리 -->
+<section class="slide dark">
+  <div class="eyebrow">정리</div>
+  <div class="fill">
+    <div class="quote">회사는 제주를 뗐지만,<br>소비자는 아직 제주로 브랜드를 기억한다.</div>
+    <p class="lead" style="opacity:.8">브랜드 자산은 사라진 것이 아니라 <b>연결되지 않고 있었다</b>.<br>
+    우리가 제안하는 것은 새 이야기를 만드는 일이 아니라, <b>이미 있는 이야기를 데이터로 다시 증명해 보여주는 일</b>이다.</p>
+    <div class="mt"><span class="tag">증명된 헤리티지</span></div>
+  </div>
+  <div class="foot"><span>감사합니다</span><span>26</span></div>
+</section>
+
+<!-- ══════ 백업 슬라이드 ══════ -->
+
+<section class="slide deep">
+  <div class="backup-mark">APPENDIX</div>
+  <div class="fill">
+    <h2>질의응답용 근거 자료</h2>
+    <p class="lead">본편에서는 결론만 말했습니다. 아래는 그 결론이 어떻게 나왔는지에 대한 자료입니다.</p>
+  </div>
+  <div class="foot"><span>백업 슬라이드</span><span>A0</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A1</div>
+  <div class="eyebrow">근거 등급 체계</div>
+  <div class="fill">
+    <h2>모든 숫자에 출처 등급을 매겼다</h2>
+    <table class="mt">
+      <thead><tr><th>등급</th><th style="text-align:left">뜻</th><th style="text-align:left">이 프로젝트에서</th></tr></thead>
+      <tbody>
+        <tr><td class="hi">A</td><td style="text-align:left">1차 자료 (법정 공시·등록), 원본 보유</td><td style="text-align:left">감사보고서(DART) · 공정위 정보공개서</td></tr>
+        <tr><td class="hi">B</td><td style="text-align:left">팀이 직접 수집, 방법론 명시</td><td style="text-align:left">네이버 데이터랩 · 공식 사이트 직접 점검</td></tr>
+        <tr><td class="hi">C</td><td style="text-align:left">언론 보도, 1차 교차검증 안 됨</td><td style="text-align:left">업계 참고지표 — 출처 명시 후 신중 인용</td></tr>
+        <tr><td class="hi">D</td><td style="text-align:left">주장·추정, 검증 불가</td><td style="text-align:left"><b>전혀 사용하지 않음</b></td></tr>
+      </tbody>
+    </table>
+    <div class="note mt">발표에 나온 모든 수치는 A 또는 B 등급입니다. C 등급(zero-click 69% 등)은 "업계 참고 지표"라고 명시했습니다.</div>
+  </div>
+  <div class="foot"><span>근거검증_감사.md</span><span>A1</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A2</div>
+  <div class="eyebrow">한계 — 상관 ≠ 인과</div>
+  <div class="fill">
+    <h2>r = 0.98이어도<br>"매장을 늘리면 된다"는 아니다</h2>
+    <div class="grid2 mt">
+      <div class="card"><h3>왜 단정할 수 없나</h3><p><b>표본이 작다</b> — 연간 n=4~5<br><b>역인과 가능성</b> — 수요가 줄어 채산성이 안 맞는 매장부터 닫았을 수 있다<br><b>교란변수</b> — K뷰티 붐, 중국 수요 소멸이 겹친다</p></div>
+      <div class="card hi"><h3>그래서 이렇게 쓴다</h3><p>"매장을 늘리면 검색이 는다"가 <b>아니라</b><br>"매장이 하던 <b>노출 기능</b>을 무엇으로 대체할 것인가"라는 질문으로만 사용한다.</p></div>
+    </div>
+    <div class="note mt">대시보드의 상관계수 차트에는 이 경고 캡션이 <b>항상 함께</b> 노출되도록 만들었습니다 — 원본을 안 읽은 사람이 화면만 보고 오해하지 않도록.</div>
+  </div>
+  <div class="foot"><span>전략실행_지표반응_중립분석.md</span><span>A2</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A3</div>
+  <div class="eyebrow">정의 확정 과정</div>
+  <div class="fill">
+    <h2>같은 지표가 상승·하락·보합으로<br>다 다르게 나왔다</h2>
+    <table class="mt">
+      <thead><tr><th style="text-align:left">'제주 연상' 정의</th><th>2025 → 2026</th><th style="text-align:left">판정</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left">제주 + 화산송이</td><td class="hi">1.96% → 1.45%</td><td style="text-align:left">하락</td></tr>
+        <tr><td style="text-align:left">제주 + 그린티</td><td class="hi">2.29% → 3.72%</td><td style="text-align:left">상승</td></tr>
+        <tr><td style="text-align:left"><b>제주 단독</b> ← 확정</td><td class="hi">0.51% → 0.51%</td><td style="text-align:left"><b>보합</b></td></tr>
+      </tbody>
+    </table>
+    <div class="note mt"><b>"2026년 제주 연상이 처음 꺾였다"는 보고는 실제로 화산송이 하락이었습니다.</b>
+    키워드를 분리 조회해 원인을 특정하고, 제주 단독을 공식 정의로 확정했습니다.
+    같은 착시를 2025년 "3~8월 스파이크"에서 한 번 더 잡았습니다 — 그것도 화산송이의 여름 계절성이었습니다.</div>
+  </div>
+  <div class="foot"><span>2026재현조회_계절성판정.md</span><span>A3</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A4</div>
+  <div class="eyebrow">대조군 교체</div>
+  <div class="fill">
+    <h2>토니모리를 왜 안 쓰는가</h2>
+    <div class="grid2 mt">
+      <div>
+        <table>
+          <thead><tr><th>브랜드</th><th>2026 1~7월 YoY</th></tr></thead>
+          <tbody>
+            <tr><td class="hi">이니스프리</td><td>−31.5%</td></tr>
+            <tr><td class="hi">미샤</td><td>−27.1%</td></tr>
+            <tr><td class="hi">토니모리</td><td><b style="color:var(--neg)">−53.5%</b></td></tr>
+          </tbody>
+        </table>
+        <div class="note mt">토니모리는 2026-02부터 월별 −50~67%로 <b>균일하게</b> 빠졌다 — 일시적 사건이 아니라 레벨 시프트다.</div>
+      </div>
+      <div class="card hi"><h3>왜 문제인가</h3>
+        <p>"토니모리는 평평한데 이니스프리만 무너졌다"는 논증이 <b>2026 구간에서 성립하지 않는다.</b>
+        오히려 이니스프리는 3사 중 중간이다.</p>
+        <p style="margin-top:.7em">또 점유율 분모에 넣으면 <b>우리가 가만히 있어도 점유율이 오르는 착시</b>가 생긴다.
+        그래서 검색량 대조군을 미샤·3CE로 교체했다.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>2021~2025 구간의 토니모리 인용은 유효</span><span>A4</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A5</div>
+  <div class="eyebrow">수치 통일</div>
+  <div class="fill">
+    <h2>같은 데이터도 집계 방식에 따라 갈린다</h2>
+    <table class="mt">
+      <thead><tr><th style="text-align:left">계열</th><th style="text-align:left">산출 방법</th><th>2024 YoY</th><th style="text-align:left">채택</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left"><b>일간 정밀</b></td><td style="text-align:left">1,826일 전량의 일수 가중 평균</td><td class="hi">−38.5%</td><td style="text-align:left">✅ 표준</td></tr>
+        <tr><td style="text-align:left">월간 API</td><td style="text-align:left">월간 조회 (재정규화 척도)</td><td class="hi">−38.4%</td><td style="text-align:left">병기 — 라이브 파이프라인</td></tr>
+        <tr><td style="text-align:left">단순평균</td><td style="text-align:left">월평균 12개를 다시 평균 (월 길이 미가중)</td><td class="hi">−38.6%</td><td style="text-align:left">❌ 폐기</td></tr>
+      </tbody>
+    </table>
+    <div class="note mt">문서마다 −38.4 / −38.5 / −38.6%가 섞여 있던 원인을 <b>집계 방식 차이</b>로 특정하고, 표준 계열을 정해 전 문서를 통일했습니다.
+    수치가 충돌하면 <b>검색지수_표준수치표</b>가 기준입니다.</div>
+  </div>
+  <div class="foot"><span>02_수집자료/검색지수_표준수치표_2021-2026.md</span><span>A5</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A6</div>
+  <div class="eyebrow">재현 가능성</div>
+  <div class="fill">
+    <h2>직접 확인할 수 있습니다</h2>
+    <div class="grid2 mt">
+      <div class="card hi"><h3>데이터 재조회</h3><p>NAVER 데이터랩 API 호출 스크립트가 저장소에 있습니다.<br><code>python build_data.py --live</code><br>실행하면 최신 월까지 재조회하고 대시보드에 반영됩니다.</p></div>
+      <div class="card hi"><h3>AEO 자동 점검</h3><p><code>python check_aeo.py</code><br>공식 사이트의 robots.txt · llms.txt · JSON-LD를 실제로 조회해 4항목을 판정합니다.</p></div>
+    </div>
+    <div class="note mt">원자료(CSV·API 원응답)와 집계 스크립트를 모두 저장소에 두었습니다. <b>같은 숫자가 다시 나오는지 확인할 수 있습니다.</b></div>
+  </div>
+  <div class="foot"><span>github.com/RY-ruc/Brand-Growth-Strategy</span><span>A6</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A7</div>
+  <div class="eyebrow">스코프</div>
+  <div class="fill">
+    <h2>매출을 왜 안 다루는가</h2>
+    <div class="grid2 mt">
+      <div class="card hi"><h3>다루는 것 — 인지도</h3><p>브랜드 검색 · 연상 · 접점 · 콘텐츠 · 경쟁 지위<br><span style="opacity:.65">"소비자가 브랜드를 아는가"</span></p></div>
+      <div class="card"><h3>제외 — 재무</h3><p>예산 회계 구조 · 가맹 수익성 · 판매 랭킹 · 해외 공급 매출 · 10년 재무 실적<br><span style="opacity:.65">"얼마나 팔렸는가"</span></p></div>
+    </div>
+    <div class="note mt"><b>판단 기준은 하나입니다</b> — "이것이 소비자의 인지를 재는가, 판매 성과를 재는가".
+    제외한 항목도 인지도와 맞닿는 지점은 문제 A~E 안에 반영했습니다(예: 광고비 재배치 → 문제 B).<br>
+    마케팅이 통제할 수 없는 레버(매장 수 확대 등)를 KPI로 삼지 않기 위한 구분입니다.</div>
+  </div>
+  <div class="foot"><span>인지도범위_판단가이드라인.md</span><span>A7</span></div>
+</section>
+
+<section class="slide">
+  <div class="backup-mark">A8</div>
+  <div class="eyebrow">이 분석의 약점</div>
+  <div class="fill">
+    <h2>먼저 밝히는 한계</h2>
+    <table class="mt">
+      <tbody>
+        <tr><td class="hi" style="width:32%">표본이 작다</td><td style="text-align:left">상관계수는 연간 n=4~5. "상관이 관찰된다"까지만 쓰고 "입증됐다"고 쓰지 않는다</td></tr>
+        <tr><td class="hi">인과가 아니다</td><td style="text-align:left">검색 감소가 리브랜딩 때문인지, 브랜드 쇠퇴의 결과인지 이 데이터로는 구분할 수 없다</td></tr>
+        <tr><td class="hi">관심이지 태도가 아니다</td><td style="text-align:left">검색량은 얼마나 찾는지 알려주지만 좋아하는지는 알려주지 않는다</td></tr>
+        <tr><td class="hi">AEO는 미측정</td><td style="text-align:left">취약점을 점검했을 뿐, 실제 AI 인용률은 아직 재지 않았다</td></tr>
+        <tr><td class="hi">해외는 스코프 밖</td><td style="text-align:left">해외 반응은 매출 지표뿐 — 인지도를 직접 잰 자료가 없다</td></tr>
+      </tbody>
+    </table>
+    <div class="note mt">한계를 먼저 밝히는 것이 이 프로젝트의 원칙입니다. <b>D등급(검증 불가) 근거는 한 건도 사용하지 않았습니다.</b></div>
+  </div>
+  <div class="foot"><span>각 원본 문서에 한계가 전부 명시돼 있음</span><span>A8</span></div>
+</section>
+
+</div>
+
+<div class="pager" id="pager"></div>
+<div class="hint">← → 이동 · F 전체화면 · P 인쇄(PDF)</div>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let i = 0;
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle('on', k === i));
+  document.getElementById('pager').textContent = `${i + 1} / ${slides.length}`;
+  if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+}
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(i + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(i - 1); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key.toLowerCase() === 'f') { document.documentElement.requestFullscreen?.(); }
+  else if (e.key.toLowerCase() === 'p') { e.preventDefault(); window.print(); }
+});
+addEventListener('click', e => { if (!e.target.closest('a')) show(i + 1); });
+show(parseInt(location.hash.slice(1)) - 1 || 0);
+</script>
+</body>
+</html>

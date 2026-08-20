@@ -161,28 +161,28 @@ function renderKPI() {
       <div class="num">${sign(k.brand_search.yoy)}%</div>
       <div class="sub">${esc(D.meta.ytd_window)} · <span class="neg">하락 지속</span><br>5년 누적 ${fmt(k.brand_search.cum5y)}%</div>
       ${spark(last24(s.brand), '#9C4A42', 150, 26, last24m)}
-      <div class="gatestrip"><div class="tr"><i style="width:32%"></i></div><em>90일 32%</em></div>
+      <div class="gatestrip"><em>게이트 — 낙폭이 자연 감속을 초과해 축소</em></div>
     </div>
     <div>
       <div class="lab">‘제주’ 연상 비중 <i>(제주 단독)</i></div>
       <div class="num">${fmt(k.jeju_ratio.current, 2)}%</div>
       <div class="sub"><span class="hold">보합</span> · ${esc(k.jeju_ratio.peak_year)}년 ${fmt(k.jeju_ratio.peak, 2)}% 정점<br>절대 지수 ${fmt(k.jeju_ratio.abs_yoy)}% 동반 판정</div>
       ${spark(last24(s.jeju), '#3B5D48', 150, 26, last24m)}
-      <div class="gatestrip"><div class="tr"><i style="width:48%"></i></div><em>180일 48%</em></div>
+      <div class="gatestrip"><em>게이트 — 비중 상승 + 절대 지수 낙폭 &lt; 브랜드</em></div>
     </div>
     <div>
       <div class="lab">제품 ↔ 브랜드 Gap</div>
       <div class="num">${sign(k.gap.ytd)}<span class="u">%p</span></div>
       <div class="sub">제품 ${fmt(k.gap.product_yoy)}% · 브랜드 ${fmt(k.gap.brand_yoy)}%<br>구간 따라 부호 반전 · KR1 종속</div>
       ${spark(last24(s.product), '#C97C86', 150, 26, last24m)}
-      <div class="gatestrip"><div class="tr"><i style="width:20%"></i></div><em>가드 발동</em></div>
+      <div class="gatestrip"><em>게이트 — KR1 개선 시에만 Gap 축소를 성과로 인정</em></div>
     </div>
     <div>
       <div class="lab">경쟁 검색 점유율 <i>(직접경쟁 3사)</i></div>
       <div class="num">${fmt(k.share.direct)}%</div>
       <div class="sub">이니스프리·미샤·3CE · <span class="neg">하락 중</span>(전년 ${fmt(k.share.direct_prev)}%)<br>4사(+토니모리) ${fmt(k.share.all4)}%는 붕괴 착시</div>
       ${spark(last24(s.share_direct || s.brand), '#3B5D48', 150, 26, last24m)}
-      <div class="gatestrip"><div class="tr"><i style="width:38%"></i></div><em>360일 38%</em></div>
+      <div class="gatestrip"><em>게이트 — 자연 둔화 대비 초과 회복분만 인정</em></div>
     </div>`;
 
   const a = D.kpi.aeo;
