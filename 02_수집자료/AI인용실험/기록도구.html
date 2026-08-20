@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 인용 실험 기록 도구</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#24382C;--forest:#3B5D48;--sage:#9FB89A;--sage-dim:#C6D4C2;
+      --stone:#E8E2D6;--camellia:#C97C86;--neg:#9C4A42;--off:#FAFAF7;--ink:#22241F;--paper:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--off);color:var(--ink);font-family:'Noto Sans KR',sans-serif;padding:0 0 60px}
+header{background:var(--deep);color:var(--stone);padding:24px 30px}
+header .k{font-size:10.5px;font-weight:700;letter-spacing:.2em;color:var(--sage)}
+h1{font-size:21px;font-weight:900;letter-spacing:-.04em;color:var(--off);margin-top:8px}
+header p{font-size:12px;font-weight:300;line-height:1.75;margin-top:9px;max-width:760px;opacity:.85}
+.wrap{max-width:1180px;padding:0 30px}
+.sec{font-size:10.5px;font-weight:700;letter-spacing:.15em;color:var(--forest);margin:26px 0 12px}
+
+/* 진행·집계 */
+.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:22px}
+.card{background:var(--paper);border:1px solid var(--stone);padding:15px 17px}
+.card .lab{font-size:10.5px;font-weight:500;opacity:.6}
+.card .num{font-size:27px;font-weight:900;letter-spacing:-.05em;color:var(--deep);margin:7px 0 2px;font-variant-numeric:tabular-nums}
+.card .sub{font-size:10px;font-weight:400;line-height:1.6;opacity:.7}
+.card.hl{border-left:3px solid var(--camellia)}
+.bar{height:4px;background:var(--stone);margin-top:9px}
+.bar i{display:block;height:100%;background:var(--sage)}
+
+/* 프로토콜 */
+details{background:var(--paper);border:1px solid var(--stone);padding:14px 17px;margin-top:12px}
+summary{font-size:12.5px;font-weight:700;cursor:pointer;color:var(--forest)}
+details ol{margin:12px 0 0 18px;font-size:11.5px;line-height:1.95}
+details li{margin-bottom:5px}
+details b{font-weight:700}
+.warn{margin-top:11px;font-size:10.5px;line-height:1.7;background:var(--off);border-left:2px solid var(--camellia);padding:9px 11px}
+
+/* 표 */
+.tblwrap{overflow-x:auto;background:var(--paper);border:1px solid var(--stone);margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{background:var(--off);font-size:10px;font-weight:700;letter-spacing:.03em;opacity:.65;
+   padding:9px 8px;text-align:left;border-bottom:1px solid var(--sage-dim);white-space:nowrap;position:sticky;top:0;z-index:2}
+td{padding:6px 8px;border-bottom:1px solid var(--stone);vertical-align:middle}
+tr.gA{background:#FDFCFA} tr.gB{background:#F7FAF6}
+tr.done{opacity:.72}
+td.q{font-weight:700;white-space:nowrap}
+td.q small{display:block;font-weight:400;font-size:9.5px;opacity:.55;margin-top:2px}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;margin-right:5px}
+.tag.A{background:#F6E4E2;color:var(--neg)} .tag.B{background:#E3EDE4;color:var(--forest)}
+.yn{display:flex;gap:4px}
+.yn button{font:inherit;font-size:10.5px;font-weight:700;padding:5px 11px;border:1px solid var(--stone);
+  background:var(--paper);cursor:pointer;border-radius:3px;color:var(--ink);opacity:.5}
+.yn button.on.y{background:var(--forest);color:#fff;border-color:var(--forest);opacity:1}
+.yn button.on.n{background:var(--neg);color:#fff;border-color:var(--neg);opacity:1}
+input[type=text],input[type=number]{font:inherit;font-size:11px;padding:5px 7px;border:1px solid var(--stone);
+  border-radius:3px;background:var(--paper);width:100%;color:var(--ink)}
+input:focus{outline:2px solid var(--sage);outline-offset:-1px}
+input:disabled{background:var(--off);opacity:.45}
+.w-rank{width:62px} .w-prod{min-width:150px} .w-comp{min-width:150px} .w-memo{min-width:130px}
+
+/* 버튼 */
+.actions{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}
+.btn{font:inherit;font-size:11.5px;font-weight:700;padding:10px 18px;border:1px solid var(--forest);
+  background:var(--forest);color:#fff;cursor:pointer;border-radius:4px}
+.btn.ghost{background:transparent;color:var(--forest)}
+.btn.danger{border-color:var(--neg);color:var(--neg);background:transparent}
+.btn:hover{opacity:.88}
+.hint{font-size:10px;font-weight:300;line-height:1.8;opacity:.6;margin-top:12px}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--deep);color:var(--stone);font-size:11.5px;
+  font-weight:500;padding:12px 16px;border-radius:5px;opacity:0;transform:translateY(8px);transition:.25s;z-index:50}
+.toast.on{opacity:1;transform:none}
+@media(max-width:820px){.top{grid-template-columns:1fr}.wrap{padding:0 15px}header{padding:20px 15px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="k">AI CITATION TEST · 이니스프리 캡스톤</div>
+  <h1>AI 인용 실험 기록 도구</h1>
+  <p>“회사가 실제로 걸어둔 일반명사 질의어(A군)에서는 이니스프리가 안 나오고,
+     이니스프리 고유 자산 질의어(B군)에서는 나온다”를 측정합니다.
+     입력은 자동 저장되므로 창을 닫아도 남습니다.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="card"><div class="lab">진행률</div>
+      <div class="num" id="prog">0 / 72</div>
+      <div class="sub" id="progSub">응답 입력 완료 기준</div>
+      <div class="bar"><i id="progBar" style="width:0%"></i></div></div>
+    <div class="card hl"><div class="lab">A군 — 회사가 건 일반명사</div>
+      <div class="num" id="rateA">—</div>
+      <div class="sub">이니스프리 언급률 · <b>낮을수록 우리 논지가 강함</b></div></div>
+    <div class="card hl"><div class="lab">B군 — 이니스프리 고유 자산</div>
+      <div class="num" id="rateB">—</div>
+      <div class="sub">이니스프리 언급률 · <b>높을수록 우리 논지가 강함</b></div></div>
+  </div>
+
+  <details open>
+    <summary>실험 순서 — 이대로만 하시면 됩니다</summary>
+    <div class="warn" style="border-left-color:var(--neg);margin-top:0;margin-bottom:12px">
+      <b>0단계 — 오염 통제 (이걸 안 하면 실험이 무효입니다)</b><br>
+      그동안 이니스프리를 조사한 계정으로 물으면 <b>개인화·메모리 때문에 이니스프리가 유리하게 나옵니다.</b>
+      아래 중 하나를 반드시 지키세요.
+      <ul style="margin:7px 0 0 18px;line-height:1.9">
+        <li><b>ChatGPT</b> — 설정에서 <b>메모리 끄기</b> + 새 계정 또는 로그아웃 상태. 메모리가 켜져 있으면 이전 대화를 기억합니다</li>
+        <li><b>Claude</b> — <b>다른 계정</b>(조사에 안 쓴 계정) 또는 새 대화. 프로젝트 안에서 묻지 마세요</li>
+        <li><b>Perplexity</b> — 로그아웃 또는 시크릿창</li>
+        <li><b>Gemini</b> — 활동 기록 끄기 또는 시크릿창</li>
+      </ul>
+      <b>가장 간단한 방법: 전부 시크릿창 + 로그아웃 상태로 하는 것.</b>
+      기록표 메모칸에 <code>로그아웃</code> 또는 <code>시크릿</code>이라고 적어두면 나중에 근거가 됩니다.
+    </div>
+    <ol>
+      <li><b>AI 하나를 고릅니다</b> (ChatGPT → Perplexity → Gemini 순서 추천). 한 AI를 끝내고 다음으로 갑니다.</li>
+      <li><b>반드시 새 대화창에서</b> 시작합니다. 앞 대화가 남아 있으면 답이 오염됩니다.</li>
+      <li>표의 질의어를 <b>글자 그대로 복사해서</b> 입력합니다. <b>“이니스프리”를 절대 먼저 언급하지 마세요.</b></li>
+      <li>답변이 나오면 <b>전체 화면을 캡처</b>합니다. 파일명은 <code>AI_질의번호_회차.png</code> (예: <code>chatgpt_A1_1.png</code>).</li>
+      <li>표에 기록합니다 — 언급 <b>있음/없음</b>, 있으면 <b>몇 번째로</b> 나왔는지, <b>어떤 제품</b>인지, <b>함께 나온 경쟁 브랜드</b>.</li>
+      <li>같은 질의를 <b>2회차</b>도 합니다. 반드시 <b>새 대화창</b>에서.</li>
+      <li>12개 질의 × 2회를 끝내면 다음 AI로 넘어갑니다.</li>
+      <li>다 끝나면 <b>CSV 내보내기</b>를 눌러 저장하고, 캡처 파일과 함께 이 폴더에 넣습니다.</li>
+    </ol>
+    <div class="warn">
+      <b>주의</b> — AI 답변은 같은 질문에도 매번 다릅니다. 그래서 2회씩 하는 겁니다.
+      한 번 나왔다고 “나온다”, 한 번 안 나왔다고 “안 나온다”로 쓰면 안 됩니다.
+      <b>발표에 쓸 캡처는 반드시 미리 찍어두세요.</b> 무대에서 라이브로만 하면 안 나올 때 논지가 무너집니다.
+    </div>
+  </details>
+
+  <div class="sec">기록표 <small style="font-weight:400;letter-spacing:0;opacity:.6">A군 6개 · B군 6개 × AI 3사 × 2회 = 72건</small></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr>
+        <th style="width:210px">질의어</th><th style="width:88px">AI</th><th style="width:44px">회차</th>
+        <th style="width:120px">이니스프리 언급</th><th style="width:70px">몇 번째</th>
+        <th>언급된 제품</th><th>함께 나온 경쟁 브랜드</th><th>메모 · 캡처파일</th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="exp">CSV 내보내기 (Excel에서 열림)</button>
+    <button class="btn ghost" id="expMd">요약 마크다운 복사</button>
+    <button class="btn danger" id="clr">전체 지우기</button>
+  </div>
+
+  <div class="hint">
+    입력은 브라우저에 자동 저장됩니다(localStorage) — 창을 닫아도 남지만, <b>다른 PC·시크릿창에서는 안 보입니다.</b>
+    끝나면 반드시 CSV로 내보내 저장소에 넣으세요.<br>
+    B6 <b>노세범 선크림</b>은 <b>대조 확인용</b>입니다 — 회사가 유일하게 걸어둔 고유명사라 <b>여기서는 나와야 정상</b>입니다.
+    여기서도 안 나오면 측정 방법 자체를 의심해야 합니다.
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* A군 = 회사가 llms.txt 타겟 질의어에 직접 걸어둔 일반명사 (원문 그대로)
+   B군 = 이니스프리 고유 자산 — B6만 회사가 걸었고 나머지는 비워둠
+   질의어 개수를 늘린 이유: 같은 질의를 여러 번 반복하는 것보다
+   서로 다른 질의에서 일관되게 나오는 편이 일반화 근거가 훨씬 강하다. */
+const QUERIES = [
+  {id:'A1', g:'A', q:'수분크림 추천',              why:'회사가 그린티 히알루론산 수분 크림에 건 질의어'},
+  {id:'A2', g:'A', q:'선세럼 추천',                why:'회사가 데일리 유브이 수분장벽 선세럼에 건 질의어'},
+  {id:'A3', g:'A', q:'폼클렌징 추천',              why:'회사가 화산송이 바하 모공 폼 클렌징에 건 질의어'},
+  {id:'A4', g:'A', q:'안티에이징 앰플 추천',       why:'회사가 블랙티 유스 인핸싱 앰플에 건 질의어'},
+  {id:'A5', g:'A', q:'스킨부스터 추천',            why:'회사가 레티놀 PDRN 스킨부스터 앰플에 건 질의어'},
+  {id:'A6', g:'A', q:'비타민C 세럼 추천',          why:'회사가 비타민C 캡슐 세럼에 건 질의어'},
+  {id:'B1', g:'B', q:'녹차 스킨케어 추천',         why:'그린티 축 31.4 — 회사가 안 건 고유 자산'},
+  {id:'B2', g:'B', q:'제주 화장품 추천',           why:'제주 축 7.8 — 회사가 안 건 고유 자산'},
+  {id:'B3', g:'B', q:'화산송이 클렌징 추천',       why:'화산송이 축 22.3 — 회사가 안 건 고유 자산'},
+  {id:'B4', g:'B', q:'제주 원료 스킨케어 추천',    why:'제주 헤리티지 직접 질의 — 회사가 안 건 자산'},
+  {id:'B5', g:'B', q:'화장품 공병 수거하는 브랜드 추천', why:'공병·그린사이클 축 26.0 — 회사가 안 건 자산'},
+  {id:'B6', g:'B', q:'노세범 선크림 추천',         why:'노세범 축 70.1 — 회사가 유일하게 건 고유명사 · <b>대조 확인용</b>'},
+];
+const AIS = ['ChatGPT','Perplexity','Gemini'];
+const TRIES = [1,2];
+const KEY = 'ai_citation_test_v1';
+
+const rows = [];
+QUERIES.forEach(q => AIS.forEach(ai => TRIES.forEach(t =>
+  rows.push({key:`${q.id}|${ai}|${t}`, ...q, ai, t, hit:null, rank:'', prod:'', comp:'', memo:''}))));
+
+const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+rows.forEach(r => Object.assign(r, saved[r.key] || {}));
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function save(){
+  const o = {};
+  rows.forEach(r => { if(r.hit!==null||r.rank||r.prod||r.comp||r.memo)
+    o[r.key]={hit:r.hit,rank:r.rank,prod:r.prod,comp:r.comp,memo:r.memo}; });
+  localStorage.setItem(KEY, JSON.stringify(o));
+  stats();
+}
+function stats(){
+  const done = rows.filter(r => r.hit !== null).length;
+  $('#prog').textContent = `${done} / ${rows.length}`;
+  $('#progBar').style.width = (done/rows.length*100).toFixed(1)+'%';
+  ['A','B'].forEach(g => {
+    const s = rows.filter(r => r.g===g && r.hit!==null);
+    const el = $('#rate'+g);
+    el.textContent = s.length ? Math.round(s.filter(r=>r.hit).length/s.length*100)+'%' : '—';
+    el.nextElementSibling.innerHTML = s.length
+      ? `${s.filter(r=>r.hit).length}/${s.length}건 언급 · ${g==='A'?'<b>낮을수록 우리 논지가 강함</b>':'<b>높을수록 우리 논지가 강함</b>'}`
+      : (g==='A'?'이니스프리 언급률 · <b>낮을수록 우리 논지가 강함</b>':'이니스프리 언급률 · <b>높을수록 우리 논지가 강함</b>');
+  });
+}
+
+const tb = $('#tb');
+rows.forEach((r,i) => {
+  const first = i===0 || rows[i-1].id!==r.id;
+  const tr = document.createElement('tr');
+  tr.className = 'g'+r.g + (r.hit!==null?' done':'');
+  tr.innerHTML = `
+    <td class="q">${first?`<span class="tag ${r.g}">${r.g}군</span>${esc(r.q)}<small>${esc(r.why)}</small>`:''}</td>
+    <td>${esc(r.ai)}</td><td>${r.t}회</td>
+    <td><div class="yn">
+      <button class="y ${r.hit===true?'on':''}" data-h="1">있음</button>
+      <button class="n ${r.hit===false?'on':''}" data-h="0">없음</button></div></td>
+    <td><input type="number" min="1" max="20" class="w-rank" value="${esc(r.rank)}" ${r.hit?'':'disabled'} placeholder="–"></td>
+    <td><input type="text" class="w-prod" value="${esc(r.prod)}" ${r.hit?'':'disabled'} placeholder="예: 그린티 수분크림"></td>
+    <td><input type="text" class="w-comp" value="${esc(r.comp)}" placeholder="예: 라네즈, 토리든"></td>
+    <td><input type="text" class="w-memo" value="${esc(r.memo)}" placeholder="chatgpt_A1_1.png / 시크릿"></td>`;
+  const [rank, prod, comp, memo] = tr.querySelectorAll('input');
+  tr.querySelectorAll('.yn button').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.h === '1';
+    r.hit = (r.hit === v) ? null : v;
+    tr.querySelectorAll('.yn button').forEach(x => x.classList.remove('on'));
+    if(r.hit !== null) b.classList.add('on');
+    [rank, prod].forEach(el => { el.disabled = r.hit !== true; if(r.hit !== true) el.value=''; });
+    if(r.hit !== true){ r.rank=''; r.prod=''; }
+    tr.classList.toggle('done', r.hit !== null);
+    save();
+  }));
+  [[rank,'rank'],[prod,'prod'],[comp,'comp'],[memo,'memo']].forEach(([el,k]) =>
+    el.addEventListener('input', () => { r[k] = el.value; save(); }));
+  tb.appendChild(tr);
+});
+stats();
+
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),2600); }
+
+$('#exp').addEventListener('click', () => {
+  const head = ['구분','질의ID','질의어','AI','회차','이니스프리 언급','몇 번째','언급된 제품','함께 나온 경쟁 브랜드','메모/캡처'];
+  const body = rows.map(r => [r.g+'군', r.id, r.q, r.ai, r.t+'회',
+    r.hit===null?'':(r.hit?'있음':'없음'), r.rank, r.prod, r.comp, r.memo]);
+  const csv = [head, ...body].map(l => l.map(c => `"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});   // BOM — Excel 한글 깨짐 방지
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AI인용실험_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV를 내려받았습니다. 이 폴더에 넣어주세요.');
+});
+
+$('#expMd').addEventListener('click', async () => {
+  const line = g => {
+    const s = rows.filter(r => r.g===g && r.hit!==null);
+    return s.length ? `${g}군 ${s.filter(r=>r.hit).length}/${s.length}건 언급 (${Math.round(s.filter(r=>r.hit).length/s.length*100)}%)` : `${g}군 미측정`;
+  };
+  const byQ = QUERIES.map(q => {
+    const s = rows.filter(r => r.id===q.id && r.hit!==null);
+    return `| ${q.g}군 | ${q.q} | ${s.length ? s.filter(r=>r.hit).length+'/'+s.length : '—'} |`;
+  }).join('\n');
+  const md = `## AI 인용 실험 결과 (${new Date().toISOString().slice(0,10)})\n\n`
+    + `- 대상: ${AIS.join(' · ')} · 질의 ${QUERIES.length}개 × ${TRIES.length}회\n`
+    + `- ${line('A')} / ${line('B')}\n\n`
+    + `| 구분 | 질의어 | 언급 |\n|---|---|---|\n${byQ}\n`;
+  try { await navigator.clipboard.writeText(md); toast('마크다운을 복사했습니다.'); }
+  catch { toast('복사 실패 — CSV를 쓰세요.'); }
+});
+
+$('#clr').addEventListener('click', () => {
+  if(!confirm('입력한 기록을 전부 지웁니다. 계속할까요?')) return;
+  localStorage.removeItem(KEY); location.reload();
+});
+</script>
+</body>
+</html>
