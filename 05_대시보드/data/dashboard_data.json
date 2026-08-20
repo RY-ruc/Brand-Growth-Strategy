@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated_at": "2026-08-20 09:59 KST",
+  "generated_at": "2026-08-20 10:03 KST",
   "source_mode": "repo",
   "coverage": "2021-01 ~ 2026-08",
   "latest_partial_month": "2026-08",
@@ -50,9 +50,9 @@
    ]
   },
   "aeo": {
-   "score": 1,
+   "score": 3,
    "total": 4,
-   "checked": "2026-08-20 09:59 KST",
+   "checked": "2026-08-20 10:01 KST",
    "items": [
     {
      "k": "robots.txt AI 크롤러 규칙",
@@ -67,13 +67,13 @@
     },
     {
      "k": "FAQPage 스키마(JSON-LD)",
-     "ok": false,
-     "note": "JSON-LD 1개 있으나 FAQPage 아님 (Organization)"
+     "ok": true,
+     "note": "확인 · /kr/ko/cu/support/faq → JSON-LD 없음 / / → ContactPoint, Organization / /kr/ko/dp/product/103436 → AggregateRating, Answer, Brand, FAQPage, Offer, Organization, Product, PropertyValue, Question"
     },
     {
      "k": "FAQ형 콘텐츠 경로",
-     "ok": false,
-     "note": "확인한 경로 5개 모두 미응답 — 제품나열형 구조"
+     "ok": true,
+     "note": "존재: /kr/ko/cu/support/faq"
     }
    ],
    "source": "check_aeo.py",
@@ -101,7 +101,7 @@
   }
  ],
  "diff": {
-  "base": "2026-08-20 09:42 KST",
+  "base": "2026-08-20 09:59 KST",
   "rows": [
    {
     "label": "브랜드 검색 YoY",
@@ -134,8 +134,8 @@
    {
     "label": "AEO 충족",
     "prev": 1,
-    "cur": 1,
-    "delta": 0,
+    "cur": 3,
+    "delta": 2,
     "unit": "/4"
    }
   ]

@@ -49,7 +49,20 @@ TIMEOUT = 12
 AI_BOTS = ["GPTBot", "ClaudeBot", "anthropic-ai", "PerplexityBot",
            "CCBot", "Google-Extended", "Applebot-Extended", "Bytespider"]
 
-FAQ_PATHS = ["/faq", "/support/faq", "/cs/faq", "/help", "/customer/faq"]
+# 실제 경로는 llms.txt가 직접 알려준다(2026-08-20 확인). 추측 경로만 보다가
+# 존재하는 FAQ를 '없음'으로 잘못 판정했던 이력이 있어 공식 경로를 맨 앞에 둔다.
+FAQ_PATHS = [
+    "/kr/ko/cu/support/faq",   # llms.txt에 명시된 공식 FAQ
+    "/faq", "/support/faq", "/cs/faq", "/help", "/customer/faq",
+]
+
+# FAQPage 스키마는 메인이 아니라 FAQ 페이지에 있을 가능성이 높다.
+# llms.txt가 "모든 PDP에 JSON-LD가 구현돼 있다"고 밝히므로 상품 페이지도 함께 본다.
+SCHEMA_PATHS = [
+    "/kr/ko/cu/support/faq",            # FAQ 페이지
+    "/",                                 # 메인
+    "/kr/ko/dp/product/103436",          # 히어로 상품 PDP (그린티 히알루론산 수분 크림)
+]
 
 
 def fetch_h(url: str) -> tuple[int, str, dict | None]:
@@ -130,11 +143,7 @@ def check_llms() -> dict:
     return {"k": "llms.txt", "ok": None, "note": f"판정 보류 (status {st})"}
 
 
-def check_faq_schema() -> dict:
-    st, body = fetch(BASE)
-    if st != 200:
-        return {"k": "FAQPage 스키마(JSON-LD)", "ok": None,
-                "note": f"메인 페이지 조회 실패(status {st}) — 판정 보류"}
+def _ld_types(body: str) -> tuple[list[str], int]:
     blocks = re.findall(r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
                         body, re.S | re.I)
     types: list[str] = []
@@ -143,20 +152,42 @@ def check_faq_schema() -> dict:
             data = json.loads(b.strip())
         except json.JSONDecodeError:
             continue
-        for item in (data if isinstance(data, list) else [data]):
-            if isinstance(item, dict) and item.get("@type"):
-                t = item["@type"]
-                types += t if isinstance(t, list) else [t]
-    if "FAQPage" in types:
-        return {"k": "FAQPage 스키마(JSON-LD)", "ok": True, "note": f"확인 · 스키마 {', '.join(sorted(set(types)))}"}
-    if blocks:
-        return {"k": "FAQPage 스키마(JSON-LD)", "ok": False,
-                "note": f"JSON-LD {len(blocks)}개 있으나 FAQPage 아님 ({', '.join(sorted(set(types))) or '타입 불명'})"}
-    # SPA면 정적 HTML에 스키마가 없는 게 정상 — '없음'으로 단정하지 않는다
-    spa = len(body) < 60_000 and body.count("<script") > 3
-    return {"k": "FAQPage 스키마(JSON-LD)", "ok": None if spa else False,
-            "note": "정적 HTML에 JSON-LD 없음 — 클라이언트 렌더링 추정, 판정 보류" if spa
-                    else "JSON-LD 자체가 없음"}
+        stack = [data]
+        while stack:                       # @graph 등 중첩 구조까지 훑는다
+            cur = stack.pop()
+            if isinstance(cur, list):
+                stack.extend(cur)
+            elif isinstance(cur, dict):
+                t = cur.get("@type")
+                if t:
+                    types += t if isinstance(t, list) else [t]
+                for v in cur.values():
+                    if isinstance(v, (list, dict)):
+                        stack.append(v)
+    return types, len(blocks)
+
+
+def check_faq_schema() -> dict:
+    """FAQPage 스키마 — 메인만 보면 놓친다. FAQ 페이지·상품 PDP까지 확인한다."""
+    seen: dict[str, list[str]] = {}
+    any_ok = False
+    for p in SCHEMA_PATHS:
+        st, body = fetch(BASE + p if p != "/" else BASE)
+        if st != 200:
+            seen[p] = [f"status {st}"]
+            continue
+        types, n = _ld_types(body)
+        seen[p] = sorted(set(types)) or [f"JSON-LD {n}개·타입 불명" if n else "JSON-LD 없음"]
+        if "FAQPage" in types:
+            any_ok = True
+
+    detail = " / ".join(f"{p} → {', '.join(v)}" for p, v in seen.items())
+    if any_ok:
+        return {"k": "FAQPage 스키마(JSON-LD)", "ok": True, "note": f"확인 · {detail}"}
+    found_any_ld = any(v and not v[0].startswith(("status", "JSON-LD 없음")) for v in seen.values())
+    return {"k": "FAQPage 스키마(JSON-LD)", "ok": False if found_any_ld else None,
+            "note": (f"FAQPage 없음 — {detail}" if found_any_ld
+                     else f"판정 보류(JSON-LD 미검출) — {detail}")}
 
 
 def check_faq_content() -> dict:
