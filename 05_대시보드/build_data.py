@@ -211,24 +211,6 @@ def make_alerts(k: dict, prev: dict | None) -> list[dict]:
         a.append({"level": "high", "kpi": "경쟁 검색 점유율",
                   "msg": f'직접경쟁 3사 기준 {s["direct_prev"]}% → {s["direct"]}% 하락',
                   "action": "KR4 게이트 미달 — 3CE·미샤 대비 상대 위치 점검"})
-    if s["all4"] is not None and s["all4"] > s["all4_prev"]:
-        a.append({"level": "info", "kpi": "경쟁 검색 점유율",
-                  "msg": f'토니모리 포함 4사 기준은 {s["all4_prev"]}% → {s["all4"]}%로 상승(착시)',
-                  "action": "토니모리 붕괴 효과 — 이 수치를 성과로 인용하지 말 것"})
-
-    if k["aeo"]["score"] < k["aeo"]["total"]:
-        a.append({"level": "mid", "kpi": "AEO/SEO",
-                  "msg": f'{k["aeo"]["score"]}/{k["aeo"]["total"]} 충족 — 미완료 항목 존재',
-                  "action": "랜딩페이지 신규 제작(Part 5 30~90일)과 연동"})
-
-    if prev:
-        pk = prev.get("kpi", {})
-        pb = (pk.get("brand_search") or {}).get("yoy")
-        cb = k["brand_search"]["yoy"]
-        if pb is not None and cb is not None and abs(cb - pb) >= 3:
-            a.append({"level": "info", "kpi": "변화 감지",
-                      "msg": f'직전 갱신 대비 브랜드 YoY {pb}% → {cb}% ({cb-pb:+.1f}%p)',
-                      "action": "구간·정의 변경 여부 먼저 확인 후 해석"})
     return a
 
 
