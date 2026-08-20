@@ -103,17 +103,40 @@ def fetch(url: str) -> tuple[int, str]:
 
 
 def check_robots() -> dict:
+    """robots.txt — 판정 기준을 '차단 여부'로 바로잡았다(2026-08-20).
+
+    기존에는 'GPTBot 등 전용 규칙이 있는가'로 봤고 없으면 미충족 처리했다. 그런데
+    robots.txt는 기본이 허용이라, 전용 규칙이 없다는 것은 '차단하지 않는다'는 뜻이다.
+    AEO에서 중요한 것은 AI 크롤러가 실제로 접근할 수 있는가이지 이름이 적혀 있는가가 아니다.
+    → 차단이 없으면 충족으로 본다. 명시적 차단이 있을 때만 미충족.
+    """
     st, body = fetch(f"{BASE}/robots.txt")
     if st != 200:
-        return {"k": "robots.txt AI 크롤러 규칙", "ok": None,
-                "note": f"robots.txt 조회 실패(status {st}) — 판정 보류"}
-    found = [b for b in AI_BOTS if re.search(rf"User-agent:\s*{re.escape(b)}", body, re.I)]
-    if found:
-        return {"k": "robots.txt AI 크롤러 규칙", "ok": True,
-                "note": f"전용 규칙 확인: {', '.join(found)}"}
-    ua_count = len(re.findall(r"^\s*User-agent:", body, re.I | re.M))
-    return {"k": "robots.txt AI 크롤러 규칙", "ok": False,
-            "note": f"AI 크롤러 전용 규칙 없음 (User-agent 블록 {ua_count}개 — 범용 규칙만)"}
+        return {"k": "robots.txt — AI 크롤러 접근", "ok": None,
+                "note": f"조회 실패(status {st}) — 판정 보류"}
+
+    # AI 봇을 이름으로 차단하는 블록이 있는가
+    blocked = []
+    for bot in AI_BOTS:
+        m = re.search(rf"(?ims)^user-agent:\s*{re.escape(bot)}\s*$(.*?)(?=^user-agent:|\Z)", body)
+        if m and re.search(r"(?im)^disallow:\s*/\s*$", m.group(1)):
+            blocked.append(bot)
+    # 전체(*) 블록이 사이트를 통째로 막는가
+    star = re.search(r"(?ims)^user-agent:\s*\*\s*$(.*?)(?=^user-agent:|\Z)", body)
+    star_all = bool(star and re.search(r"(?im)^disallow:\s*/\s*$", star.group(1)))
+
+    named = [b for b in AI_BOTS if re.search(rf"(?im)^user-agent:\s*{re.escape(b)}\s*$", body)]
+    dis = len(re.findall(r"(?im)^disallow:", body))
+
+    if star_all or blocked:
+        who = ", ".join(blocked) if blocked else "전체(*)"
+        return {"k": "robots.txt — AI 크롤러 접근", "ok": False,
+                "note": f"차단됨 — {who}에 Disallow: / 적용. llms.txt가 있어도 크롤러가 못 읽는다"}
+
+    detail = (f"AI 봇 명시 {', '.join(named)}" if named
+              else "AI 봇 개별 명시는 없음(= 기본 허용)")
+    return {"k": "robots.txt — AI 크롤러 접근", "ok": True,
+            "note": f"접근 허용 · {detail} · 차단 경로는 중복·API {dis}건뿐 — 전체 차단 없음"}
 
 
 def check_llms() -> dict:
@@ -202,8 +225,59 @@ def check_faq_content() -> dict:
             "note": f"확인한 경로 {len(FAQ_PATHS)}개 모두 미응답 — 제품나열형 구조"}
 
 
+SNAPDIR = HERE / "data" / "llms_snapshots"
+
+
+def snapshot_llms() -> dict:
+    """llms.txt 본문을 보관하고 직전 스냅샷과 비교한다.
+
+    과거 버전은 구할 수 없다 — 웨이백·archive.today·Common Crawl 모두 이 URL 스냅샷이 0건이다
+    (도메인 자체는 1996년부터 아카이브되지만 llms.txt는 크롤 대상이 아니었다).
+    그래서 '8/18에 무엇이 바뀌었나'는 영구히 알 수 없다.
+    대신 지금부터 매번 보관해두면 다음 변경은 무엇이 바뀌었는지 정확히 말할 수 있다.
+    """
+    import difflib
+    import hashlib
+
+    st, body, hdr = fetch_h(f"{BASE}/llms.txt")
+    if st != 200 or not body.strip():
+        return {"ok": False, "note": f"스냅샷 실패(status {st})"}
+
+    SNAPDIR.mkdir(parents=True, exist_ok=True)
+    digest = hashlib.sha256(body.encode("utf-8")).hexdigest()[:12]
+    lm = (hdr or {}).get("Last-Modified", "")
+    stamp = datetime.now(KST).strftime("%Y%m%d-%H%M")
+
+    prev = sorted(SNAPDIR.glob("llms_*.txt"))
+    changed, diff_lines = None, []
+    if prev:
+        old = prev[-1].read_text(encoding="utf-8")
+        changed = (old != body)
+        if changed:
+            diff_lines = [l for l in difflib.unified_diff(
+                old.splitlines(), body.splitlines(),
+                fromfile=prev[-1].name, tofile=f"llms_{stamp}.txt", lineterm="", n=1)]
+
+    if not prev or changed:
+        (SNAPDIR / f"llms_{stamp}_{digest}.txt").write_text(body, encoding="utf-8")
+
+    if not prev:
+        print(f"  [스냅샷] 최초 보관 — 이후 변경분부터 diff 가능 ({len(body):,}자)")
+        return {"ok": True, "first": True, "digest": digest, "last_modified": lm}
+    if changed:
+        print(f"  [스냅샷] ⚠ llms.txt 변경 감지 — {len(diff_lines)}줄 차이")
+        for l in diff_lines[:40]:
+            print(f"      {l}")
+        (SNAPDIR / f"diff_{stamp}.txt").write_text("\n".join(diff_lines), encoding="utf-8")
+        return {"ok": True, "changed": True, "digest": digest,
+                "diff_lines": len(diff_lines), "last_modified": lm}
+    print(f"  [스냅샷] 직전과 동일 (sha {digest})")
+    return {"ok": True, "changed": False, "digest": digest, "last_modified": lm}
+
+
 def main(apply_to_dashboard: bool = True) -> dict:
     print(f"[AEO] {BASE} 점검 시작")
+    snap = snapshot_llms()
     items = [check_robots(), check_llms(), check_faq_schema(), check_faq_content()]
     score = sum(1 for i in items if i["ok"] is True)
     pending = sum(1 for i in items if i["ok"] is None)
@@ -215,6 +289,7 @@ def main(apply_to_dashboard: bool = True) -> dict:
         "total": len(items),
         "pending": pending,
         "items": items,
+        "llms_snapshot": snap,
         "_note": "실행 지표(회사가 숙제를 했는가)이지 소비자 인지 지표가 아니다. KR 목록 밖. "
                  "항목이 유동적이므로 인용 시점을 반드시 함께 표기할 것.",
     }

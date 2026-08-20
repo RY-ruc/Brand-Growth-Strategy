@@ -1,14 +1,14 @@
 {
- "checked": "2026-08-20 10:01 KST",
+ "checked": "2026-08-20 10:09 KST",
  "base_url": "https://www.innisfree.com",
- "score": 3,
+ "score": 4,
  "total": 4,
  "pending": 0,
  "items": [
   {
-   "k": "robots.txt AI 크롤러 규칙",
-   "ok": false,
-   "note": "AI 크롤러 전용 규칙 없음 (User-agent 블록 1개 — 범용 규칙만)"
+   "k": "robots.txt — AI 크롤러 접근",
+   "ok": true,
+   "note": "접근 허용 · AI 봇 개별 명시는 없음(= 기본 허용) · 차단 경로는 중복·API 5건뿐 — 전체 차단 없음"
   },
   {
    "k": "llms.txt",
@@ -27,5 +27,11 @@
    "note": "존재: /kr/ko/cu/support/faq"
   }
  ],
+ "llms_snapshot": {
+  "ok": true,
+  "first": true,
+  "digest": "cac5d7ddcac9",
+  "last_modified": "Tue, 18 Aug 2026 05:16:45 GMT"
+ },
  "_note": "실행 지표(회사가 숙제를 했는가)이지 소비자 인지 지표가 아니다. KR 목록 밖. 항목이 유동적이므로 인용 시점을 반드시 함께 표기할 것."
 }

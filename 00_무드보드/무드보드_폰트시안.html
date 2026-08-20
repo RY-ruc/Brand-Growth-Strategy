@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>innisfree — 무드보드 폰트 시안 (산세리프 / 세리프 / 믹스 + 영문 5종)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Gowun+Batang:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@300;400;500;700;900&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --basalt:#1F2623;
+    --forest:#3B5D48;
+    --stone:#E8E2D6;
+    --camellia:#C97C86;
+    --offwhite:#FAFAF7;
+    --ink:#22241F;
+    --line:rgba(31,38,35,0.12);
+    --mute:#8d897e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#F2F0EA;
+    color:var(--ink);
+    font-family:'Noto Sans KR',sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:56px 28px 100px;}
+
+  /* ── 문서 헤더 ───────────────────────────── */
+  .doc-head{
+    border-bottom:2px solid var(--basalt);
+    padding-bottom:22px;
+    margin-bottom:14px;
+  }
+  .doc-head .kicker{
+    font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--camellia);font-weight:700;margin-bottom:10px;
+  }
+  .doc-head h1{
+    font-size:30px;font-weight:900;letter-spacing:-0.02em;margin:0 0 8px;
+    color:var(--basalt);
+  }
+  .doc-head p{margin:0;font-size:14px;color:#5c5a53;max-width:720px;}
+  .doc-note{
+    font-size:12.5px;color:var(--mute);margin:0 0 48px;
+    padding-top:10px;
+  }
+
+  h2.part{
+    font-size:20px;font-weight:900;color:var(--basalt);
+    margin:0 0 6px;display:flex;align-items:center;gap:11px;
+  }
+  h2.part::before{content:'';width:26px;height:3px;background:var(--camellia);}
+  .part-desc{font-size:13.5px;color:#5c5a53;margin:0 0 28px;padding-left:37px;max-width:760px;}
+
+  /* ── 버전 블록 ───────────────────────────── */
+  .variant{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:32px;
+    box-shadow:0 2px 14px rgba(0,0,0,0.04);
+  }
+  .variant > .vhead{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:20px 26px;
+    border-bottom:1px solid var(--line);
+    background:#FBFAF7;
+  }
+  .vhead .badge{
+    font-family:'Inter',sans-serif;
+    font-size:12px;font-weight:700;letter-spacing:0.1em;
+    background:var(--basalt);color:#fff;
+    padding:5px 11px;border-radius:20px;
+  }
+  .variant.pick .vhead .badge{background:var(--forest);}
+  .vhead .vname{font-size:17px;font-weight:700;color:var(--basalt);}
+  .vhead .vtag{
+    font-size:11.5px;font-weight:700;letter-spacing:0.06em;
+    color:var(--forest);border:1px solid var(--forest);
+    padding:3px 9px;border-radius:4px;
+  }
+  .vhead .vone{font-size:13px;color:var(--mute);margin-left:auto;}
+
+  /* 폰트 지정표 */
+  .spec{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .spec th,.spec td{
+    text-align:left;padding:9px 26px;border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .spec th{
+    width:150px;color:var(--mute);font-weight:500;
+    background:#FDFCFA;
+  }
+  .spec td b{font-weight:700;color:var(--basalt);}
+  .spec tr:last-child th,.spec tr:last-child td{border-bottom:1px solid var(--line);}
+
+  /* 렌더 영역 */
+  .render{padding:30px 26px 34px;background:var(--offwhite);}
+
+  /* ── 샘플 컴포넌트 (3개 버전 공통 마크업) ──── */
+  .s-hero{
+    background:var(--basalt);color:var(--offwhite);
+    border-radius:12px;padding:36px 34px;text-align:center;margin-bottom:26px;
+  }
+  .s-eyebrow{
+    font-family:var(--f-label);
+    font-size:12px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--stone);font-weight:500;margin-bottom:14px;
+  }
+  .s-headline{
+    font-family:var(--f-head);
+    font-weight:var(--w-head);
+    font-size:40px;
+    letter-spacing:var(--ls-head);
+    line-height:1.3;
+    margin:0 0 12px;color:#fff;
+  }
+  .s-subhead{
+    font-family:var(--f-story);
+    font-weight:var(--w-story);
+    font-size:16.5px;color:var(--stone);
+    margin:0 auto;max-width:560px;line-height:1.75;
+  }
+
+  .s-secttl{
+    font-family:var(--f-head);
+    font-size:19px;font-weight:var(--w-sect);color:var(--basalt);
+    margin:0 0 16px;display:flex;align-items:center;gap:10px;
+  }
+  .s-secttl::before{content:'';width:22px;height:3px;background:var(--camellia);}
+
+  .s-attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:26px;}
+  .s-attr{background:#fff;border:1px solid var(--line);border-radius:11px;padding:19px 18px;}
+  .s-attr .from{
+    font-family:var(--f-body);
+    font-size:11.5px;color:#9a958a;text-decoration:line-through;margin-bottom:6px;
+  }
+  .s-attr .to{
+    font-family:var(--f-body);
+    font-size:15.5px;font-weight:var(--w-strong);color:var(--forest);line-height:1.5;
+  }
+
+  .s-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .s-card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:22px 20px;}
+  .s-role{
+    font-family:var(--f-label);
+    font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--camellia);font-weight:700;margin-bottom:10px;
+  }
+  .s-story{
+    font-family:var(--f-story);
+    font-weight:var(--w-story);
+    font-size:19px;line-height:1.7;color:var(--ink);margin:0;
+  }
+  .s-pkg{
+    font-family:var(--f-label);
+    font-size:19px;font-weight:var(--w-strong);letter-spacing:0.02em;
+    color:var(--basalt);margin:0 0 4px;
+  }
+  .s-ui{
+    font-family:var(--f-body);
+    font-size:13px;color:#5c5a53;margin:12px 0 0;line-height:1.75;
+  }
+  .s-price{
+    font-family:var(--f-label);
+    font-size:15px;font-weight:600;color:var(--basalt);
+    font-variant-numeric:tabular-nums;margin-top:8px;
+  }
+
+  /* ── 버전별 폰트 정의 (여기만 다름) ────────── */
+  .va{
+    --f-head:'Noto Sans KR',sans-serif;
+    --f-body:'Noto Sans KR',sans-serif;
+    --f-story:'Noto Sans KR',sans-serif;
+    --f-label:'Inter','Noto Sans KR',sans-serif;
+    --w-head:900; --ls-head:-0.025em;
+    --w-story:300; --w-strong:700; --w-sect:700;
+  }
+  .vb{
+    --f-head:'Noto Serif KR',serif;
+    --f-body:'Gowun Batang',serif;
+    --f-story:'Gowun Batang',serif;
+    --f-label:'EB Garamond','Noto Serif KR',serif;
+    --w-head:900; --ls-head:-0.01em;
+    --w-story:400; --w-strong:700; --w-sect:700;
+  }
+  .vc{
+    --f-head:'Noto Serif KR',serif;
+    --f-body:'Noto Sans KR',sans-serif;
+    --f-story:'Gowun Batang',serif;
+    --f-label:'Inter','Noto Sans KR',sans-serif;
+    --w-head:700; --ls-head:-0.015em;
+    --w-story:400; --w-strong:500; --w-sect:700;
+  }
+
+  /* ── 한 줄 비교 ──────────────────────────── */
+  .strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    background:var(--basalt);border-radius:14px;overflow:hidden;
+    margin-bottom:56px;
+  }
+  .strip > div{padding:28px 22px;border-right:1px solid rgba(255,255,255,0.14);}
+  .strip > div:last-child{border-right:none;}
+  .strip .lab{
+    font-family:'Inter',sans-serif;
+    font-size:11px;letter-spacing:0.14em;color:var(--camellia);
+    font-weight:700;margin-bottom:14px;
+  }
+  .strip .line{
+    font-size:25px;line-height:1.34;color:#fff;margin:0 0 10px;
+  }
+  .strip .sub{font-size:13.5px;color:var(--stone);margin:0;line-height:1.7;}
+
+  /* ── 영문 폰트 카드 ──────────────────────── */
+  .fcard{
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;margin-bottom:22px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.04);
+  }
+  .fcard .fhead{
+    display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+    padding:18px 26px;border-bottom:1px solid var(--line);background:#FBFAF7;
+  }
+  .fcard .num{
+    font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+    color:#fff;background:var(--forest);
+    width:24px;height:24px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .fcard .fname{font-size:18px;font-weight:700;color:var(--basalt);}
+  .fcard .fclass{font-size:12px;color:var(--mute);}
+  .fcard .fuse{
+    margin-left:auto;font-size:11.5px;font-weight:700;letter-spacing:0.04em;
+    color:var(--forest);border:1px solid var(--forest);padding:3px 9px;border-radius:4px;
+  }
+  .fspec{padding:30px 30px 26px;background:var(--offwhite);}
+  .fspec .en-h{
+    font-size:34px;line-height:1.25;margin:0 0 16px;color:var(--basalt);
+  }
+  .fspec .en-b{
+    font-size:16.5px;line-height:1.8;margin:0 0 16px;color:#3a3d37;max-width:660px;
+  }
+  .fspec .en-l{
+    font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--forest);
+    margin:0;padding-top:14px;border-top:1px solid var(--line);
+  }
+  .fnote{
+    padding:18px 30px 22px;font-size:13px;line-height:1.8;
+    display:grid;grid-template-columns:1fr 1fr;gap:8px 26px;
+  }
+  .fnote div span{
+    display:inline-block;min-width:52px;font-weight:700;color:var(--basalt);
+    font-size:12px;
+  }
+  .fnote .warn span{color:var(--camellia);}
+
+  /* 폰트별 적용 */
+  .ff-ebg .en-h,.ff-ebg .en-b,.ff-ebg .en-l{font-family:'EB Garamond',serif;}
+  .ff-ebg .en-h{font-weight:500;}
+  .ff-cor .en-h,.ff-cor .en-b,.ff-cor .en-l{font-family:'Cormorant Garamond',serif;}
+  .ff-cor .en-h{font-weight:400;font-size:40px;letter-spacing:0.005em;}
+  .ff-cor .en-b{font-weight:400;}
+  .ff-spe .en-h,.ff-spe .en-b,.ff-spe .en-l{font-family:'Spectral',serif;}
+  .ff-spe .en-h{font-weight:400;font-size:32px;}
+  .ff-spe .en-b{font-weight:300;}
+  .ff-lor .en-h,.ff-lor .en-b,.ff-lor .en-l{font-family:'Lora',serif;}
+  .ff-lor .en-h{font-weight:500;font-size:32px;}
+  .ff-fra .en-h,.ff-fra .en-b,.ff-fra .en-l{font-family:'Fraunces',serif;}
+  .ff-fra .en-h{font-weight:600;font-size:32px;}
+  .ff-fra .en-b{font-weight:400;}
+
+  .ko-mirror{
+    font-family:'Gowun Batang',serif;
+    font-size:13.5px;color:var(--mute);margin:0 0 22px;
+    padding-left:12px;border-left:2px solid var(--stone);
+  }
+
+  /* ── 마무리 ─────────────────────────────── */
+  .verdict{
+    background:var(--basalt);color:var(--offwhite);
+    border-radius:14px;padding:34px 32px;margin-top:40px;
+  }
+  .verdict h3{
+    font-size:18px;font-weight:900;margin:0 0 16px;color:#fff;
+  }
+  .verdict ul{margin:0;padding-left:20px;font-size:14px;line-height:2;}
+  .verdict li b{color:var(--stone);}
+  .verdict .cite{
+    font-size:12px;opacity:0.55;margin:18px 0 0;padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+
+  footer{text-align:center;font-size:12px;color:var(--mute);margin-top:30px;}
+
+  @media print{
+    body{background:#fff;}
+    .variant,.fcard{break-inside:avoid;box-shadow:none;}
+    .strip{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="kicker">innisfree · Moodboard Type Study</div>
+    <h1>폰트 시안 — 산세리프 / 세리프 / 믹스</h1>
+    <p>「이니스프리_리브랜딩_무드보드」의 타이포그래피만 3가지로 바꿔 비교한 문서입니다.
+       세 버전은 <b>마크업·색·레이아웃이 완전히 동일</b>하고 폰트 지정만 다릅니다. 차이가 보인다면 그건 전부 폰트 차이입니다.</p>
+  </div>
+  <p class="doc-note">
+    ※ 웹폰트(Google Fonts)를 불러오므로 <b>인터넷 연결 상태에서 열어야</b> 제대로 보입니다.
+    · 원본 무드보드는 수정하지 않았습니다.
+  </p>
+
+  <h2 class="part">Part 1 — 한글 조합 3안</h2>
+  <p class="part-desc">
+    현재 무드보드는 헤드라인 Noto Sans KR Black + 스토리 Gowun Batang 조합으로, 아래 A안과 C안의 중간 지점에 있습니다.
+  </p>
+
+  <!-- ═══ A안: 전부 산세리프 ═══ -->
+  <div class="variant">
+    <div class="vhead">
+      <span class="badge">A</span>
+      <span class="vname">전부 산세리프</span>
+      <span class="vtag">과학 · 정밀 · 글로벌</span>
+      <span class="vone">가장 안전하고 가장 평범합니다</span>
+    </div>
+    <table class="spec">
+      <tr><th>헤드라인</th><td><b>Noto Sans KR</b> Black 900 / 자간 −0.025em</td></tr>
+      <tr><th>스토리 · 본문</th><td><b>Noto Sans KR</b> Light 300 — 긴 문장은 굵기를 낮춰 밀도 조절</td></tr>
+      <tr><th>라벨 · 영문 · 수치</th><td><b>Inter</b> — 라틴 전용. Noto Sans KR의 라틴보다 자형이 정돈됨</td></tr>
+    </table>
+    <div class="render va">
+      <div class="s-hero">
+        <div class="s-eyebrow">innisfree · Brand Repositioning 2026</div>
+        <h1 class="s-headline">자연에서, 과학으로 증명된 초록</h1>
+        <p class="s-subhead">로드샵 브랜드에서 온라인·글로벌 라이프스타일 브랜드로 — 브랜드 전체 리포지셔닝 무드보드</p>
+      </div>
+      <div class="s-secttl">브랜드 속성 재정의</div>
+      <div class="s-attrs">
+        <div class="s-attr"><div class="from">과거: 제주 감성 마케팅</div><div class="to">현재: 제주 원료 + 과학적 검증</div></div>
+        <div class="s-attr"><div class="from">과거: 중저가 포지션</div><div class="to">현재: 합리적 프리미엄 포지션</div></div>
+        <div class="s-attr"><div class="from">과거: 오프라인 매장 중심</div><div class="to">현재: 온라인·글로벌 채널 중심</div></div>
+      </div>
+      <div class="s-two">
+        <div class="s-card">
+          <div class="s-role">헤리티지 스토리텔링</div>
+          <p class="s-story">제주의 화산송이,<br>그리고 그 안의 과학</p>
+        </div>
+        <div class="s-card">
+          <div class="s-role">패키지 · UI</div>
+          <p class="s-pkg">GREEN TEA SEED SERUM</p>
+          <p class="s-price">80ml · ₩32,000</p>
+          <p class="s-ui">자사몰·앱 본문 가독성 기준 텍스트입니다. 성분표·용량·가격 같은 정보성 요소가 이 크기에서 어떻게 읽히는지 확인하세요.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ B안: 전부 세리프 ═══ -->
+  <div class="variant">
+    <div class="vhead">
+      <span class="badge">B</span>
+      <span class="vname">전부 세리프</span>
+      <span class="vtag">헤리티지 · 정통 · 서사</span>
+      <span class="vone">인상은 가장 강하고, UI에서 가장 약합니다</span>
+    </div>
+    <table class="spec">
+      <tr><th>헤드라인</th><td><b>Noto Serif KR</b> Black 900 — Gowun Batang은 700까지라 헤드라인 무게가 안 나옵니다</td></tr>
+      <tr><th>스토리 · 본문</th><td><b>Gowun Batang</b> 400 — 붓 흐름이 남아 있어 원료 스토리에 맞음</td></tr>
+      <tr><th>라벨 · 영문 · 수치</th><td><b>EB Garamond</b> — 라벨까지 세리프로 통일</td></tr>
+    </table>
+    <div class="render vb">
+      <div class="s-hero">
+        <div class="s-eyebrow">innisfree · Brand Repositioning 2026</div>
+        <h1 class="s-headline">자연에서, 과학으로 증명된 초록</h1>
+        <p class="s-subhead">로드샵 브랜드에서 온라인·글로벌 라이프스타일 브랜드로 — 브랜드 전체 리포지셔닝 무드보드</p>
+      </div>
+      <div class="s-secttl">브랜드 속성 재정의</div>
+      <div class="s-attrs">
+        <div class="s-attr"><div class="from">과거: 제주 감성 마케팅</div><div class="to">현재: 제주 원료 + 과학적 검증</div></div>
+        <div class="s-attr"><div class="from">과거: 중저가 포지션</div><div class="to">현재: 합리적 프리미엄 포지션</div></div>
+        <div class="s-attr"><div class="from">과거: 오프라인 매장 중심</div><div class="to">현재: 온라인·글로벌 채널 중심</div></div>
+      </div>
+      <div class="s-two">
+        <div class="s-card">
+          <div class="s-role">헤리티지 스토리텔링</div>
+          <p class="s-story">제주의 화산송이,<br>그리고 그 안의 과학</p>
+        </div>
+        <div class="s-card">
+          <div class="s-role">패키지 · UI</div>
+          <p class="s-pkg">GREEN TEA SEED SERUM</p>
+          <p class="s-price">80ml · ₩32,000</p>
+          <p class="s-ui">자사몰·앱 본문 가독성 기준 텍스트입니다. 성분표·용량·가격 같은 정보성 요소가 이 크기에서 어떻게 읽히는지 확인하세요.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ C안: 반반 믹스 ═══ -->
+  <div class="variant pick">
+    <div class="vhead">
+      <span class="badge">C · 추천</span>
+      <span class="vname">반반 믹스 — 규칙이 있는 혼용</span>
+      <span class="vtag">감성=세리프 / 정보=산세리프</span>
+      <span class="vone">브랜드 문장 구조를 그대로 씁니다</span>
+    </div>
+    <table class="spec">
+      <tr><th>배분 규칙</th><td><b>「자연에서」 = 세리프, 「과학으로」 = 산세리프.</b> 감정을 전달하는 자리는 세리프, 사실을 전달하는 자리는 산세리프로 고정합니다</td></tr>
+      <tr><th>헤드라인</th><td><b>Noto Serif KR</b> 700 — 900은 무거워 감성이 죽습니다</td></tr>
+      <tr><th>스토리 · 원료 서사</th><td><b>Gowun Batang</b> 400</td></tr>
+      <tr><th>본문 · UI · 성분표</th><td><b>Noto Sans KR</b> 400/500</td></tr>
+      <tr><th>라벨 · 영문 · 수치</th><td><b>Inter</b> — 용량·가격·성분% 는 반드시 산세리프</td></tr>
+    </table>
+    <div class="render vc">
+      <div class="s-hero">
+        <div class="s-eyebrow">innisfree · Brand Repositioning 2026</div>
+        <h1 class="s-headline">자연에서, 과학으로 증명된 초록</h1>
+        <p class="s-subhead">로드샵 브랜드에서 온라인·글로벌 라이프스타일 브랜드로 — 브랜드 전체 리포지셔닝 무드보드</p>
+      </div>
+      <div class="s-secttl">브랜드 속성 재정의</div>
+      <div class="s-attrs">
+        <div class="s-attr"><div class="from">과거: 제주 감성 마케팅</div><div class="to">현재: 제주 원료 + 과학적 검증</div></div>
+        <div class="s-attr"><div class="from">과거: 중저가 포지션</div><div class="to">현재: 합리적 프리미엄 포지션</div></div>
+        <div class="s-attr"><div class="from">과거: 오프라인 매장 중심</div><div class="to">현재: 온라인·글로벌 채널 중심</div></div>
+      </div>
+      <div class="s-two">
+        <div class="s-card">
+          <div class="s-role">헤리티지 스토리텔링</div>
+          <p class="s-story">제주의 화산송이,<br>그리고 그 안의 과학</p>
+        </div>
+        <div class="s-card">
+          <div class="s-role">패키지 · UI</div>
+          <p class="s-pkg">GREEN TEA SEED SERUM</p>
+          <p class="s-price">80ml · ₩32,000</p>
+          <p class="s-ui">자사몰·앱 본문 가독성 기준 텍스트입니다. 성분표·용량·가격 같은 정보성 요소가 이 크기에서 어떻게 읽히는지 확인하세요.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="part">한 줄 비교</h2>
+  <p class="part-desc">같은 문장, 같은 크기, 같은 색. 폰트만 다릅니다.</p>
+  <div class="strip">
+    <div class="va">
+      <div class="lab">A · SANS</div>
+      <p class="line" style="font-family:var(--f-head);font-weight:var(--w-head);letter-spacing:var(--ls-head);">자연에서,<br>과학으로 증명된 초록</p>
+      <p class="sub" style="font-family:var(--f-story);font-weight:var(--w-story);">제주의 화산송이, 그리고 그 안의 과학</p>
+    </div>
+    <div class="vb">
+      <div class="lab">B · SERIF</div>
+      <p class="line" style="font-family:var(--f-head);font-weight:var(--w-head);letter-spacing:var(--ls-head);">자연에서,<br>과학으로 증명된 초록</p>
+      <p class="sub" style="font-family:var(--f-story);font-weight:var(--w-story);">제주의 화산송이, 그리고 그 안의 과학</p>
+    </div>
+    <div class="vc">
+      <div class="lab">C · MIX</div>
+      <p class="line" style="font-family:var(--f-head);font-weight:var(--w-head);letter-spacing:var(--ls-head);">자연에서,<br>과학으로 증명된 초록</p>
+      <p class="sub" style="font-family:var(--f-story);font-weight:var(--w-story);">제주의 화산송이, 그리고 그 안의 과학</p>
+    </div>
+  </div>
+
+  <!-- ═══════════ Part 2 ═══════════ -->
+  <h2 class="part">Part 2 — 영문 폰트 5종 (헤리티지 스토리텔링용)</h2>
+  <p class="part-desc">
+    로고·워드마크가 아니라 <b>영문 헤리티지 카피 조판용</b> 후보입니다. 5종 모두 같은 문장으로 조판했으니 그대로 비교하세요.
+    전부 Google Fonts라 상업적 사용·웹 임베드가 무료입니다(OFL).
+  </p>
+  <p class="ko-mirror">
+    대조용 한글 원문 — “제주의 화산송이, 그리고 그 안의 과학”<br>
+    아래 영문은 <b>조판 확인용 시안 카피</b>입니다. 문구 자체는 사실 검증 전이므로 그대로 인용하지 마세요.
+  </p>
+
+  <!-- 1 -->
+  <div class="fcard ff-ebg">
+    <div class="fhead">
+      <span class="num">1</span>
+      <span class="fname">EB Garamond</span>
+      <span class="fclass">Old-style Serif · 정본 가라몽 복각</span>
+      <span class="fuse">본문 · 장문 서사</span>
+    </div>
+    <div class="fspec">
+      <p class="en-h">Born of a volcano.<br>Proven in a lab.</p>
+      <p class="en-b">On the slopes of Hallasan, rain does not simply fall and leave. It sinks through layers of porous volcanic rock, and what returns to the roots of a green tea leaf has already been filtered by the island itself. We began with a question about that soil, and we are still answering it.</p>
+      <p class="en-l">Green Tea Seed Serum · Jeju, Korea</p>
+    </div>
+    <div class="fnote">
+      <div><span>강점</span> 소문자 x-height가 낮아 문장이 조용합니다. 장문에서 눈이 안 피로합니다</div>
+      <div><span>짝</span> Inter / Noto Sans KR</div>
+      <div class="warn"><span>주의</span> 작은 크기(13px 이하)에서 획이 가늘어집니다 — 모바일 본문은 16px 이상</div>
+      <div><span>추천도</span> ★★★★★ — 5개 중 가장 무난하고 가장 안 틀립니다</div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="fcard ff-cor">
+    <div class="fhead">
+      <span class="num">2</span>
+      <span class="fname">Cormorant Garamond</span>
+      <span class="fclass">Display Serif · 고대비 가라몽</span>
+      <span class="fuse">헤드라인 전용</span>
+    </div>
+    <div class="fspec">
+      <p class="en-h">Born of a volcano.<br>Proven in a lab.</p>
+      <p class="en-b">On the slopes of Hallasan, rain does not simply fall and leave. It sinks through layers of porous volcanic rock, and what returns to the roots of a green tea leaf has already been filtered by the island itself. We began with a question about that soil, and we are still answering it.</p>
+      <p class="en-l">Green Tea Seed Serum · Jeju, Korea</p>
+    </div>
+    <div class="fnote">
+      <div><span>강점</span> 획 대비가 커서 큰 사이즈에서 압도적으로 우아합니다. 브랜드 필름 자막·캠페인 KV에 강함</div>
+      <div><span>짝</span> Jost / Inter Light</div>
+      <div class="warn"><span>주의</span> <b>본문 금지.</b> 가는 획이 스크린에서 뭉갭니다 — 28px 이상에서만 쓰세요</div>
+      <div><span>추천도</span> ★★★★☆ — 용도만 지키면 가장 예쁩니다</div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="fcard ff-spe">
+    <div class="fhead">
+      <span class="num">3</span>
+      <span class="fname">Spectral</span>
+      <span class="fclass">Screen-first Serif · 저대비</span>
+      <span class="fuse">성분 · 근거 설명</span>
+    </div>
+    <div class="fspec">
+      <p class="en-h">Born of a volcano. Proven in a lab.</p>
+      <p class="en-b">On the slopes of Hallasan, rain does not simply fall and leave. It sinks through layers of porous volcanic rock, and what returns to the roots of a green tea leaf has already been filtered by the island itself. We began with a question about that soil, and we are still answering it.</p>
+      <p class="en-l">Green Tea Seed Serum · Jeju, Korea</p>
+    </div>
+    <div class="fnote">
+      <div><span>강점</span> 애초에 화면용으로 설계돼 작은 크기에서 안 무너집니다. 세리프인데 정보 전달이 됩니다</div>
+      <div><span>짝</span> Inter / Noto Sans KR</div>
+      <div class="warn"><span>주의</span> 감성이 약합니다 — 캠페인 헤드라인엔 밋밋합니다</div>
+      <div><span>추천도</span> ★★★★☆ — “과학으로 증명된” 쪽 문서에 최적</div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="fcard ff-lor">
+    <div class="fhead">
+      <span class="num">4</span>
+      <span class="fname">Lora</span>
+      <span class="fclass">Contemporary Serif · 붓 곡선</span>
+      <span class="fuse">웹 스토리 페이지 범용</span>
+    </div>
+    <div class="fspec">
+      <p class="en-h">Born of a volcano. Proven in a lab.</p>
+      <p class="en-b">On the slopes of Hallasan, rain does not simply fall and leave. It sinks through layers of porous volcanic rock, and what returns to the roots of a green tea leaf has already been filtered by the island itself. We began with a question about that soil, and we are still answering it.</p>
+      <p class="en-l">Green Tea Seed Serum · Jeju, Korea</p>
+    </div>
+    <div class="fnote">
+      <div><span>강점</span> 헤드라인과 본문을 <b>한 폰트로</b> 다 커버합니다. Gowun Batang과 곡선 성격이 비슷해 한글 혼용 시 이질감이 적습니다</div>
+      <div><span>짝</span> Noto Sans KR / Inter</div>
+      <div class="warn"><span>주의</span> 웹에서 매우 흔합니다 — 차별성은 낮습니다</div>
+      <div><span>추천도</span> ★★★★☆ — 상세페이지(Part 4-4) 실무 1순위</div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="fcard ff-fra">
+    <div class="fhead">
+      <span class="num">5</span>
+      <span class="fname">Fraunces</span>
+      <span class="fclass">Soft Serif · 가변폰트(SOFT/WONK 축)</span>
+      <span class="fuse">캠페인 헤드라인</span>
+    </div>
+    <div class="fspec">
+      <p class="en-h">Born of a volcano. Proven in a lab.</p>
+      <p class="en-b">On the slopes of Hallasan, rain does not simply fall and leave. It sinks through layers of porous volcanic rock, and what returns to the roots of a green tea leaf has already been filtered by the island itself. We began with a question about that soil, and we are still answering it.</p>
+      <p class="en-l">Green Tea Seed Serum · Jeju, Korea</p>
+    </div>
+    <div class="fnote">
+      <div><span>강점</span> 세리프 끝이 둥글어 “자연주의인데 촌스럽지 않은” 지점을 잡습니다. 5종 중 유일하게 개성이 있습니다</div>
+      <div><span>짝</span> Inter / Archivo</div>
+      <div class="warn"><span>주의</span> 과하게 쓰면 레트로 F&amp;B 브랜드로 기웁니다 — <b>헤드라인 한정</b>, 본문은 EB Garamond로 받으세요</div>
+      <div><span>추천도</span> ★★★☆☆ — 차별화가 필요할 때만</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <h3>정리 — 고를 때 이것만 보세요</h3>
+    <ul>
+      <li><b>A안(전부 산세리프)</b> — 안전하지만 “제주 헤리티지”가 사라집니다. 경쟁사와 구별이 안 됩니다</li>
+      <li><b>B안(전부 세리프)</b> — 인상은 가장 좋은데 자사몰 UI·성분표·가격이 읽히지 않습니다. <b>실사용 불가</b></li>
+      <li><b>C안(믹스) 추천</b> — 「자연에서 = 세리프 / 과학으로 = 산세리프」 규칙 하나로 두 성격을 다 살립니다. 규칙이 있으니 팀 3명이 따로 작업해도 안 갈라집니다</li>
+      <li><b>영문 조합 추천</b> — 헤드라인 <b>Cormorant Garamond</b> + 본문 <b>EB Garamond</b>. 보수적으로 가려면 <b>Lora</b> 단독</li>
+      <li><b>피할 것</b> — Playfair Display. 뷰티 브랜드가 전부 쓰고 있어 차별화가 안 됩니다</li>
+    </ul>
+    <p class="cite">
+      Part 2의 영문 문장은 조판 비교용 시안 카피입니다. 실제 카피로 승격하려면 원료·공정 서술의 사실 확인이 먼저입니다.
+      폰트 5종은 모두 SIL Open Font License(무료·상업적 사용 가능).
+    </p>
+  </div>
+
+  <footer>
+    innisfree 리브랜딩 캡스톤 · 무드보드 타이포그래피 시안 · 2026-08-20<br>
+    공개 자료 기반 학습용 분석이며 이니스프리 및 아모레퍼시픽과 무관한 가상 기획입니다.
+  </footer>
+
+</div>
+</body>
+</html>
