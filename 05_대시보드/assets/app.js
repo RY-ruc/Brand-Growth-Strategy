@@ -188,6 +188,75 @@ function renderKPI() {
 }
 
 
+/* 헤리티지 자산 감가 — "이미 1등이니 놔둬도 된다"가 성립하는지 보여준다.
+   비중(제주÷브랜드)은 분모가 무너져도 오르므로, 절대 지수의 YoY를 나란히 놓아야
+   "제주가 더 버티는가, 더 빨리 빠지는가"가 드러난다. */
+function renderDecay(d) {
+  if (!d || !d.yoy) return;
+  const yrs = Object.keys(d.yoy['브랜드'] || {});           // YoY는 첫해가 없다
+  const jeju = yrs.map(y => d.yoy['제주']?.[y] ?? null);
+  const brand = yrs.map(y => d.yoy['브랜드']?.[y] ?? null);
+
+  /* 그룹 막대 — 연도별로 제주/브랜드 낙폭을 나란히. 역전된 해를 강조 */
+  const W = 320, H = 158, pad = { l: 34, r: 12, t: 16, b: 30 };
+  const all = [...jeju, ...brand].filter(v => v != null);
+  const mn = Math.min(...all, 0), mx = Math.max(...all, 0);
+  const Y = v => pad.t + (mx - v) / ((mx - mn) || 1) * (H - pad.t - pad.b);
+  const step = (W - pad.l - pad.r) / yrs.length, bw = step * 0.3;
+  const zero = Y(0);
+  let s = `<line x1="${pad.l - 6}" y1="${zero}" x2="${W - pad.r}" y2="${zero}" stroke="#B3A98F"/>`;
+
+  yrs.forEach((y, i) => {
+    const flipped = d.flip && d.flip.year === y;
+    const x0 = pad.l + i * step + (step - bw * 2 - 3) / 2;
+    [[jeju[i], '#3B5D48', 0], [brand[i], '#B3A98F', bw + 3]].forEach(([v, c, off]) => {
+      if (v == null) return;
+      const top = Math.min(Y(v), zero), h = Math.abs(Y(v) - zero);
+      s += `<rect x="${(x0 + off).toFixed(1)}" y="${top.toFixed(1)}" width="${bw.toFixed(1)}"
+             height="${h.toFixed(1)}" fill="${c}" opacity="${flipped ? 1 : .72}"/>
+            <text x="${(x0 + off + bw / 2).toFixed(1)}" y="${(top + h + 10).toFixed(1)}"
+             text-anchor="middle" font-size="8" font-weight="${flipped ? 700 : 400}"
+             fill="${c}">${v}</text>`;
+    });
+    if (flipped) {
+      s += `<rect x="${(x0 - 4).toFixed(1)}" y="${pad.t - 8}" width="${(bw * 2 + 11).toFixed(1)}"
+             height="${(H - pad.b - pad.t + 22).toFixed(1)}" fill="none" stroke="#C97C86"
+             stroke-width="1.2" stroke-dasharray="3 2"/>
+            <text x="${(x0 + bw).toFixed(1)}" y="${pad.t - 11}" text-anchor="middle"
+             font-size="8.5" font-weight="700" fill="#8E4A52">역전</text>`;
+    }
+    s += `<text x="${(pad.l + i * step + step / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle"
+           font-size="8.5" opacity=".5">${esc(y)}</text>`;
+  });
+  s += `<text x="${pad.l}" y="${pad.t + 4}" font-size="8.5" font-weight="500" fill="#3B5D48">제주</text>
+        <text x="${pad.l + 30}" y="${pad.t + 4}" font-size="8.5" font-weight="500" fill="#8A7F66">브랜드</text>`;
+  $('#chartDecay').innerHTML = svg(`0 0 ${W} ${H}`, s);
+
+  const f = d.flip;
+  $('#capFlip').innerHTML = f
+    ? `<b>${esc(f.year)}년에 역전됐다</b> — 제주 ${f.jeju}% vs 브랜드 ${f.brand}%.
+       그 전까지는 제주가 더 버텼지만, 이 해부터 <b>제주가 브랜드보다 빨리 빠진다</b>.
+       “가장 오래 버티는 연상”이라는 지위를 잃었다는 뜻이다 — 안 부르는 동안 재고가 녹고 있다.`
+    : `아직 역전되지 않았다.`;
+
+  /* 제품군 피크 — 옮겨간 쪽도 꺾였는가 */
+  const abs = d.abs?.['제품군(레티놀)'] || {};
+  const py = Object.keys(abs);
+  if (py.length) {
+    const pk = d.product_peak;
+    $('#chartPeak').innerHTML = barChart({
+      labels: py, values: py.map(y => abs[y]),
+      hiIdx: pk ? py.indexOf(pk.year) : -1,
+      w: 250, h: 150, color: '#C97C86',
+    });
+    $('#capPeak').innerHTML = pk
+      ? `<b>${esc(pk.year)}년 정점(${pk.value}) 이후 ${esc(pk.last_year)}년 ${pk.last}로 ${pk.drop}%.</b>
+         제주를 놓고 기능성으로 옮겨갔는데 <b>그쪽도 이미 꺾였다</b> — 2026년(1~7월)도 −20.1%다.
+         “선택과 집중”이라면 집중한 쪽이라도 이겨야 하는데, 둘 다 놓치고 있다.`
+      : '';
+  }
+}
+
 function renderScreen1() {
   const an = D.series.annual, f = D.fixed, ev = D.events;
   const years = an.years;
@@ -259,6 +328,9 @@ function renderScreen1() {
       { values: years.map(y => an.share_all4[y]), color: '#C97C86', w: 1.6, dash: '2 3', label: '4사(+토니모리)', labelY: 124 },
     ],
   });
+
+  /* 헤리티지 자산 감가 — 제주 vs 브랜드 YoY 역전 */
+  renderDecay(an.decay);
 
   /* 기능⑤ — 경쟁 브랜드 검색량 추이 (3CE 직접경쟁 편입) */
   const comp = an.competitors || {};

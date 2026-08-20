@@ -246,6 +246,44 @@ def build(live=False, standalone=False) -> dict:
 
     jeju_ratio = {str(y): round(annual(jeju, y) / annual(brand, y) * 100, 2) for y in full_years}
 
+    # ── 헤리티지 자산 감가 ────────────────────────────────────
+    # 비중(제주÷브랜드)만 보면 분모가 무너져도 올라 보인다. 절대 지수의 YoY를
+    # 브랜드와 나란히 놓아야 "제주가 더 버티는가, 더 빨리 빠지는가"가 보인다.
+    # 2025년에 역전됐다 — 제주 -30.2% vs 브랜드 -28.9%.
+    def yoy_series(s):
+        out, ys = {}, [y for y in full_years if annual(s, y)]
+        for a, b in zip(ys, ys[1:]):
+            out[str(b)] = round((annual(s, b) - annual(s, a)) / annual(s, a) * 100, 1)
+        return out
+
+    decay = {
+        "years": [str(y) for y in full_years],
+        "abs": {k: {str(y): round(annual(v, y), 3) for y in full_years if annual(v, y)}
+                for k, v in {"브랜드": brand, "제주": jeju,
+                             "그린티": api.get("3:그린티", {}),
+                             "화산송이": api.get("3:화산송이", {}),
+                             "제품군(레티놀)": api.get("3:레티놀", {})}.items()},
+        "yoy": {k: yoy_series(v)
+                for k, v in {"브랜드": brand, "제주": jeju,
+                             "제품군(레티놀)": api.get("3:레티놀", {})}.items()},
+        "_note": "월간 API 계열. 제주 우위 역전 시점과 제품군 피크 이후 하락을 함께 본다",
+    }
+    # 우위 역전 판정 — 제주 낙폭이 브랜드보다 커진 첫 해
+    flip = None
+    for y in decay["yoy"].get("제주", {}):
+        j, b = decay["yoy"]["제주"].get(y), decay["yoy"]["브랜드"].get(y)
+        if j is not None and b is not None and j < b and flip is None:
+            flip = {"year": y, "jeju": j, "brand": b}
+    decay["flip"] = flip
+    # 제품군 피크 연도와 그 이후 낙폭
+    pr = decay["abs"].get("제품군(레티놀)", {})
+    if pr:
+        pk = max(pr, key=lambda k: pr[k])
+        last = sorted(pr)[-1]
+        decay["product_peak"] = {"year": pk, "value": pr[pk], "last_year": last,
+                                 "last": pr[last],
+                                 "drop": round((pr[last] - pr[pk]) / pr[pk] * 100, 1)}
+
     def share_of(names, y, use_ytd=False):
         f = (lambda s: ytd(s, y, ytd_month)) if use_ytd else (lambda s: annual(s, y))
         vs = {n: f(comp[n]) for n in names if n in comp}
@@ -353,6 +391,7 @@ def build(live=False, standalone=False) -> dict:
                        "brand_api": {str(y): round(annual(brand, y), 4) for y in full_years},
                        "brand_daily": daily_brand, "brand_daily_yoy": daily_yoy,
                        "jeju_ratio": jeju_ratio, "product_ratio": daily_product_ratio,
+                       "decay": decay,
                        "share_direct": share_direct, "share_pair": share_pair, "share_all4": share_all4,
                        "competitors": {n: {str(y): round(annual(comp[n], y), 3)
                                            for y in full_years if annual(comp[n], y)} for n in comp}},

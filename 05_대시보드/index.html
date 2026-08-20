@@ -6,7 +6,7 @@
 <title>이니스프리 브랜드 인지도 진단·모니터링 대시보드</title>
 <meta name="description" content="공개 데이터 기반 이니스프리 브랜드 인지도 진단 및 KPI 모니터링 대시보드">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20260820b">
+<link rel="stylesheet" href="assets/style.css?v=20260820d">
 </head>
 <body>
 <div class="app">
@@ -66,6 +66,22 @@
         <div class="src">확정 2026-08-19 · 화산송이·그린티 합산 금지</div>
         <div class="chartbox" id="chartJeju"></div>
         <div class="cap"><b>읽는 법</b> 비중이 오른 것은 제주가 늘어서가 아니라 분모(브랜드 검색)가 더 빨리 무너졌기 때문이다. 2024년 정점 이후 보합이며, 2025년부터는 제주 절대 검색도 브랜드만큼 빠진다.</div>
+      </div>
+    </div>
+
+    <div class="sec">헤리티지 자산 감가 <small>“제주는 이미 1등이니 놔둬도 된다”가 성립하는지 — 안 부르는 동안 자산이 유지되는가</small></div>
+    <div class="two">
+      <div class="p">
+        <h3>제주 vs 브랜드 — 어느 쪽이 더 빨리 빠지는가</h3>
+        <div class="src">절대 지수 YoY · 비중이 아니라 실제 검색량</div>
+        <div class="chartbox" id="chartDecay"></div>
+        <div class="cap" id="capFlip"></div>
+      </div>
+      <div class="p">
+        <h3>옮겨간 쪽(제품군)도 꺾였다</h3>
+        <div class="src">레티놀·앰플 연평균 지수 · 회사가 집중한 기능성 키워드</div>
+        <div class="chartbox" id="chartPeak"></div>
+        <div class="cap" id="capPeak"></div>
       </div>
     </div>
 
@@ -225,6 +241,6 @@
 
 </div><!-- /.app -->
 <div class="toast" id="toast"></div>
-<script src="assets/app.js?v=20260820b"></script>
+<script src="assets/app.js?v=20260820d"></script>
 </body>
 </html>
