@@ -71,11 +71,10 @@ aside .blk:first-of-type{margin-top:auto}
 main{flex:1;min-width:0}
 
 /* ── 히어로 ────────────────────────────── */
-.hero{background:var(--basalt);color:var(--offwhite);padding:92px 0 76px}
-.hero-logo{height:52px;display:block;margin-bottom:30px}
-.hero .eyebrow{display:inline-block;background:var(--rose);color:var(--basalt);
- font-size:11.5px;font-weight:700;letter-spacing:.12em;padding:5px 12px;
- border-radius:100px;margin-bottom:24px}
+.hero{background:var(--basalt);color:var(--offwhite);padding:56px 0 72px}
+.hero-logo{height:64px;display:block;margin-bottom:34px}
+.hero .eyebrow{display:block;color:var(--rose);
+ font-size:11px;font-weight:700;letter-spacing:.22em;margin-bottom:20px}
 .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.6vw,40px);
  line-height:1.42;letter-spacing:-.01em;text-wrap:balance;max-width:21em}
 .hero .sub{margin-top:18px;font-size:15px;color:rgba(250,250,247,.78);max-width:46em}
@@ -103,6 +102,7 @@ section{padding:72px 0 12px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
 /* grid 자식의 min-width:auto가 표 최소폭에 밀려 넘치는 것 방지 */
 .grid2>*,.grid3>*,.kpis>*,.story>*{min-width:0}
+.grid2.wide-first{grid-template-columns:3fr 2fr}
 .card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);
  padding:28px 28px 24px;
  box-shadow:0 1px 2px rgba(37,53,49,.04), 0 12px 32px rgba(37,53,49,.06)}
@@ -270,7 +270,7 @@ footer b{color:var(--offwhite)}
  .grid3{grid-template-columns:1fr}
 }
 @media (max-width:860px){
- .grid2{grid-template-columns:1fr}
+ .grid2,.grid2.wide-first{grid-template-columns:1fr}
  .shell{display:block}
  aside{position:static;width:auto;height:auto;flex:none;padding:18px 20px;
   box-shadow:0 2px 8px rgba(21,31,28,.22), 0 10px 30px rgba(21,31,28,.24)}
@@ -432,7 +432,7 @@ footer b{color:var(--offwhite)}
    <h2>&ldquo;제주는 이미 1등이니 놔둬도 된다&rdquo;가 성립하는가</h2>
    <p class="desc">안 부르는 동안 자산이 유지되는가 — 비중이 아니라 절대 검색량으로 본다.</p>
   </div>
-  <div class="grid2">
+  <div class="grid2 wide-first">
    <div class="card">
     <h3>제주 vs 브랜드 — 어느 쪽이 더 빨리 빠지는가</h3>
     <div class="src">NAVER 데이터랩 · 절대 지수 YoY (%) · 월간 API 계열</div>
@@ -513,7 +513,7 @@ footer b{color:var(--offwhite)}
    <p class="desc">판정 분모는 직접경쟁 3사(이니스프리 + 미샤 + 3CE) — 2026-08-19 팀 확정.
     토니모리(2026-02 붕괴)·에뛰드는 차트에서 제외했다.</p>
   </div>
-  <div class="grid2">
+  <div class="grid2 wide-first">
    <div class="card">
     <h3>경쟁 검색 점유율 추이</h3>
     <div class="src">NAVER 데이터랩 · 동일 척도 그룹 조회 · 연평균 + 2026 1~7월
@@ -729,8 +729,6 @@ footer b{color:var(--offwhite)}
       <thead><tr><th style="text-align:left">개입 시점 타임라인</th><th style="text-align:left">내용</th></tr></thead>
       <tbody id="eventRows"></tbody>
      </table></div>
-    </div>
-    
     </div>
    </div>
 
@@ -2372,7 +2370,7 @@ const sx = (v,min,max,x0,x1) => x0 + (v-min)/(max-min)*(x1-x0);
   });
   s += `<text x="${cx}" y="${H-14}" text-anchor="middle" ${FONT} font-size="14" fill="${C.past}">${yr}</text>`;
   if(yr==='2025'){
-   s += `<rect x="${cx-bw-13}" y="${y0-6}" width="${(bw+10)*2+6}" height="${y(-33)-y0+16}" rx="8"
+   s += `<rect x="${cx-bw-13}" y="${y0-6}" width="${(bw+10)*2+6}" height="${y(-38)-y0+16}" rx="8"
      fill="none" stroke="${C.roseDeep}" stroke-width="2" stroke-dasharray="6 4"/>
     <text x="${cx}" y="${top-14}" text-anchor="middle" ${FONT} font-size="14" font-weight="700" fill="${C.roseDeep}">역전 — 제주가 더 빨리 빠짐</text>`;
   }
@@ -2406,9 +2404,9 @@ const sx = (v,min,max,x0,x1) => x0 + (v-min)/(max-min)*(x1-x0);
   if(isPk) s += `<text x="${cx}" y="${vy-30}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}">정점</text>`;
  });
  const x1 = L+gw*years.indexOf(pk.year)+gw/2, x2 = L+gw*years.indexOf(pk.last_year)+gw/2;
- s += `<path d="M${x1+34} ${y(pk.value)-4} C ${(x1+x2)/2} ${y(pk.value)-40}, ${(x1+x2)/2} ${y(pk.last)-46}, ${x2-6} ${y(pk.last)-26}"
+ s += `<path d="M${x1+34} ${y(pk.value)-4} C ${(x1+x2)/2} ${y(pk.value)-34}, ${(x1+x2)/2} ${y(pk.last)-40}, ${x2-6} ${y(pk.last)-26}"
    fill="none" stroke="${C.roseDeep}" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrP)"/>
-  <text x="${(x1+x2)/2+10}" y="${y(pk.value)-40}" text-anchor="middle" ${FONT} font-size="15" font-weight="700" fill="${C.roseDeep}">정점 대비 ${pk.drop}%</text>`;
+  <text x="${(x1+x2)/2+10}" y="${y(pk.value)-54}" text-anchor="middle" ${FONT} font-size="15" font-weight="700" fill="${C.roseDeep}">정점 대비 ${pk.drop}%</text>`;
  put('chPeak', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="제품군 검색 연평균. 2023년 정점 이후 37.4% 하락">
   <defs><marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
    <path d="M0 0 L10 5 L0 10 z" fill="${C.roseDeep}"/></marker></defs>
@@ -2511,7 +2509,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
  const m = D.series.monthly;
  const cut = m.months.length-1;
  const months = m.months.slice(0,cut), brand=m.brand.slice(0,cut), prod=m.product.slice(0,cut);
- const W=1120,H=380, top=44, bot=52, L=48, R=52;
+ const W=1120,H=380, top=58, bot=52, L=48, R=52;
  const bMax=Math.max(...brand)*1.06, pMax=Math.max(...prod)*1.06;
  const x=i=> L+i*(W-L-R)/(months.length-1);
  const yb=v=> top+(bMax-v)/bMax*(H-top-bot);
@@ -2521,7 +2519,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
  D.events.filter(e=>e.kind==='major').forEach(e=>{
   const i=months.indexOf(e.date); if(i<0) return;
   s += `<line x1="${x(i)}" y1="${top-6}" x2="${x(i)}" y2="${H-bot}" stroke="${C.roseDeep}" stroke-width="1.5" stroke-dasharray="5 5"/>
-   <text x="${x(i)+7}" y="${top+8}" ${FONT} font-size="12.5" font-weight="700" fill="${C.roseDeep}">${esc(e.label)}</text>`;
+   <text x="${x(i)+7}" y="${top+16}" ${FONT} font-size="11.5" font-weight="700" fill="${C.roseDeep}">${esc(e.label)}</text>`;
  });
  const path=(vals,yf)=> vals.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+yf(v).toFixed(1)).join('');
  s += `<path class="draw" pathLength="1" d="${path(brand,yb)}" fill="none" stroke="${C.forest}" stroke-width="2.8"/>
@@ -2634,12 +2632,12 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
    s+=`<rect x="${cx+2}" y="${cy+2}" width="${cw-4}" height="${rh-4}" rx="6" fill="rgba(63,90,69,${op})" data-tip="${yr}-${String(mo).padStart(2,'0')} · 지수 ${v.toFixed(2)}"/>`;
   }
  });
- // 리브랜딩 시점(2023-02) 마커 — 전후로 흐름이 꺾이지 않음을 보여준다
+ // 리브랜딩 캠페인 기간(2023-02 ~ 2023-12 · 2024-01 광고비 철회) — 기간 전체를 표시
  const r23 = years.indexOf('2023');
  if (r23 >= 0) {
   const mx = L + 1*cw, my = top + r23*rh;
-  s += `<rect x="${mx+1}" y="${my+1}" width="${cw-2}" height="${rh-2}" rx="7" fill="none" stroke="${C.roseDeep}" stroke-width="2.5"/>
-   <text x="${mx+cw/2}" y="${top+years.length*rh+22}" text-anchor="middle" ${FONT} font-size="12" font-weight="700" fill="${C.roseDeep}">2023-02 리브랜딩</text>`;
+  s += `<rect x="${mx+1}" y="${my+1}" width="${11*cw-2}" height="${rh-2}" rx="8" fill="none" stroke="${C.roseDeep}" stroke-width="2.5"/>
+   <text x="${mx + 11*cw/2}" y="${top+years.length*rh+22}" text-anchor="middle" ${FONT} font-size="12" font-weight="700" fill="${C.roseDeep}">리브랜딩 캠페인 기간 (2023-02 시작 → 2024-01 광고비 철회)</text>`;
  }
  put('chHeat', `<svg viewBox="0 0 ${W} ${H+26}" role="img" aria-label="연도별 월별 브랜드 검색 히트맵. 2021년에서 2026년으로 갈수록 색이 옅어진다. 각 칸에 마우스를 올리면 값 표시">${s}</svg>`);
 })();
