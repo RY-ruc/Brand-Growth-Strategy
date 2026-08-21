@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>이니스프리 브랜드 인지도 대시보드 — 리디자인 시안</title>
+<meta name="description" content="리브랜딩 무드보드 컨셉을 적용한 대시보드 리디자인 시안 · 마케팅 중요도순 재구성">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23253531'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23E78093'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Gowun Batang";font-weight:400;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Gowun_Batang/GowunBatang-Regular.ttf") format("truetype");}
+@font-face{font-family:"Gowun Batang";font-weight:700;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Gowun_Batang/GowunBatang-Bold.ttf") format("truetype");}
+@font-face{font-family:"Noto Sans KR";font-weight:400;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Regular.ttf") format("truetype");}
+@font-face{font-family:"Noto Sans KR";font-weight:500;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Medium.ttf") format("truetype");}
+@font-face{font-family:"Noto Sans KR";font-weight:700;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Bold.ttf") format("truetype");}
+
+:root{
+ /* 무드보드 1차최종 팔레트 — 원본 값 그대로 */
+ --basalt:#253531; --forest:#3F5A45; --stone:#E8E6D6; --rose:#E78093; --offwhite:#FAFAF7;
+ /* 파생 토큰 — 색상 유지·명도만 조정, WCAG AA 실측 */
+ --ink:#253531;               /* 12.30:1 */
+ --ink-past:#787268;          /* 4.56:1 */
+ --rose-deep:#B54A5E;         /* 4.89:1 · 동백 로즈 h349 유지 */
+ --stone-deep:#8A8272;        /* 3.64:1 · 보조 라인 전용 */
+ --hairline:rgba(37,53,49,.14);
+ --card:#FFFFFF;
+ --serif:"Gowun Batang",serif;
+ --sans:"Noto Sans KR",system-ui,sans-serif;
+ --pad:56px; --gap:26px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--offwhite);color:var(--ink);font-family:var(--sans);
+ font-size:15px;line-height:1.65;word-break:keep-all;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ── 왼쪽 사이드바 (바로가기) ─────────────── */
+.shell{display:flex;min-height:100vh}
+aside{width:238px;flex:0 0 238px;background:var(--basalt);color:var(--offwhite);
+ /* 경계 = 그림자 — 사이드바가 본문 위에 살짝 떠 있는 층위로 분리 */
+ box-shadow:2px 0 8px rgba(21,31,28,.22), 14px 0 40px rgba(21,31,28,.26);
+ z-index:5;
+ position:sticky;top:0;height:100vh;overflow-y:auto;
+ padding:28px 20px 24px;display:flex;flex-direction:column;gap:20px}
+aside .logo img{height:22px;display:block}
+aside .logo .tag{font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--rose);margin-top:10px}
+.snav{display:flex;flex-direction:column;gap:2px}
+.snav .grp{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:rgba(250,250,247,.5);margin:10px 0 5px}
+.snav a{color:rgba(250,250,247,.87);text-decoration:none;font-size:13.5px;
+ padding:7px 11px;border-radius:8px;line-height:1.4}
+.snav a:hover{background:rgba(250,250,247,.1)}
+.snav a.on{background:var(--rose);color:var(--basalt);font-weight:700}
+.snav a:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+aside .blk{font-size:11.5px;line-height:1.7;color:rgba(250,250,247,.62);
+ border-top:1px solid rgba(250,250,247,.16);padding-top:13px}
+aside .blk b{color:var(--offwhite)}
+aside .blk:first-of-type{margin-top:auto}
+.sbtn{background:rgba(250,250,247,.08);border:1px solid rgba(250,250,247,.25);
+ color:var(--offwhite);font-family:var(--sans);font-size:12px;font-weight:700;
+ border-radius:9px;padding:9px 12px;cursor:pointer;text-align:left}
+.sbtn:hover{background:rgba(250,250,247,.16)}
+.sbtn:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+main{flex:1;min-width:0}
+
+/* ── 히어로 ────────────────────────────── */
+.hero{background:var(--basalt);color:var(--offwhite);padding:92px 0 76px}
+.hero .eyebrow{display:inline-block;background:var(--rose);color:var(--basalt);
+ font-size:11.5px;font-weight:700;letter-spacing:.12em;padding:5px 12px;
+ border-radius:100px;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.6vw,40px);
+ line-height:1.42;letter-spacing:-.01em;text-wrap:balance;max-width:21em}
+.hero .sub{margin-top:18px;font-size:15px;color:rgba(250,250,247,.78);max-width:46em}
+.hero .sub b{color:var(--offwhite);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.chip{background:rgba(250,250,247,.08);border:1px solid rgba(250,250,247,.22);
+ border-radius:10px;padding:10px 16px;min-width:150px}
+.chip .k{font-size:11px;letter-spacing:.08em;color:rgba(250,250,247,.66)}
+.chip .v{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:1px}
+.chip .v small{font-size:12px;font-weight:400;color:rgba(250,250,247,.66);margin-left:4px}
+.chip.warn .v{color:var(--rose)}
+.hero .stamp{margin-top:22px;font-size:12px;color:rgba(250,250,247,.55)}
+
+/* ── 섹션 공통 — 피드백 ①: 지표 설명 헤드라인 크게 ── */
+section{padding:72px 0 12px}
+.schead{margin-bottom:34px}
+.schead .no{display:inline-block;background:var(--rose);color:var(--basalt);
+ font-size:11.5px;font-weight:700;letter-spacing:.12em;padding:4px 11px;
+ border-radius:100px;margin-bottom:12px}
+.schead .no.mute{background:var(--stone);color:var(--ink)}
+.schead h2{font-family:var(--serif);font-weight:700;font-size:clamp(22px,2.6vw,30px);
+ line-height:1.35;letter-spacing:-.01em}
+.schead .desc{margin-top:8px;font-size:14.5px;color:var(--ink-past);max-width:52em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+/* grid 자식의 min-width:auto가 표 최소폭에 밀려 넘치는 것 방지 */
+.grid2>*,.grid3>*,.kpis>*,.story>*{min-width:0}
+.card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);
+ padding:28px 28px 24px;
+ box-shadow:0 1px 2px rgba(37,53,49,.04), 0 12px 32px rgba(37,53,49,.06)}
+
+/* ── 인터랙션: 툴팁 · 등장 효과 ── */
+.tip{position:fixed;z-index:99;background:var(--basalt);color:var(--offwhite);
+ font-size:12.5px;line-height:1.55;padding:7px 11px;border-radius:8px;
+ pointer-events:none;opacity:0;transition:opacity .12s;max-width:280px;
+ box-shadow:0 6px 20px rgba(21,31,28,.35);font-variant-numeric:tabular-nums}
+.tip.show{opacity:1}
+[data-tip]{cursor:default}
+.pre{opacity:0;transform:translateY(8px)}
+.in{opacity:1;transform:none;transition:opacity .4s ease, transform .4s ease}
+/* 라인 드로잉 — .pre/.in 은 모션 허용 시에만 JS가 부여 */
+.pre path.draw{stroke-dasharray:1;stroke-dashoffset:1}
+.in path.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:drawline 1.1s .15s ease forwards}
+@keyframes drawline{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){
+ .card,.kp{transition:none}
+ .card:hover{transform:none}
+ .pre{opacity:1;transform:none}
+ .in{transition:none}
+}
+.card h3{font-size:18.5px;font-weight:700;line-height:1.4;letter-spacing:-.01em}
+.card .src{font-size:12px;color:var(--ink-past);margin:4px 0 14px}
+.lgd{margin-left:10px;font-family:var(--sans);font-size:11px;font-weight:700;
+ color:var(--ink);background:var(--stone);border:1px solid var(--swatch-edge,rgba(37,53,49,.22));
+ border-radius:100px;padding:3px 10px;cursor:pointer}
+.lgd.off{opacity:.45}
+.lgd:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+.kpgo{margin-top:8px;font-size:11.5px;font-weight:700;color:var(--forest);text-align:right}
+.kp[data-go]{cursor:pointer}
+.kp[data-go]:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+.cap{margin-top:14px;padding:12px 16px;background:var(--offwhite);
+ border-left:3px solid var(--forest);border-radius:0 8px 8px 0;
+ font-size:13.5px;line-height:1.8;color:var(--ink)}
+.cap.warn{border-left-color:var(--rose-deep)}
+.cap b{font-weight:700}
+.chart{width:100%}
+.chart svg{display:block;width:100%;height:auto}
+
+/* ── 스토리 A→E ────────────────────────── */
+.story{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.story .st{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);
+ padding:20px 18px;display:flex;flex-direction:column}
+.story .lt{width:34px;height:34px;border-radius:50%;background:var(--forest);color:var(--offwhite);
+ font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.story .st:last-child .lt{background:var(--rose);color:var(--basalt)}
+.story h3{font-family:var(--serif);font-size:16.5px;font-weight:700;line-height:1.45;margin-bottom:8px}
+.story p{font-size:13px;color:var(--ink-past);line-height:1.65}
+.story p b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ── 이기는 구조 (문·물건·이유) ─────────── */
+.flow{display:flex;align-items:stretch;gap:12px;margin:16px 0 6px;flex-wrap:wrap}
+.fstep{flex:1;min-width:200px;background:var(--offwhite);border:1px solid var(--hairline);
+ border-radius:12px;padding:16px 18px}
+.fk{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--forest)}
+.fv{font-family:var(--serif);font-size:19px;margin-top:6px;line-height:1.4}
+.fv b{font-variant-numeric:tabular-nums}
+.fd{font-size:12.5px;color:var(--ink-past);margin-top:6px;line-height:1.6}
+.farr{align-self:center;color:var(--stone-deep);font-size:20px;font-weight:700}
+@media (max-width:860px){.farr{display:none}}
+
+/* ── 경보·KPI ──────────────────────────── */
+.alert{display:flex;gap:14px;align-items:baseline;background:var(--card);
+ border:1px solid var(--hairline);border-left:4px solid var(--rose-deep);
+ border-radius:10px;padding:13px 18px;margin-bottom:10px;flex-wrap:wrap}
+.alert .lv{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--rose-deep);white-space:nowrap}
+.alert .kpi{font-weight:700;white-space:nowrap}
+.alert .msg{color:var(--ink);font-variant-numeric:tabular-nums}
+.alert .act{color:var(--ink-past);font-size:13px;flex-basis:100%;padding-left:2px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:24px}
+.kp{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);
+ padding:20px 20px 16px;display:flex;flex-direction:column;
+ box-shadow:0 1px 2px rgba(37,53,49,.04), 0 12px 32px rgba(37,53,49,.06)}
+.kp .rank{font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--forest)}
+.kp h3{font-size:15.5px;font-weight:700;margin:4px 0 10px;line-height:1.4}
+.kp .big{font-size:30px;font-weight:700;letter-spacing:-.02em;
+ font-variant-numeric:tabular-nums;line-height:1.1}
+.kp .big.down{color:var(--rose-deep)}
+.kp .big.flat{color:var(--forest)}
+.kp .note{font-size:12px;color:var(--ink-past);margin-top:6px;line-height:1.6}
+.kp .note b{color:var(--ink)}
+.kp .spark{margin-top:auto;padding-top:12px}
+.kp .gate{margin-top:10px;padding-top:10px;border-top:1px dashed var(--hairline);
+ font-size:11.5px;color:var(--ink-past)}
+.kp .gate b{color:var(--rose-deep)}
+.kp .gate b.ok{color:var(--forest)}
+.aeoList{list-style:none;margin-top:8px}
+.aeoList li{font-size:12px;padding:3px 0;color:var(--ink)}
+.aeoList li::before{content:"";display:inline-block;width:6px;height:11px;
+ border-right:2.5px solid var(--forest);border-bottom:2.5px solid var(--forest);
+ transform:rotate(45deg);margin-right:10px}
+details.gates{margin-top:18px;background:var(--card);border:1px solid var(--hairline);
+ border-radius:var(--radius);padding:0}
+details.gates summary{cursor:pointer;padding:16px 22px;font-weight:700;font-size:15px;list-style:none}
+details.gates summary::before{content:"▸";margin-right:9px;color:var(--forest)}
+details.gates[open] summary::before{content:"▾"}
+details.gates .inner{padding:0 22px 20px;overflow-x:auto}
+
+/* ── 표 — 가독성: 행 간격·줄무늬·최소 폭 ── */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--ink-past);
+ text-align:right;padding:11px 12px;border-bottom:2px solid var(--basalt);white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:12px;border-bottom:1px solid var(--hairline);text-align:right;
+ font-variant-numeric:tabular-nums;vertical-align:top;line-height:1.65}
+td:first-child{text-align:left;font-weight:700;white-space:nowrap}
+td.l{text-align:left;font-weight:400;white-space:normal}
+tbody tr:nth-child(even) td{background:rgba(232,230,214,.32)}
+tbody tr:hover td{background:rgba(63,90,69,.08)}
+.tblwrap{overflow-x:auto}
+
+/* ── 발표 가드 ─────────────────────────── */
+.guard td:first-child{color:var(--rose-deep);font-weight:700}
+.guard td.ok{text-align:left;font-weight:400}
+.guard td.ok b{color:var(--forest)}
+.qa{background:var(--basalt);color:var(--offwhite);border-radius:var(--radius);padding:26px 28px}
+.qa .q{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1.5;margin-bottom:14px}
+.qa ol{padding-left:20px;font-size:13.5px;line-height:1.75;color:rgba(250,250,247,.85)}
+.qa ol b{color:var(--offwhite)}
+.qa .no-say{margin-top:14px;font-size:12.5px;color:var(--rose);border-top:1px solid rgba(250,250,247,.18);padding-top:12px}
+.ban{display:inline-block;background:var(--rose);color:var(--basalt);font-size:10.5px;
+ font-weight:700;letter-spacing:.08em;border-radius:100px;padding:2px 9px;margin-right:7px}
+
+/* ── 부록 ──────────────────────────────── */
+.appendix{background:var(--stone);margin-top:56px;padding-bottom:40px}
+.appendix .schead h2{font-size:clamp(20px,2.2vw,26px)}
+.appendix .card{background:var(--offwhite)}
+.appendix .cap{background:var(--card)}
+
+/* ── 푸터 ──────────────────────────────── */
+footer{background:var(--basalt);color:rgba(250,250,247,.72);padding:44px 0 52px;font-size:12.5px;line-height:1.8}
+footer img{height:20px;margin-bottom:16px;display:block}
+footer b{color:var(--offwhite)}
+
+@media (max-width:1320px){
+ .story{grid-template-columns:repeat(3,1fr)}
+ .kpis{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:1100px){
+ .story{grid-template-columns:repeat(2,1fr)}
+ .kpis{grid-template-columns:repeat(2,1fr)}
+ .grid3{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .shell{display:block}
+ aside{position:static;width:auto;height:auto;flex:none;padding:18px 20px;
+  box-shadow:0 2px 8px rgba(21,31,28,.22), 0 10px 30px rgba(21,31,28,.24)}
+ .snav{flex-direction:row;flex-wrap:wrap;gap:4px}
+ .snav .grp{display:none}
+ aside .blk,.sbtn,#livePanel{display:none}
+}
+@media (max-width:560px){
+ .story,.kpis{grid-template-columns:1fr}
+ :root{--pad:32px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{
+ aside{display:none}
+ .shell{display:block}
+ .hero,.qa,footer{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .card,.kp,.qa,.st{break-inside:avoid}
+ .schead{break-after:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+<aside aria-label="바로가기">
+ <div class="logo"><img src="data:image/png;base64,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" alt="innisfree">
+  <div class="tag">AWARENESS MONITOR<br>리디자인 시안</div></div>
+ <nav class="snav" aria-label="섹션 바로가기">
+  <span class="grp">본편</span>
+  <a href="#story">01 · 결론 서사와 해결</a>
+  <a href="#kpi">02 · KPI 모니터링</a>
+  <a href="#asset">03 · 헤리티지 자산 감가</a>
+  <a href="#diagnosis">04 · 진단 재현</a>
+  <a href="#compete">05 · 경쟁 포지션</a>
+  <a href="#opportunity">06 · 이길 수 있는 자리</a>
+  <a href="#guard">07 · 발표 가드</a>
+  <span class="grp">부록</span>
+  <a href="#appendix">A1~A6 · 참조 자료</a>
+ </nav>
+ <div class="blk"><b>지표 정의</b><div id="defBox"></div></div>
+ <div class="blk"><b>데이터 소스</b><div id="srcBox"></div></div>
+ <div class="blk"><b>데이터 기준</b><br>2021-01 ~ 2026-08<br>진행 중인 월은 집계 제외</div>
+ <div class="blk"><b>캡스톤 학습용 · 비공식</b><br>이니스프리·아모레퍼시픽과 무관한 가상 기획</div>
+ <button class="sbtn" id="liveBtn" aria-expanded="false">API 갱신 방법</button>
+ <div class="blk" id="livePanel" hidden>
+  <b>python build_data.py</b> — 저장소 CSV 재빌드<br>
+  <b>python build_data.py --live</b> — NAVER 재조회<br>
+  <b>python check_aeo.py</b> — AEO 4항목 실측<br>
+  갱신 후 캐시가 남으면 ?v= 값을 올린다
+ </div>
+ <button class="sbtn" id="printBtn">전체 인쇄 · PDF</button>
+</aside>
+<main>
+
+<header class="hero">
+ <div class="wrap">
+  <span class="eyebrow">INNISFREE · BRAND AWARENESS MONITOR</span>
+  <h1>회사는 20년 쌓은 &lsquo;제주&rsquo;를 떼고 가상의 섬으로 갈아탔지만,
+      소비자 인식은 따라오지 않았다.</h1>
+  <p class="sub">바꾼 것 자체보다, <b>바꾼 뒤에 아무것도 하지 않은 것</b>이 실패의 구조다 —
+   예산은 새로 만들지 않은 채 1년 만에 거뒀다.</p>
+  <div class="chips" id="heroChips"></div>
+  <div class="stamp" id="heroStamp"></div>
+ </div>
+</header>
+
+<!-- ① 스토리 A→E -->
+<section id="story">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">01 · 결론 서사</span>
+   <h2>다섯 문장이면 끝나는 이야기 — A에서 E까지</h2>
+   <p class="desc">핵심 발견 다섯 개 — 발표 서사의 순서 그대로.</p>
+  </div>
+  <div class="story">
+   <div class="st"><div class="lt">A</div><h3>회사는 이미 제주로 돌아왔다</h3>
+    <p>공식몰 브랜드 스토리에 제주 <b>12회</b> · THE NEW ISLE <b>0회</b> (2026-08 실사)</p></div>
+   <div class="st"><div class="lt">B</div><h3>그런데 그 말로 부르지 않는다</h3>
+    <p>llms.txt 타겟 질의어 <b>34개 중 제주 0개</b></p></div>
+   <div class="st"><div class="lt">C</div><h3>자산은 녹고 있다</h3>
+    <p>제주 절대 검색 5년 <b>−58.6%</b> · 2025년 브랜드보다 빨리 빠지기 시작(우위 역전)</p></div>
+   <div class="st"><div class="lt">D</div><h3>옮겨간 기능성도 꺾였다</h3>
+    <p>제품군 검색 2023 정점 이후 <b>−37.4%</b> · 2026년에도 <b>−20.1%</b></p></div>
+   <div class="st"><div class="lt">E</div><h3>이길 방법은 회사가 증명했다</h3>
+    <p>노세범 <b>66.78</b> &gt; 기름종이 <b>63.77</b> — 브랜드어가 자기가 밀어낸 카테고리어를 이겼다</p></div>
+  </div>
+
+  <div class="card" style="margin-top:26px">
+   <h3>다섯 문제에는 다섯 해결이 붙어 있다</h3>
+   <div class="src">문제 정의 = 제안서_본문 Part 1 · 해결 = Part 4 크리에이티브 4종 + Part 5 로드맵 (2026-08-19 확정)</div>
+   <div class="tblwrap"><table>
+    <thead><tr><th>문제</th><th style="text-align:left">무엇이 문제인가</th><th style="text-align:left">핵심 지표</th><th style="text-align:left">해결</th></tr></thead>
+    <tbody>
+     <tr><td>A</td><td class="l">헤리티지 서사 단절 — 회사는 말하지 않는데 소비자 인식은 남아 있다</td><td class="l">브랜드 검색 −23.9% · 제주 연상 0.34→0.52% (브랜드보다 완만)</td><td class="l"><b>무드보드 (4-1)</b> — 헤리티지 계승 톤으로 발신 재개</td></tr>
+     <tr><td>B</td><td class="l">광고가 인지도로 전환되지 않았고, 1년 만에 중단됐다</td><td class="l">광고비·브랜드 r=−0.03 (제품과는 r=+0.69)</td><td class="l"><b>예산 원칙 (Part 5)</b> — 재배치 아닌 증액 + 최소 3년 사전 확약</td></tr>
+     <tr><td>C</td><td class="l">오프라인 접점(매장) 소멸이 인지도와 가장 강하게 연결됐다</td><td class="l">매장 400→190개 · r=0.98</td><td class="l"><b>체험 거점 (4-2)</b> — 실증 사례 &lsquo;공병공간&rsquo; 확장</td></tr>
+     <tr><td>D</td><td class="l">제품은 팔리는데, 그게 브랜드로 안 쌓인다</td><td class="l">제품 검색 +118.5% vs 브랜드 −23.9%</td><td class="l"><b>상세페이지 (4-4)</b> — 원료·헤리티지·루틴으로 제품→브랜드 동선</td></tr>
+     <tr><td>E</td><td class="l">제로클릭 대응 — 형식은 갖췄는데 실제 AI 답변에는 안 나온다</td><td class="l">AEO 4/4 (실사) · 타겟 질의어 34개 중 헤리티지 0개</td><td class="l"><b>랜딩페이지 (4-3)</b> — FAQ·구조화 데이터 + AI가 인용할 서사 문서</td></tr>
+    </tbody>
+   </table></div>
+  </div>
+ </div>
+</section>
+
+<!-- ② 경보 + KPI -->
+<section id="kpi">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">02 · KPI 모니터링</span>
+   <h2>핵심 성과 지표 다섯 개 — 팀 확정 우선순위 순서</h2>
+   <p class="desc">각 카드 하단은 90 / 180 / 360일 게이트의 판정 기준.
+    캠페인 개입 전이라 진행률은 아직 계산되지 않는다.</p>
+  </div>
+  <div id="alertBox"></div>
+  <div class="kpis" id="kpiCards"></div>
+  <details class="gates">
+   <summary>90 / 180 / 360일 게이트 목표표 — 실측치에서 역산한 판정 기준</summary>
+   <div class="inner"><table>
+    <thead><tr><th>KPI</th><th style="text-align:left">기준값</th><th style="text-align:left">90일</th><th style="text-align:left">180일</th><th style="text-align:left">360일</th></tr></thead>
+    <tbody>
+     <tr><td>1 · 브랜드 검색지수</td><td class="l">2.30 (2025 연평균)</td>
+      <td class="l">YoY 낙폭이 −28.8%보다 축소 <b>— 자연 감속 대비 초과분으로 판정</b></td>
+      <td class="l">YoY −10% 이내</td><td class="l">YoY 플러스 전환 (상한: 2023 수준 5.25)</td></tr>
+     <tr><td>2 · &lsquo;제주&rsquo; 연상 비중(단독)</td><td class="l">0.52% (2025)</td>
+      <td class="l">0.52% 유지</td><td class="l">0.56% 이상 — 정체 구간 첫 이탈</td>
+      <td class="l">0.60% 이상 + <b>제주 절대 지수의 YoY 낙폭이 브랜드보다 작을 것</b></td></tr>
+     <tr><td>3 · 제품-브랜드 Gap</td><td class="l">+9.6%p (2026 1~7월)</td>
+      <td class="l" colspan="3">가드 지표 — KPI 1(브랜드 성장률)에 종속. 구간에 따라 부호가 뒤집히므로 단독 판정 금지, 두 성장률 병기</td></tr>
+     <tr><td>4 · AEO/SEO 대응</td><td class="l">기획 당시 1/4 → <b>4/4</b> (2026-08-20 실사)</td>
+      <td class="l">3/4 이상 — 실사 기준으로는 이미 초과. 항목이 유동적이라 착수 시점 재확인</td>
+      <td class="l">4/4 100% 충족</td>
+      <td class="l">100% 유지 + FAQ형 콘텐츠 건수 확장(정성적 목표)</td></tr>
+     <tr><td>5 · 경쟁 검색 점유율(직접 3사)</td><td class="l">53.1% (2025)</td>
+      <td class="l">추가 하락 없음</td><td class="l">56% 이상 (2023 수준 회복)</td><td class="l">60% 이상</td></tr>
+    </tbody>
+   </table></div>
+  </details>
+ </div>
+</section>
+
+<!-- ③ 헤리티지 자산 감가 -->
+<section id="asset">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">03 · 헤리티지 자산 감가</span>
+   <h2>&ldquo;제주는 이미 1등이니 놔둬도 된다&rdquo;가 성립하는가</h2>
+   <p class="desc">안 부르는 동안 자산이 유지되는가 — 비중이 아니라 절대 검색량으로 본다.</p>
+  </div>
+  <div class="grid2">
+   <div class="card">
+    <h3>제주 vs 브랜드 — 어느 쪽이 더 빨리 빠지는가</h3>
+    <div class="src">NAVER 데이터랩 · 절대 지수 YoY (%) · 월간 API 계열</div>
+    <div class="chart" id="chDecay"></div>
+    <div class="cap warn"><b>2025년 역전</b> — 제주 −30.2% vs 브랜드 −28.9%.
+     &ldquo;가장 오래 버티는 연상&rdquo; 지위를 잃었다 — 안 부르는 동안 자산이 녹고 있다.</div>
+   </div>
+   <div class="card">
+    <h3>옮겨간 쪽(제품군)도 꺾였다</h3>
+    <div class="src">레티놀·앰플 연평균 지수 · 회사가 집중한 기능성 키워드</div>
+    <div class="chart" id="chPeak"></div>
+    <div class="cap warn"><b>정점(2023) 이후 −37.4%, 2026년도 −20.1%.</b>
+     &ldquo;선택과 집중&rdquo;이라면 집중한 쪽이라도 이겨야 하는데, 둘 다 놓치고 있다.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ⑥ 진단 재현 -->
+<section id="diagnosis">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">04 · 진단 재현</span>
+   <h2>2023년, 돈이 만든 것은 브랜드가 아니라 제품 한 줄이었다</h2>
+   <p class="desc">광고 +41.6% 증액의 해, 브랜드 검색 −23.9% · 제품군 +118.5% —
+    서로 다른 세 출처가 같은 지점을 가리킨다.</p>
+  </div>
+  <div class="grid3" style="margin-bottom:var(--gap)">
+   <div class="card" style="padding:18px 22px"><div class="src" style="margin:0 0 6px">출처 1 · DART 감사보고서</div>
+    <b>광고 +41.6% 증액에도 브랜드 검색 −23.9%</b></div>
+   <div class="card" style="padding:18px 22px"><div class="src" style="margin:0 0 6px">출처 2 · 공정위 정보공개서</div>
+    <b>매장 400 → 190개 — 브랜드 검색과 r=0.98</b></div>
+   <div class="card" style="padding:18px 22px"><div class="src" style="margin:0 0 6px">출처 3 · NAVER 데이터랩</div>
+    <b>같은 해 제품군 검색만 +118.5%</b></div>
+  </div>
+  <div class="card" style="margin-bottom:var(--gap)">
+   <h3>브랜드 검색 vs 제품군 검색 — 월간</h3>
+   <div class="src">NAVER 데이터랩 · 월간 API 계열 · 세로 점선은 개입 시점 · 두 계열은 각자의 축 — 기울기만 비교</div>
+   <div class="chart" id="chTrend"></div>
+   <div class="cap"><b>스케일 주의</b> 제품군은 브랜드의 약 1/10 규모라 각자의 축으로 그렸다.
+    선의 높낮이가 아니라 <b>방향</b>을 볼 것 — 리브랜딩 해에 두 선은 정반대로 움직였다.</div>
+  </div>
+  <div class="card" style="margin-bottom:var(--gap)">
+   <h3>브랜드 검색 히트맵 — 5년에 걸쳐 전 구간이 식었다</h3>
+   <div class="src">NAVER 데이터랩 · 월간 API 계열 · 진한 칸 = 검색 많음 · 진행 중인 월(2026-08)은 제외</div>
+   <div class="chart" id="chHeat"></div>
+   <div class="cap">위(2021)에서 아래(2026)로 옅어진다 — 하락은 <b>전 구간</b>이다.
+    YoY는 같은 달끼리 비교해 계절성을 통제한다(2026-08-19 판정).</div>
+  </div>
+  <div class="grid2">
+   <div class="card">
+    <h3>매장 수 vs 브랜드 검색 — 같이 움직였다</h3>
+    <div class="src">공정위 정보공개서 · r = 0.98 (R²=0.97) · 시간이 왼쪽(2021)에서 오른쪽(2024)으로 흐르도록 축을 반전</div>
+    <div class="chart" id="chStore"></div>
+    <div class="cap warn"><b>상관이지 인과가 아니다</b> — n=4, 역인과(수요 감소 → 폐점) 배제 못 함.
+     &ldquo;매장을 늘리면 검색이 는다&rdquo;로 읽지 말 것.</div>
+   </div>
+   <div class="card">
+    <h3>광고선전비 vs 브랜드 검색 — 따로 움직였다</h3>
+    <div class="src">DART 감사보고서 주석21 · 산점도 · r = −0.03 · 2023년 점만 로즈</div>
+    <div class="chart" id="chAd"></div>
+    <div class="cap warn"><b>무상관(r≈0)을 &ldquo;광고가 무의미하다&rdquo;로 단정하지 않는다.</b>
+     n=5, 채널별 반응 시차 미반영. 같은 돈이 제품 검색과는 r=+0.69로 연결됐다.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ④ 경쟁 포지션 -->
+<section id="compete">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">05 · 경쟁 포지션</span>
+   <h2>직접경쟁 3사 안에서 이니스프리의 자리</h2>
+   <p class="desc">판정 분모는 직접경쟁 3사(이니스프리 + 미샤 + 3CE) — 2026-08-19 팀 확정.
+    토니모리(2026-02 붕괴)·에뛰드는 차트에서 제외했다.</p>
+  </div>
+  <div class="grid2">
+   <div class="card">
+    <h3>경쟁 검색 점유율 추이</h3>
+    <div class="src">NAVER 데이터랩 · 동일 척도 그룹 조회 · 연평균 + 2026 1~7월
+     <button class="lgd" id="togglePair" aria-pressed="true">2사(참고) 표시</button></div>
+    <div class="chart" id="chShare"></div>
+    <div class="cap"><b>판정은 굵은 선(직접 3사) 하나.</b>
+     토니모리를 넣은 옛 4사 기준은 붕괴 착시(−53.5%)로 폐기.</div>
+   </div>
+   <div class="card">
+    <h3>경쟁 브랜드 검색량 추이 — 브랜드별 고유색</h3>
+    <div class="src">한 요청 안에서 동일 척도로 조회 · 연평균 · 2026 YoY는 라벨 병기</div>
+    <div class="chart" id="chComp"></div>
+    <div class="cap"><b>같은 조회 안에서만 크기 비교 가능.</b>
+     이니스프리 5년 −73.0%로 하락 폭 최대 · 2026 YoY 이니 −31.5% vs 미샤 −27.1%.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ⑤ 이길 자리 -->
+<section id="opportunity">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">06 · 이길 수 있는 자리</span>
+   <h2>고유명사는 남이 쓸 수 없다</h2>
+   <p class="desc">진입은 일반명사에서만 일어난다(실측). 그런데 이니스프리는 브랜드어가 카테고리어를
+    넘어서는 것까지 이미 한 번 증명했다 — 노세범 66.78 &gt; 기름종이 63.77(같은 조회).
+    조회 2025-08 ~ 2026-08.</p>
+  </div>
+  <div class="grid2">
+   <div class="card">
+    <h3>이니스프리 고유 자산 키워드</h3>
+    <div class="src">묶음 조회 A · 구성 키워드는 막대 라벨에 병기</div>
+    <div class="chart" id="chLtA"></div>
+   </div>
+   <div class="card">
+    <h3>같은 카테고리 — 일반명사 vs 결합어</h3>
+    <div class="src">묶음 조회 B · A표와 값 직접 비교 금지(요청 단위 재정규화)</div>
+    <div class="chart" id="chLtB"></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:var(--gap)">
+   <h3>이기는 구조 — 문 · 물건 · 이유</h3>
+   <div class="src">01_분석결과/고민어_vs_원산지어_검증.md · 2026-08-20 조사 · 아래 세 수치는 각각 다른 조회의 값</div>
+   <div class="flow">
+    <div class="fstep"><div class="fk">사람이 들어오는 문</div>
+     <div class="fv">수분크림 <b>62.98</b></div>
+     <div class="fd">일반명사 — 진입은 여기서만 일어난다. 화산송이(1.885)의 33배 (맨단어 실측)</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fk">살 물건</div>
+     <div class="fv">이니스프리 그린티 <b>41.74</b></div>
+     <div class="fd">살아있는 유일한 헤리티지 제품 — 나머지 라인을 전부 합쳐도 그린티의 44%</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="fk">왜 이걸 사나</div>
+     <div class="fv">제주 서귀포 녹차밭 <b>20년</b></div>
+     <div class="fd">경쟁사도 임상·저자극은 낸다. 원산지 20년은 이니스프리만 낸다 — 동점을 깨는 근거</div></div>
+   </div>
+   <div class="cap"><b>&ldquo;제주로 돌아가자&rdquo;가 아니라 &ldquo;제주를 그린티에 실어서 팔자&rdquo;.</b>
+    제주는 진입 키워드가 아니라 <b>선택 근거</b>다 — 결합어 타겟팅은 실측(0.511)으로 폐기.</div>
+  </div>
+  <div class="grid3" style="margin-top:var(--gap)">
+   <div class="card">
+    <h3>① 문은 고민의 언어로 연다</h3>
+    <div class="src">맨단어 정면 대결 — 별도 조회 D</div>
+    <div class="cap">수분크림 <b>62.98</b> · 선크림 59.76 · 여드름 22.45 · 모공 8.32 vs 화산송이 <b>1.885</b>.
+     타겟 질의어·상세페이지 제목·FAQ를 일반명사+고민어로 건다.
+     원료어를 진입 키워드로 삼는 전략은 폐기한다.</div>
+   </div>
+   <div class="card">
+    <h3>② 이름이 고민을 말하게 한다</h3>
+    <div class="src">브랜드어 vs 카테고리어 — 별도 조회 B</div>
+    <div class="cap"><b>노세범 66.78 &gt; 기름종이 63.77.</b> 브랜드어가 자기가 대체한 카테고리어를
+     넘어선 직접 대체 사례 — 제네릭 브랜드화는 이니스프리에서 이미 한 번 완료됐다.
+     이름은 고민의 언어로(no sebum), 원산지는 이름이 아니라 근거로.</div>
+   </div>
+   <div class="card">
+    <h3>③ 이기는 시장을 놓고, 지는 시장에 갔다</h3>
+    <div class="src">카테고리 대비 점유율 — 부르면_오는가_인과검증.md (2026-08-20)</div>
+    <div class="cap">레티놀 시장이 <b>+159%</b> 커지는 동안 이니스프리 몫은 <b>30.9% → 25.3%</b>로 줄었고,
+     줄어드는 녹차 시장에서는 아직 지배적이다.
+     제품으로 남은 것은 버텼고, 이름만 남은 것은 사라졌다(그린티 0.31 vs 제주 0.17).
+     <b>&ldquo;회사가 부르면 사람이 온다&rdquo;는 반증됐다</b> — 제주는 푸시할 것이 아니라
+     그린티라는 제품에 실어야 하며, 그 작동 여부는 가설로서 AI 인용실험으로 검증 중이다.</div>
+   </div>
+  </div>
+  <div class="cap warn" style="margin-top:14px"><b>계열 주의</b> 위 수치는 각각 별도 데이터랩 조회(D·B·E·라인별)라
+   표를 가로질러 비교·연산할 수 없다. 인용 시 구성 키워드를 함께 밝힐 것.
+   &ldquo;제주를 그린티에 실으면 소비자 검색이 반응한다&rdquo;는 가설 — AI 인용실험으로 검증 중.</div>
+ </div>
+</section>
+
+<!-- ⑦ 발표 가드 -->
+<section id="guard">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">07 · 발표 가드</span>
+   <h2>그 자리에서 무너지는 표현과, 대신 쓸 문장</h2>
+   <p class="desc">2026-08-20 실사로 확인된 것만 담았다. 전문은 CLAUDE.md와 근거 문서 참조.</p>
+  </div>
+  <div class="card" style="margin-bottom:var(--gap)">
+   <div class="tblwrap"><table class="guard">
+    <thead><tr><th style="text-align:left">쓰지 말 것</th><th style="text-align:left">대신 이렇게</th></tr></thead>
+    <tbody>
+     <tr><td class="l">&ldquo;AEO·제로클릭 대응이 전무하다&rdquo;</td>
+      <td class="ok">사실이 아니다 — 4/4 완비. <b>&ldquo;형식은 갖췄는데 실제 AI 답변에는 안 나온다&rdquo;</b></td></tr>
+     <tr><td class="l">&ldquo;제주 연상 비중이 상승했다&rdquo;</td>
+      <td class="ok">분모(브랜드 검색) 붕괴 효과. <b>&ldquo;브랜드 전체보다 오래 버텼다&rdquo;</b></td></tr>
+     <tr><td class="l">&ldquo;회사가 제주를 버렸다&rdquo; (현재형)</td>
+      <td class="ok">공식몰에 제주 12회 · THE NEW ISLE 0회. <b>&ldquo;돌아왔는데 그 말로 부르지 않는다&rdquo;</b></td></tr>
+     <tr><td class="l">&ldquo;제주 그린티 수분크림 같은 결합어를 노리자&rdquo;</td>
+      <td class="ok">결합어 실측 0.086~0.935로 사실상 0. <b>&ldquo;수분크림(63.0)으로 들어온 사람이 이니스프리를 고르게 하자&rdquo;</b></td></tr>
+     <tr><td class="l">&ldquo;사람들은 고민어로 검색하지 않는다&rdquo;</td>
+      <td class="ok">틀렸다 — 여드름 22.5 · 모공 8.3 &gt; 화산송이 1.9. <b>&ldquo;진입은 일반명사에서만 일어난다&rdquo;</b></td></tr>
+     <tr><td class="l">&ldquo;제주라서 좋다&rdquo; (감성·향토)</td>
+      <td class="ok">&ldquo;그래서 뭐가 좋은데?&rdquo; 한 방에 무너진다. <b>&ldquo;제주 서귀포 화산토·해풍에서 자란 녹차라 성분이 다르다&rdquo;</b></td></tr>
+    </tbody>
+   </table></div>
+  </div>
+  <div class="grid2">
+   <div class="qa">
+    <div class="q">&ldquo;제주로는 이미 AI가 이니스프리를 답한다.<br>이미 이기는 자리에 왜 돈을 쓰나?&rdquo;</div>
+    <ol>
+     <li><b>그 자산이 녹고 있다</b> — 제주 절대 검색 5년 −58.6%. 1등이지만 시장이 반토막</li>
+     <li><b>2025년에 우위가 역전됐다</b> — 제주 −30.2% vs 브랜드 −28.9%, 2026년에도 지속</li>
+     <li><b>옮겨간 기능성도 꺾였다</b> — 정점 이후 −37.4%. 둘 다 놓치는 중</li>
+     <li><b>프레임 정정</b> — 제주는 목적이 아니라 <b>일반명사 싸움을 이기는 차별화 수단</b>이다</li>
+    </ol>
+   </div>
+   <div class="qa">
+    <div class="q">&ldquo;사람들은 제주로 검색 안 합니다.<br>자기 피부 고민으로 검색하죠. 소용없지 않나요?&rdquo;</div>
+    <ol>
+     <li><b>인정한다</b> — 화산송이 1.885는 여드름(22.5)의 1/12. 원료어로는 사람을 못 데려온다</li>
+     <li><b>그런데 회사는 커지는 시장에서 몫을 잃고 있다</b> — 레티놀 시장 +159% 성장 중 이니스프리 몫 30.9% → 25.3%</li>
+     <li><b>제품으로 남은 것은 버텼고, 이름만 남은 것은 사라졌다</b> — 그린티 0.31 vs 제주 0.17 (2.9배)</li>
+     <li><b>그린티(41.7)가 유일한 운반 수단</b> — 나머지 원료어를 전부 합쳐도 그 44%</li>
+    </ol>
+    <div class="no-say"><span class="ban">금지</span>&ldquo;회사가 부르면 사람이 온다&rdquo;는 반증됐다 — 레티놀 상승은 시장 성장의 결과, 몫은 하락.
+     &ldquo;제주를 그린티에 실으면 작동한다&rdquo;는 <b>가설</b>이라고 답할 것.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 부록 -->
+<div class="appendix" id="appendix">
+ <section style="padding-top:56px">
+  <div class="wrap">
+   <div class="schead">
+    <span class="no mute">부록 · APPENDIX</span>
+    <h2>참조용 — 원표 · 보조 지표 · 정의와 방법론</h2>
+    <p class="desc">본편의 판정에는 쓰지 않지만 인용·재현·운영에 필요한 것들.</p>
+   </div>
+
+   <div class="card" style="margin-bottom:var(--gap)">
+    <h3>A1 · 연도별 원표 — 인용 시 이 표가 기준</h3>
+    <div class="src">브랜드 지수는 일간 정밀 계열(1,826일 참평균) · 비중·점유율은 월간 API 계열 · 계열 혼용 금지</div>
+    <div class="tblwrap" id="tblAnnual"></div>
+    <div class="cap">문서 간 수치가 다르면 <b>02_수집자료/검색지수_표준수치표_2021-2026.md</b>가 이긴다.</div>
+   </div>
+
+   <div class="grid2" style="margin-bottom:var(--gap)">
+    <div class="card">
+     <h3>A2 · 브랜드평판 순위 — 2021부터 현재 축까지</h3>
+     <div class="src">한국기업평판연구소 · 화장품전문점 카테고리 · 1위는 항상 올리브영</div>
+     <div class="chart" id="chRep"></div>
+     <div class="cap warn"><b>주의</b> 버즈량(언급량) 지표이지 선호도가 아니다. 결측월이 많아 분기 경향으로만 인용.
+      원자료가 구간 단위(2021~2022 · 2023-02 · 2023 하반기 · 2024H2~2025)로만 기록돼 있어
+      <b>문서화된 구간만 선을 그렸고 사이 결측 구간은 비웠다</b>.
+      <b>2026년 구간은 미수집</b> — 월 1회 갱신 시 채워진다(확인 필요).</div>
+    </div>
+    <div class="card">
+     <h3>A3 · 광고의 &lsquo;내용&rsquo; 스캔 — 건수가 아니라 구성</h3>
+     <div class="src">메타 광고 라이브러리 · 2026-08 조회 · 확인 범위 4개 브랜드</div>
+     <div class="tblwrap"><table>
+      <thead><tr><th>브랜드</th><th>활성 광고</th><th style="text-align:left">내용 구성</th><th>브랜드 서사</th></tr></thead>
+      <tbody>
+       <tr><td>이니스프리</td><td>220건</td><td class="l">전량 성과형</td><td style="color:var(--rose-deep);font-weight:700">0건</td></tr>
+       <tr><td>토니모리</td><td>64건</td><td class="l">전량 성과형</td><td style="color:var(--rose-deep);font-weight:700">0건</td></tr>
+       <tr><td>3CE (참고군)</td><td>10건</td><td class="l">전량 성과형</td><td style="color:var(--rose-deep);font-weight:700">0건</td></tr>
+       <tr><td>미샤</td><td>4건 (실질 2)</td><td class="l">성과형</td><td style="color:var(--rose-deep);font-weight:700">0건</td></tr>
+       <tr><td>코스알엑스 (성장 인디)¹</td><td>표본 28건</td><td class="l">전량 성과·제품형 — 할인·기획전·성분 소구</td><td style="color:var(--rose-deep);font-weight:700">0건</td></tr>
+       <tr><td>조선미녀 (헤리티지 콘셉트)¹</td><td>0건</td><td class="l">KR 타겟 공식 활성 광고 자체가 없음</td><td>—</td></tr>
+      </tbody>
+     </table></div>
+     <div class="cap warn">건수가 많다고 좋은 게 아니다 — 발견은 <b>브랜드 서사 광고가 어디에도 0건</b>이라는 것.
+      성장 인디 브랜드까지 같은 패턴임을 확인해 &ldquo;업계 전반&rdquo; 서술이 보강됐다.
+      ¹ 2026-08-21 시안 실사(메타 광고 라이브러리) — 키워드 결과에서 공식 계정 광고만 분리한 로드 표본 기준, 조회 시점 한정.</div>
+    </div>
+   </div>
+
+   <div class="card" style="margin-bottom:var(--gap)">
+     <h3>A4 · KPI 정의 — 2026-08-19 팀 확정</h3>
+     <div class="src">임의 변경 금지 · 구성 키워드를 항상 병기</div>
+     <div class="tblwrap"><table>
+      <thead><tr><th>KPI</th><th style="text-align:left">정의 · 산식</th><th style="text-align:left">주의</th></tr></thead>
+      <tbody>
+       <tr><td>브랜드 검색지수</td><td class="l">데이터랩 <b>이니스프리</b> 단일 키워드 → 월간 상대지수. 연 확정치는 일간 정밀 계열(일수 가중)</td><td class="l">요청 단위 재정규화 — 다른 조회와 절대값 비교 불가. 단순평균 계열은 폐기</td></tr>
+       <tr><td>&lsquo;제주&rsquo; 연상 비중</td><td class="l"><b>이니스프리 제주 단독</b> ÷ 이니스프리 (같은 요청 안)</td><td class="l"><b>합산 금지</b> — 화산송이·그린티를 섞으면 같은 구간이 상승·하락·보합으로 갈린다</td></tr>
+       <tr><td>제품-브랜드 Gap</td><td class="l">제품군 YoY − 브랜드 YoY (%p)</td><td class="l">구간 따라 부호 반전 — 단독 인용 금지, 두 성장률 병기</td></tr>
+       <tr><td>AEO/SEO 대응</td><td class="l">4항목 Boolean 충족률 (robots·llms.txt·FAQPage 스키마·FAQ 경로)</td><td class="l">실행 지표이지 소비자 인지 지표가 아님 — 인용 시점 필수 표기</td></tr>
+       <tr><td>경쟁 검색 점유율</td><td class="l"><b>직접경쟁 3사</b> = 이니 ÷ (이니+미샤+3CE) · 2사·4사는 참고 병기</td><td class="l">토니모리 포함 구성 판정 금지(2026-02 붕괴 착시) · 검색량 대조군: 미샤(2026~)</td></tr>
+      </tbody>
+     </table></div>
+   </div>
+
+   <div style="margin-bottom:var(--gap)">
+    <div class="card">
+     <h3>A5 · 데이터 파이프라인 · 집계 규칙</h3>
+     <div class="src">05_대시보드/build_data.py</div>
+     <div class="cap"><b>저장소 연결</b> — build_data.py가 02_수집자료/의 원자료 CSV를 읽어
+      dashboard_data.json 하나로 집계. 매장 수·광고선전비·평판 순위 등 비검색 지표는 공정위·DART 확정치.</div>
+     <div class="cap" style="margin-top:8px"><b>API 갱신</b> — <code>python build_data.py --live</code>로 최신 월 재조회.
+      키는 .env에만 두고 브라우저로 내보내지 않는다. 월 1회 갱신 담당: xio (2026-08-20 확정). 갱신마다 스냅샷을 남겨 직전과 비교한다(변화 이력).</div>
+     <div class="cap" style="margin-top:8px"><b>집계 규칙</b> — 마지막 진행 중인 월은 모든 집계에서 제외.
+      YoY는 같은 달끼리(1~N월 vs 전년 동기) 비교해 계절성을 구조적으로 통제.
+      상관 차트에는 &ldquo;다른 설명 가능성&rdquo; 캡션을 항상 함께 노출.</div>
+     <div class="tblwrap" style="margin-top:14px"><table>
+      <thead><tr><th style="text-align:left">개입 시점 타임라인</th><th style="text-align:left">내용</th></tr></thead>
+      <tbody id="eventRows"></tbody>
+     </table></div>
+    </div>
+    
+    </div>
+   </div>
+  </div>
+ </section>
+</div>
+
+<footer>
+ <div class="wrap">
+  <img src="data:image/png;base64,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" alt="innisfree">
+  <b>브랜드 인지도 진단·모니터링 대시보드 — 리디자인 시안</b><br>
+  리브랜딩 무드보드 1차최종 컨셉 적용: 베이잘트 · 리파인드 포레스트 · 스톤 베이지 · 동백 로즈 · 오프화이트,
+  곰운바탕(헤드라인·서사) + 본고딕(데이터·UI). 문구·수치는 팀 표준(검색지수_표준수치표 · CLAUDE.md 확정 정의)을 따랐다.<br>
+  공개된 감사보고서 · 공정거래위원회 정보공개서 · 네이버 데이터랩 · 언론보도를 근거로 한 학습용 분석이며,
+  이니스프리 및 아모레퍼시픽과 무관한 캡스톤 프로젝트 목적의 가상 기획이다.
+ </div>
+</footer>
+</main>
+</div><!-- /.shell -->
+
+<script>
+const D = {
+ "meta": {
+  "generated_at": "2026-08-20 11:09 KST",
+  "source_mode": "repo",
+  "coverage": "2021-01 ~ 2026-08",
+  "latest_partial_month": "2026-08",
+  "ytd_window": "2026 1~7월 vs 2025 동기",
+  "definitions": {
+   "jeju": "'이니스프리 제주' 단독 ÷ 브랜드 (2026-08-19 확정 · 합산 금지)",
+   "share": "직접경쟁 3사(이니스프리·미샤·3CE) 기준 판정 · 2사·4사 참고 병기",
+   "index": "월간 API 계열(라이브) · 과거 확정치는 일간 정밀 계열 병기",
+   "standard_doc": "02_수집자료/검색지수_표준수치표_2021-2026.md"
+  },
+  "sources": [
+   "NAVER 데이터랩 검색어트렌드",
+   "DART 감사보고서",
+   "공정거래위원회 정보공개서",
+   "한국기업평판연구소",
+   "Meta 광고 라이브러리"
+  ]
+ },
+ "kpi": {
+  "brand_search": {
+   "yoy": -31.5,
+   "cum5y": -73.0
+  },
+  "jeju_ratio": {
+   "current": 0.51,
+   "prev": 0.51,
+   "peak_year": "2024",
+   "peak": 0.53,
+   "abs_yoy": -32.5
+  },
+  "gap": {
+   "ytd": 9.6,
+   "brand_yoy": -31.5,
+   "product_yoy": -22.0
+  },
+  "share": {
+   "direct": 51.2,
+   "direct_prev": 53.1,
+   "pair": 59.0,
+   "pair_prev": 60.5,
+   "all4": 39.3,
+   "all4_prev": 36.4,
+   "members": [
+    "이니스프리",
+    "미샤",
+    "3CE"
+   ]
+  }
+ },
+ "alerts": [
+  {
+   "level": "high",
+   "kpi": "브랜드 검색지수",
+   "msg": "YoY -31.5% — 90일 게이트(낙폭 축소) 미달, 하락 지속",
+   "action": "KR1 게이트 재판정 · 개입 시점 대비 초과분 확인 필요"
+  },
+  {
+   "level": "high",
+   "kpi": "‘제주’ 연상",
+   "msg": "제주 절대 지수 -32.5%가 브랜드 -31.5%보다 빠르게 하락",
+   "action": "‘브랜드보다 오래 버틴다’는 우위가 소멸 — 헤리티지 캠페인 우선순위 상향"
+  },
+  {
+   "level": "high",
+   "kpi": "경쟁 검색 점유율",
+   "msg": "직접경쟁 3사 기준 53.1% → 51.2% 하락",
+   "action": "KR4 게이트 미달 — 3CE·미샤 대비 상대 위치 점검"
+  }
+ ],
+ "diff": {
+  "base": "2026-08-20 10:39 KST",
+  "rows": [
+   {
+    "label": "브랜드 검색 YoY",
+    "prev": -31.5,
+    "cur": -31.5,
+    "delta": 0.0,
+    "unit": "%"
+   },
+   {
+    "label": "‘제주’ 연상 비중",
+    "prev": 0.51,
+    "cur": 0.51,
+    "delta": 0.0,
+    "unit": "%"
+   },
+   {
+    "label": "제품-브랜드 Gap",
+    "prev": 9.6,
+    "cur": 9.6,
+    "delta": 0.0,
+    "unit": "%p"
+   },
+   {
+    "label": "점유율(직접 3사)",
+    "prev": 51.2,
+    "cur": 51.2,
+    "delta": 0.0,
+    "unit": "%"
+   }
+  ]
+ },
+ "series": {
+  "monthly": {
+   "months": [
+    "2021-01",
+    "2021-02",
+    "2021-03",
+    "2021-04",
+    "2021-05",
+    "2021-06",
+    "2021-07",
+    "2021-08",
+    "2021-09",
+    "2021-10",
+    "2021-11",
+    "2021-12",
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04",
+    "2022-05",
+    "2022-06",
+    "2022-07",
+    "2022-08",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08"
+   ],
+   "brand": [
+    55.77575,
+    62.11824,
+    42.06918,
+    42.55392,
+    55.77738,
+    40.98996,
+    42.4743,
+    41.0697,
+    52.07004,
+    100.0,
+    53.93777,
+    40.33695,
+    49.93608,
+    51.82918,
+    41.71668,
+    40.05226,
+    57.3539,
+    36.1784,
+    35.08373,
+    36.20377,
+    41.83536,
+    35.35636,
+    47.77976,
+    37.26604,
+    34.2475,
+    43.42405,
+    37.44512,
+    35.17565,
+    44.16648,
+    28.68699,
+    27.21081,
+    33.06919,
+    22.69512,
+    25.61257,
+    29.70707,
+    26.44114,
+    21.81783,
+    25.01218,
+    20.84622,
+    18.76362,
+    27.91204,
+    17.14215,
+    17.15822,
+    18.7699,
+    17.6854,
+    17.28945,
+    19.69429,
+    16.72899,
+    17.62299,
+    15.8841,
+    15.33406,
+    14.63886,
+    16.94775,
+    12.20011,
+    11.41587,
+    15.26801,
+    12.2845,
+    10.49613,
+    15.33783,
+    12.26793,
+    10.09692,
+    10.94985,
+    10.60802,
+    9.28015,
+    12.84722,
+    9.1724,
+    8.26748,
+    5.68483
+   ],
+   "jeju": [
+    0.1414,
+    0.13662,
+    0.16551,
+    0.18535,
+    0.20155,
+    0.19979,
+    0.22503,
+    0.21009,
+    0.17103,
+    0.19602,
+    0.16538,
+    0.14416,
+    0.20758,
+    0.15521,
+    0.13173,
+    0.21624,
+    0.17317,
+    0.15421,
+    0.18158,
+    0.17882,
+    0.2062,
+    0.21298,
+    0.15333,
+    0.19213,
+    0.23119,
+    0.25693,
+    0.14529,
+    0.13914,
+    0.16475,
+    0.17116,
+    0.17154,
+    0.16789,
+    0.11302,
+    0.11641,
+    0.11754,
+    0.13436,
+    0.14115,
+    0.12507,
+    0.09996,
+    0.09782,
+    0.10762,
+    0.1041,
+    0.10887,
+    0.11942,
+    0.10485,
+    0.09983,
+    0.07911,
+    0.08313,
+    0.08464,
+    0.0722,
+    0.06191,
+    0.06869,
+    0.08451,
+    0.07396,
+    0.08777,
+    0.10259,
+    0.0599,
+    0.06894,
+    0.06191,
+    0.06015,
+    0.06693,
+    0.0496,
+    0.04257,
+    0.0442,
+    0.05575,
+    0.04395,
+    0.05713,
+    0.03918
+   ],
+   "greentea": [
+    0.39368,
+    0.31055,
+    0.34647,
+    0.31821,
+    0.30352,
+    0.2666,
+    0.27514,
+    0.36317,
+    0.33906,
+    0.46439,
+    0.39193,
+    0.34772,
+    0.44555,
+    0.46313,
+    0.46991,
+    0.47719,
+    0.5646,
+    0.44228,
+    0.39343,
+    0.38012,
+    0.38766,
+    0.36618,
+    0.38402,
+    0.35639,
+    0.44078,
+    0.51751,
+    0.92488,
+    1.15331,
+    1.11488,
+    0.9392,
+    0.82668,
+    0.78172,
+    0.59863,
+    0.6898,
+    0.69922,
+    0.63568,
+    0.6353,
+    0.51135,
+    0.50495,
+    0.44279,
+    0.41152,
+    0.37133,
+    0.3422,
+    0.34509,
+    0.28707,
+    0.34358,
+    0.3265,
+    0.31922,
+    0.32776,
+    0.29799,
+    0.24701,
+    0.24399,
+    0.28832,
+    0.24249,
+    0.20306,
+    0.18472,
+    0.25354,
+    0.29159,
+    0.40461,
+    0.59109,
+    0.52868,
+    0.75837,
+    0.34057,
+    0.25517,
+    0.20054,
+    0.11816,
+    0.0889,
+    0.05035
+   ],
+   "volcanic": [
+    0.16162,
+    0.13713,
+    0.15772,
+    0.1591,
+    0.26585,
+    0.23684,
+    0.30277,
+    0.40549,
+    0.25467,
+    0.35224,
+    0.21926,
+    0.22641,
+    0.24801,
+    0.26961,
+    0.23018,
+    0.22101,
+    0.27376,
+    0.25329,
+    0.31105,
+    0.35626,
+    0.28895,
+    0.23068,
+    0.1969,
+    0.15383,
+    0.1743,
+    0.17995,
+    0.20921,
+    0.21448,
+    0.23935,
+    0.2062,
+    0.20971,
+    0.23232,
+    0.18083,
+    0.15471,
+    0.14655,
+    0.1213,
+    0.13612,
+    0.14994,
+    0.13462,
+    0.13637,
+    0.15308,
+    0.13072,
+    0.15709,
+    0.17405,
+    0.12495,
+    0.08765,
+    0.25781,
+    0.30804,
+    0.1306,
+    0.10372,
+    0.2661,
+    0.272,
+    0.26986,
+    0.23357,
+    0.23345,
+    0.24977,
+    0.17103,
+    0.16802,
+    0.14981,
+    0.09945,
+    0.09255,
+    0.07396,
+    0.10096,
+    0.0928,
+    0.08539,
+    0.10598,
+    0.12143,
+    0.06957
+   ],
+   "product": [
+    0.17367,
+    0.18347,
+    0.14893,
+    0.11013,
+    0.1159,
+    0.07848,
+    0.06015,
+    0.06705,
+    1.18759,
+    2.4626,
+    1.46399,
+    0.75736,
+    1.00249,
+    0.85569,
+    1.6383,
+    1.58681,
+    1.21158,
+    0.71303,
+    0.62199,
+    1.04343,
+    1.45533,
+    1.60276,
+    1.76827,
+    1.4282,
+    2.85378,
+    2.76474,
+    2.63452,
+    2.31002,
+    2.34506,
+    2.76135,
+    2.49676,
+    3.24382,
+    2.47227,
+    3.03034,
+    3.21017,
+    2.45368,
+    2.58692,
+    2.57851,
+    2.51547,
+    2.19361,
+    2.88906,
+    2.27662,
+    2.39403,
+    2.6919,
+    2.51773,
+    2.80442,
+    2.44175,
+    1.98063,
+    2.76461,
+    2.61304,
+    2.2132,
+    1.74416,
+    1.56107,
+    1.25302,
+    1.16763,
+    1.72796,
+    1.39292,
+    1.10672,
+    1.30928,
+    1.22125,
+    1.40183,
+    1.21635,
+    1.69544,
+    1.43549,
+    1.80783,
+    1.53193,
+    1.29923,
+    0.67046
+   ],
+   "c_이니스프리": [
+    55.77575,
+    62.11824,
+    42.06918,
+    42.55392,
+    55.77738,
+    40.98996,
+    42.4743,
+    41.0697,
+    52.07004,
+    100.0,
+    53.93777,
+    40.33695,
+    49.93608,
+    51.82918,
+    41.71668,
+    40.05226,
+    57.3539,
+    36.1784,
+    35.08373,
+    36.20377,
+    41.83536,
+    35.35636,
+    47.77976,
+    37.26604,
+    34.2475,
+    43.42405,
+    37.44512,
+    35.17565,
+    44.16648,
+    28.68699,
+    27.21081,
+    33.06919,
+    22.69512,
+    25.61257,
+    29.70707,
+    26.44114,
+    21.81783,
+    25.01218,
+    20.84622,
+    18.76362,
+    27.91204,
+    17.14215,
+    17.15822,
+    18.7699,
+    17.6854,
+    17.28945,
+    19.69429,
+    16.72899,
+    17.62299,
+    15.8841,
+    15.33406,
+    14.63886,
+    16.94775,
+    12.20011,
+    11.41587,
+    15.26801,
+    12.2845,
+    10.49613,
+    15.33783,
+    12.26793,
+    10.09692,
+    10.94985,
+    10.60802,
+    9.28015,
+    12.84722,
+    9.1724,
+    8.26748,
+    5.68483
+   ],
+   "c_미샤": [
+    25.75058,
+    22.643,
+    24.89288,
+    21.76232,
+    21.14887,
+    21.5585,
+    17.59737,
+    16.67976,
+    16.21876,
+    18.67609,
+    30.49169,
+    22.06383,
+    18.75156,
+    16.95214,
+    20.52562,
+    19.70584,
+    17.60151,
+    18.44678,
+    14.22168,
+    15.32866,
+    17.17053,
+    16.7752,
+    23.7962,
+    16.50697,
+    15.99084,
+    16.15484,
+    19.10607,
+    16.77558,
+    16.10361,
+    16.88308,
+    10.45168,
+    17.06805,
+    54.85563,
+    20.71487,
+    18.792,
+    12.11824,
+    11.56983,
+    10.92473,
+    14.10514,
+    10.87777,
+    10.91833,
+    11.51935,
+    8.2936,
+    8.92439,
+    10.04166,
+    11.75581,
+    12.70858,
+    10.16624,
+    9.22628,
+    9.33616,
+    16.50408,
+    8.31093,
+    8.53836,
+    9.07583,
+    6.83061,
+    7.25833,
+    7.41367,
+    7.8979,
+    9.88783,
+    8.59926,
+    8.49654,
+    7.18236,
+    8.55581,
+    6.96096,
+    6.45463,
+    6.61625,
+    5.19921,
+    3.19836
+   ],
+   "c_3CE": [
+    9.61947,
+    9.56722,
+    9.51159,
+    7.05753,
+    7.62653,
+    8.52806,
+    6.7854,
+    6.93283,
+    6.95782,
+    7.62954,
+    6.57116,
+    6.04109,
+    6.87004,
+    6.09195,
+    5.33748,
+    5.20738,
+    6.2586,
+    6.17107,
+    5.99752,
+    7.79732,
+    7.79229,
+    8.54878,
+    6.87419,
+    5.9886,
+    7.33983,
+    6.79356,
+    6.01836,
+    5.78152,
+    6.83325,
+    6.33608,
+    5.78881,
+    6.28082,
+    5.28097,
+    5.57695,
+    5.36561,
+    6.16881,
+    5.42852,
+    5.76495,
+    5.58549,
+    4.55123,
+    4.8815,
+    5.32391,
+    5.53137,
+    5.59554,
+    4.30911,
+    4.8069,
+    4.46407,
+    3.83467,
+    4.08985,
+    4.06699,
+    3.53127,
+    2.93816,
+    3.70658,
+    2.87851,
+    3.00535,
+    3.44174,
+    3.39188,
+    3.56644,
+    3.35019,
+    3.29895,
+    3.30071,
+    2.83733,
+    2.77968,
+    2.76863,
+    2.37055,
+    2.27398,
+    2.17967,
+    1.26231
+   ],
+   "c_토니모리": [
+    15.03694,
+    11.05333,
+    11.41926,
+    11.11298,
+    11.7808,
+    14.65568,
+    11.21972,
+    10.49098,
+    10.37972,
+    10.82377,
+    11.72932,
+    12.02694,
+    12.84584,
+    13.55523,
+    13.07778,
+    20.0994,
+    15.62653,
+    11.39477,
+    10.64934,
+    10.11726,
+    10.60564,
+    8.8307,
+    9.55781,
+    12.29028,
+    11.23416,
+    11.59922,
+    11.62622,
+    10.35247,
+    10.80179,
+    10.34117,
+    9.06529,
+    17.06265,
+    9.40787,
+    8.70487,
+    10.74905,
+    9.48635,
+    13.83276,
+    10.36653,
+    10.36955,
+    14.09673,
+    16.90782,
+    19.44602,
+    14.54681,
+    11.46485,
+    9.84111,
+    9.11476,
+    8.80785,
+    8.13613,
+    8.50483,
+    14.97164,
+    15.78413,
+    12.0125,
+    11.23655,
+    14.51453,
+    12.97016,
+    9.42017,
+    8.1517,
+    8.88809,
+    9.37484,
+    8.00502,
+    7.79732,
+    6.39347,
+    6.05604,
+    5.99162,
+    5.59253,
+    4.76408,
+    5.29465,
+    2.8588
+   ],
+   "c_에뛰드": [
+    9.36291,
+    8.68717,
+    8.58495,
+    8.69269,
+    8.54162,
+    7.52983,
+    7.76529,
+    7.38906,
+    8.34911,
+    7.50647,
+    8.49817,
+    6.92216,
+    7.44921,
+    7.42083,
+    7.42384,
+    6.48363,
+    26.47881,
+    7.29261,
+    7.84177,
+    7.00014,
+    6.38267,
+    6.2915,
+    6.29451,
+    7.41593,
+    8.29637,
+    7.38378,
+    7.20433,
+    6.11669,
+    6.41419,
+    5.1638,
+    4.71134,
+    4.99703,
+    6.09271,
+    6.12272,
+    6.81479,
+    13.27318,
+    8.27615,
+    6.96171,
+    10.67157,
+    6.57192,
+    7.89866,
+    7.87354,
+    7.06431,
+    5.3425,
+    5.14861,
+    5.58901,
+    6.09811,
+    4.41836,
+    5.51216,
+    5.9935,
+    4.54495,
+    3.76209,
+    4.43394,
+    3.77465,
+    3.77866,
+    4.58099,
+    3.40092,
+    3.42516,
+    4.03384,
+    3.37016,
+    3.97633,
+    4.5339,
+    8.1674,
+    2.79325,
+    2.1332,
+    2.37632,
+    2.5667,
+    1.31518
+   ],
+   "share_direct": [
+    61.19,
+    65.85,
+    55.01,
+    59.62,
+    65.97,
+    57.67,
+    63.53,
+    63.49,
+    69.2,
+    79.17,
+    59.27,
+    58.94,
+    66.09,
+    69.22,
+    61.73,
+    61.65,
+    70.62,
+    59.51,
+    63.44,
+    61.02,
+    62.63,
+    58.27,
+    60.9,
+    62.36,
+    59.48,
+    65.42,
+    59.85,
+    60.93,
+    65.82,
+    55.27,
+    62.62,
+    58.61,
+    27.4,
+    49.35,
+    55.15,
+    59.12,
+    56.21,
+    59.98,
+    51.43,
+    54.88,
+    63.85,
+    50.44,
+    55.38,
+    56.38,
+    55.2,
+    51.07,
+    53.42,
+    54.44,
+    56.96,
+    54.24,
+    43.35,
+    56.55,
+    58.05,
+    50.51,
+    53.72,
+    58.8,
+    53.2,
+    47.8,
+    53.67,
+    50.76,
+    46.12,
+    52.22,
+    48.34,
+    48.82,
+    59.28,
+    50.78,
+    52.84,
+    56.03
+   ],
+   "share_pair": [
+    68.41,
+    73.29,
+    62.83,
+    66.16,
+    72.51,
+    65.53,
+    70.71,
+    71.12,
+    76.25,
+    84.26,
+    63.89,
+    64.64,
+    72.7,
+    75.35,
+    67.02,
+    67.02,
+    76.52,
+    66.23,
+    71.16,
+    70.25,
+    70.9,
+    67.82,
+    66.75,
+    69.3,
+    68.17,
+    72.88,
+    66.21,
+    67.71,
+    73.28,
+    62.95,
+    72.25,
+    65.96,
+    29.26,
+    55.29,
+    61.25,
+    68.57,
+    65.35,
+    69.6,
+    59.64,
+    63.3,
+    71.88,
+    59.81,
+    67.41,
+    67.78,
+    63.78,
+    59.53,
+    60.78,
+    62.2,
+    65.64,
+    62.98,
+    48.16,
+    63.79,
+    66.5,
+    57.34,
+    62.56,
+    67.78,
+    62.36,
+    57.06,
+    60.8,
+    58.79,
+    54.3,
+    60.39,
+    55.35,
+    57.14,
+    66.56,
+    58.09,
+    61.39,
+    64.0
+   ]
+  },
+  "annual": {
+   "years": [
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+   ],
+   "brand_api": {
+    "2021": 52.4311,
+    "2022": 42.5493,
+    "2023": 32.3235,
+    "2024": 19.9017,
+    "2025": 14.1415
+   },
+   "brand_daily": {
+    "2021": 8.503,
+    "2022": 6.903,
+    "2023": 5.251,
+    "2024": 3.228,
+    "2025": 2.302
+   },
+   "brand_daily_yoy": {
+    "2022": -18.8,
+    "2023": -23.9,
+    "2024": -38.5,
+    "2025": -28.7
+   },
+   "jeju_ratio": {
+    "2021": 0.34,
+    "2022": 0.42,
+    "2023": 0.5,
+    "2024": 0.53,
+    "2025": 0.52
+   },
+   "product_ratio": {
+    "2021": 1.07,
+    "2022": 2.89,
+    "2023": 8.3,
+    "2024": 12.35,
+    "2025": 11.67
+   },
+   "decay": {
+    "years": [
+     "2021",
+     "2022",
+     "2023",
+     "2024",
+     "2025"
+    ],
+    "abs": {
+     "브랜드": {
+      "2021": 52.431,
+      "2022": 42.549,
+      "2023": 32.323,
+      "2024": 19.902,
+      "2025": 14.142
+     },
+     "제주": {
+      "2021": 0.178,
+      "2022": 0.18,
+      "2023": 0.161,
+      "2024": 0.106,
+      "2025": 0.074
+     },
+     "그린티": {
+      "2021": 0.343,
+      "2022": 0.428,
+      "2023": 0.777,
+      "2024": 0.403,
+      "2025": 0.298
+     },
+     "화산송이": {
+      "2021": 0.24,
+      "2022": 0.253,
+      "2023": 0.189,
+      "2024": 0.163,
+      "2025": 0.196
+     },
+     "제품군(레티놀)": {
+      "2022": 1.046,
+      "2023": 2.531,
+      "2024": 2.347,
+      "2025": 1.585
+     }
+    },
+    "yoy": {
+     "브랜드": {
+      "2022": -18.8,
+      "2023": -24.0,
+      "2024": -38.4,
+      "2025": -28.9
+     },
+     "제주": {
+      "2022": 1.0,
+      "2023": -10.8,
+      "2024": -34.1,
+      "2025": -30.2
+     },
+     "제품군(레티놀)": {
+      "2023": 141.9,
+      "2024": -7.3,
+      "2025": -32.5
+     }
+    },
+    "_note": "월간 API 계열. 제주 우위 역전 시점과 제품군 피크 이후 하락을 함께 본다",
+    "flip": {
+     "year": "2025",
+     "jeju": -30.2,
+     "brand": -28.9
+    },
+    "product_peak": {
+     "year": "2023",
+     "value": 2.531,
+     "last_year": "2025",
+     "last": 1.585,
+     "drop": -37.4
+    }
+   },
+   "longtail": {
+    "_메모": "데이터랩 지수는 요청 단위로 재정규화된다 — A 표와 B 표의 값을 서로 비교하지 말 것. 각 항목은 묶음 조회이므로 인용 시 구성 키워드를 함께 밝힐 것.",
+    "window": "2025-08-01 ~ 2026-08-18",
+    "calls": {
+     "A": {
+      "title": "A. 이니스프리 고유 자산 키워드 — 남이 쓸 수 없는 말",
+      "note": "각 키워드가 이니스프리를 얼마나 고유하게 가리키는지가 핵심",
+      "items": [
+       {
+        "name": "노세범",
+        "value": 70.126,
+        "months": 13,
+        "keywords": "노세범, 이니스프리 노세범"
+       },
+       {
+        "name": "그린티(이니스프리)",
+        "value": 31.408,
+        "months": 13,
+        "keywords": "이니스프리 그린티, 그린티 세럼, 그린티 수분크림"
+       },
+       {
+        "name": "공병·그린사이클",
+        "value": 25.956,
+        "months": 13,
+        "keywords": "이니스프리 공병, 화장품 공병"
+       },
+       {
+        "name": "화산송이",
+        "value": 22.286,
+        "months": 13,
+        "keywords": "화산송이, 이니스프리 화산송이"
+       },
+       {
+        "name": "제주 뷰티",
+        "value": 7.819,
+        "months": 13,
+        "keywords": "제주 화장품, 제주 스킨케어, 제주 여행 선물"
+       }
+      ]
+     },
+     "B": {
+      "title": "B. 같은 카테고리에서 일반명사 vs 고유명사",
+      "note": "일반명사는 크지만 이니스프리 몫이 아니다",
+      "items": [
+       {
+        "name": "선크림(일반)",
+        "value": 59.758,
+        "months": 13,
+        "keywords": "선크림"
+       },
+       {
+        "name": "폼클렌징(일반)",
+        "value": 53.517,
+        "months": 13,
+        "keywords": "폼클렌징"
+       },
+       {
+        "name": "노세범 선크림",
+        "value": 15.914,
+        "months": 13,
+        "keywords": "노세범 선크림, 이니스프리 선크림"
+       },
+       {
+        "name": "화산송이 클렌징",
+        "value": 5.442,
+        "months": 13,
+        "keywords": "화산송이 클렌징, 화산송이 폼클렌징, 이니스프리 폼클렌징"
+       },
+       {
+        "name": "모공 클렌징",
+        "value": 2.848,
+        "months": 13,
+        "keywords": "모공 클렌징, 딥클렌징"
+       }
+      ]
+     }
+    },
+    "summary": {
+     "own_total": 157.595,
+     "own_top": {
+      "name": "노세범",
+      "value": 70.126
+     },
+     "generic": {
+      "선크림": 59.758,
+      "폼클렌징": 53.517
+     },
+     "missed": {
+      "회사가 건 것(모공·딥클렌징)": 2.848,
+      "안 건 것(화산송이·브랜드)": 5.442
+     },
+     "checked": "2026-08-20 11:07 KST"
+    }
+   },
+   "share_direct": {
+    "2021": 64.1,
+    "2022": 63.4,
+    "2023": 55.7,
+    "2024": 55.4,
+    "2025": 53.1
+   },
+   "share_pair": {
+    "2021": 70.8,
+    "2022": 70.3,
+    "2023": 62.3,
+    "2024": 64.4,
+    "2025": 60.9
+   },
+   "share_all4": {
+    "2021": 56.0,
+    "2022": 53.5,
+    "2023": 46.9,
+    "2024": 41.3,
+    "2025": 37.4
+   },
+   "competitors": {
+    "이니스프리": {
+     "2021": 52.431,
+     "2022": 42.549,
+     "2023": 32.323,
+     "2024": 19.902,
+     "2025": 14.142
+    },
+    "미샤": {
+     "2021": 21.624,
+     "2022": 17.982,
+     "2023": 19.585,
+     "2024": 10.984,
+     "2025": 9.073
+    },
+    "3CE": {
+     "2021": 7.736,
+     "2022": 6.578,
+     "2023": 6.13,
+     "2024": 5.006,
+     "2025": 3.439
+    },
+    "토니모리": {
+     "2021": 11.811,
+     "2022": 12.388,
+     "2023": 10.869,
+     "2024": 12.244,
+     "2025": 11.153
+    },
+    "에뛰드": {
+     "2021": 8.152,
+     "2022": 8.648,
+     "2023": 6.883,
+     "2024": 6.826,
+     "2025": 4.218
+    }
+   }
+  }
+ },
+ "fixed": {
+  "stores": {
+   "2021": 400,
+   "2022": 324,
+   "2023": 234,
+   "2024": 190,
+   "_note": "공정위 정보공개서 · 2024년말 190개가 인용 가능한 최신 공식치. 147개는 2025 가맹점협의회 주장치(비공식)"
+  },
+  "ad_spend": {
+   "2021": 261.3,
+   "2022": 243.6,
+   "2023": 344.9,
+   "2024": 273.9,
+   "2025": 247.6,
+   "_note": "DART 감사보고서 주석21 · 억원. 광고선전비는 전체 마케팅비가 아님"
+  },
+  "correlation": {
+   "store_brand": 0.98,
+   "ad_brand": -0.03,
+   "ad_product": 0.69,
+   "_note": "n=4~5로 표본이 작다. 상관이지 인과가 아니며 역인과 배제 안 됨"
+  },
+  "reputation": [
+   {
+    "p": "2021~2022",
+    "rank": 2
+   },
+   {
+    "p": "2023-02",
+    "rank": 3
+   },
+   {
+    "p": "2023 하반기",
+    "rank": 2
+   },
+   {
+    "p": "2024H2~2025",
+    "rank": 3
+   },
+   {
+    "_note": "버즈량 지표이지 선호도 아님 · 결측월 많아 분기 경향으로만 인용"
+   }
+  ],
+  "meta_ads": {
+   "이니스프리": 220,
+   "토니모리": 64,
+   "미샤": 4,
+   "3CE": 10,
+   "_note": "브랜드 스토리텔링 광고는 네 브랜드 모두 0건"
+  }
+ },
+ "events": [
+  {
+   "date": "2023-02",
+   "label": "리브랜딩 발표",
+   "kind": "major",
+   "desc": "제주 → THE NEW ISLE 세계관 전환, 로고·컬러·용기·매장 전면 교체"
+  },
+  {
+   "date": "2023-04",
+   "label": "그린티 캠페인 피크",
+   "kind": "minor",
+   "desc": "2022 연평균 대비 2.73배"
+  },
+  {
+   "date": "2024-01",
+   "label": "광고선전비 −20.6%",
+   "kind": "major",
+   "desc": "증액 1년 만에 철회 · 같은 해 브랜드 검색 최대 낙폭"
+  },
+  {
+   "date": "2024-07",
+   "label": "PDRN 앰플 출시",
+   "kind": "minor",
+   "desc": "출시 당일 올리브영 판매 1위(회사 발표 기준)"
+  },
+  {
+   "date": "2026-02",
+   "label": "토니모리 레벨 시프트",
+   "kind": "warn",
+   "desc": "대조군 붕괴 · 검색량 대조군을 미샤·3CE로 대체(2026-08-19 확정)"
+  }
+ ]
+};
+const AEO = {
+ "checked": "2026-08-20 10:09 KST",
+ "base_url": "https://www.innisfree.com",
+ "score": 4,
+ "total": 4,
+ "pending": 0,
+ "items": [
+  {
+   "k": "robots.txt — AI 크롤러 접근",
+   "ok": true,
+   "note": "접근 허용 · AI 봇 개별 명시는 없음(= 기본 허용) · 차단 경로는 중복·API 5건뿐 — 전체 차단 없음"
+  },
+  {
+   "k": "llms.txt",
+   "ok": true,
+   "note": "200 OK · 7,595자 · 최종 갱신 2026-08-18 14:16 KST(서버 기준) · 첫머리 “# 이니스프리 공식 온라인몰 (Innisfree Official Online Mall) > **AI Instruction:**…”",
+   "last_modified": "Tue, 18 Aug 2026 05:16:45 GMT"
+  },
+  {
+   "k": "FAQPage 스키마(JSON-LD)",
+   "ok": true,
+   "note": "확인 · /kr/ko/cu/support/faq → JSON-LD 없음 / / → ContactPoint, Organization / /kr/ko/dp/product/103436 → AggregateRating, Answer, Brand, FAQPage, Offer, Organization, Product, PropertyValue, Question"
+  },
+  {
+   "k": "FAQ형 콘텐츠 경로",
+   "ok": true,
+   "note": "존재: /kr/ko/cu/support/faq"
+  }
+ ],
+ "llms_snapshot": {
+  "ok": true,
+  "first": true,
+  "digest": "cac5d7ddcac9",
+  "last_modified": "Tue, 18 Aug 2026 05:16:45 GMT"
+ },
+ "_note": "실행 지표(회사가 숙제를 했는가)이지 소비자 인지 지표가 아니다. KR 목록 밖. 항목이 유동적이므로 인용 시점을 반드시 함께 표기할 것."
+};
+
+/* ── 팔레트 ── */
+const C = {basalt:'#253531', forest:'#3F5A45', stone:'#E8E6D6', rose:'#E78093',
+ off:'#FAFAF7', roseDeep:'#B54A5E', stoneDeep:'#8A8272', past:'#787268',
+ hair:'rgba(37,53,49,.14)'};
+const FONT = 'font-family="Noto Sans KR,sans-serif"';
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const put = (id, html) => { document.getElementById(id).innerHTML = html; };
+
+/* ── 툴팁 엔진 — data-tip 달린 요소 공용 ── */
+const TIP = (() => {
+ const el = document.createElement('div'); el.className = 'tip'; document.body.appendChild(el);
+ function move(ev){
+  el.style.left = Math.min(window.innerWidth - el.offsetWidth - 12, ev.clientX + 14) + 'px';
+  el.style.top  = (ev.clientY + 16) + 'px';
+ }
+ return { show(ev, html){ el.innerHTML = html; el.classList.add('show'); move(ev); },
+          move, hide(){ el.classList.remove('show'); } };
+})();
+document.addEventListener('pointerover', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t) TIP.show(e, t.getAttribute('data-tip')); });
+document.addEventListener('pointermove', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t) TIP.move(e); });
+document.addEventListener('pointerout',  e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t) TIP.hide(); });
+
+/* ── 히어로 칩 ── */
+(function(){
+ const k = D.kpi;
+ put('heroChips', `
+  <div class="chip warn"><div class="k">브랜드 검색 YoY (2026 1~7월)</div><div class="v">${k.brand_search.yoy}%</div></div>
+  <div class="chip warn"><div class="k">5년 누적 (2021→2025)</div><div class="v">${k.brand_search.cum5y}%</div></div>
+  <div class="chip"><div class="k">'제주' 연상 비중 (단독)</div><div class="v">${k.jeju_ratio.current}%<small>보합</small></div></div>
+  <div class="chip warn"><div class="k">점유율 (직접 3사)</div><div class="v">${k.share.direct}%<small>← ${k.share.direct_prev}%</small></div></div>`);
+ put('heroStamp', `데이터 기준 ${esc(D.meta.coverage)} · ${esc(D.meta.ytd_window)} · 생성 ${esc(D.meta.generated_at)} · 마지막 진행 중인 월(${esc(D.meta.latest_partial_month)})은 집계 제외`);
+ // 사이드바 — 원본 05_대시보드의 지표 정의·데이터 소스 블록 계승
+ const df = D.meta.definitions;
+ put('defBox', `&lsquo;제주&rsquo; 연상 — ${esc(df.jeju)}<br>점유율 — ${esc(df.share)}<br>지수 — ${esc(df.index)}`);
+ put('srcBox', D.meta.sources.map(esc).join('<br>'));
+ document.getElementById('liveBtn').addEventListener('click', e => {
+  const p = document.getElementById('livePanel');
+  p.hidden = !p.hidden;
+  e.currentTarget.setAttribute('aria-expanded', String(!p.hidden));
+ });
+ document.getElementById('printBtn').addEventListener('click', () => window.print());
+})();
+
+/* ── 경보 ── */
+put('alertBox', D.alerts.map(a => `
+ <div class="alert"><span class="lv">경보 · ${a.level==='high'?'높음':'주의'}</span>
+  <span class="kpi">${esc(a.kpi)}</span><span class="msg">${esc(a.msg)}</span>
+  <span class="act">→ ${esc(a.action)}</span></div>`).join(''));
+
+/* ── 스파크라인 ── */
+function spark(vals, color, w=170, h=46){
+ const v = vals.filter(x => x!=null);
+ const mn = Math.min(...v), mx = Math.max(...v), sp = (mx-mn)||1;
+ const pts = v.map((x,i)=>[4+(i/(v.length-1))*(w-8), h-7-((x-mn)/sp)*(h-18)]);
+ const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+ const area = line+` L${pts[pts.length-1][0].toFixed(1)} ${h-2} L${pts[0][0].toFixed(1)} ${h-2} Z`;
+ const last = pts[pts.length-1];
+ return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="연도별 추이">
+  <path d="${area}" fill="${color}" opacity=".12"/>
+  <path d="${line}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+  ${pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="${color}"/>`).join('')}
+  <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" fill="${color}"/></svg>`;
+}
+
+/* ── KPI 카드 5 ── */
+(function(){
+ const k = D.kpi, a = D.series.annual;
+ const yrs = ['2021','2022','2023','2024','2025'];   // 연간 확정치 — 노이즈 없는 추이
+ const brand = yrs.map(y=>a.brand_daily[y]);
+ const jejuRatio = yrs.map(y=>a.jeju_ratio[y]);
+ const product = yrs.map(y=>a.product_ratio[y]);
+ const share = [...yrs.map(y=>a.share_direct[y]), k.share.direct];
+ put('kpiCards', `
+ <div class="kp" data-go="diagnosis" role="link" tabindex="0"><div class="rank">KPI 1 · 문제 A</div><h3>브랜드 검색지수</h3>
+  <div class="big down">${k.brand_search.yoy}%</div>
+  <div class="note">2026 1~7월 YoY · 5년 누적 <b>${k.brand_search.cum5y}%</b></div>
+  <div class="spark">${spark(brand, C.roseDeep)}</div>
+  <div class="gate">게이트: 낙폭이 −28.8%보다 축소 → <b>미달 · 하락 지속</b></div>
+  <div class="kpgo">근거 보기 →</div></div>
+ <div class="kp" data-go="asset" role="link" tabindex="0"><div class="rank">KPI 2 · 문제 A</div><h3>'제주' 연상 비중 <span style="font-weight:400;font-size:12px">(단독)</span></h3>
+  <div class="big flat">${k.jeju_ratio.current}%</div>
+  <div class="note"><b>경보 — 제주 절대 지수 ${k.jeju_ratio.abs_yoy}%</b>, 브랜드보다 빠르게 하락<br>
+   비중은 전년 ${k.jeju_ratio.prev}% → 보합(자산 잔존 신호) · 정점 ${esc(k.jeju_ratio.peak_year)}년 ${k.jeju_ratio.peak}%</div>
+  <div class="spark">${spark(jejuRatio, C.forest)}</div>
+  <div class="gate">게이트: 최소 0.52% 유지 · 1~7월 비중 보합 — <b>절대 낙폭 조건 미달(경보)</b></div>
+  <div class="kpgo">근거 보기 →</div></div>
+ <div class="kp" data-go="asset" role="link" tabindex="0"><div class="rank">KPI 3 · 문제 D</div><h3>제품-브랜드 Gap</h3>
+  <div class="big">+${k.gap.ytd}%p</div>
+  <div class="note">제품 <b>${k.gap.product_yoy}%</b> vs 브랜드 <b>${k.gap.brand_yoy}%</b> —
+   브랜드 성장률이 마이너스인 동안은 성공으로 보지 않는다(가드 조건)</div>
+  <div class="spark">${spark(product, C.stoneDeep)}</div>
+  <div class="gate">가드: KPI 1에 종속 판정 → <b>브랜드 성장률 미개선</b></div>
+  <div class="kpgo">근거 보기 →</div></div>
+ <div class="kp" data-go="guard" role="link" tabindex="0"><div class="rank">KPI 4 · 문제 E</div><h3>AEO/SEO 대응</h3>
+  <div class="big flat">${AEO.score}/${AEO.total}</div>
+  <div class="note">형식 충족 (실사 2026-08-20) · <b>실제 AI 답변 인용은 별개</b> — 검증 중</div>
+  <ul class="aeoList">${AEO.items.map(i=>`<li>${esc(i.k.split('—')[0].trim())}</li>`).join('')}</ul>
+  <div class="gate">실사 4/4 — <b class="ok">형식 충족</b> · 항목이 유동적이라 착수 시점 전부 재확인(기획 주의)</div>
+  <div class="kpgo">근거 보기 →</div></div>
+ <div class="kp" data-go="compete" role="link" tabindex="0"><div class="rank">KPI 5 · 문제 A</div><h3>경쟁 검색 점유율 <span style="font-weight:400;font-size:12px">(직접 3사)</span></h3>
+  <div class="big down">${k.share.direct}%</div>
+  <div class="note">2025년 ${k.share.direct_prev}% → 하락 · 2021년 64.1%에서 지속 하락<br>
+   참고: 2사 ${k.share.pair}%</div>
+  <div class="spark">${spark(share, C.roseDeep)}</div>
+  <div class="gate">게이트: 추가 하락 없음 → <b>미달 · −1.9%p</b></div>
+  <div class="kpgo">근거 보기 →</div></div>`);
+})();
+
+/* ── 공용 스케일 ── */
+const sx = (v,min,max,x0,x1) => x0 + (v-min)/(max-min)*(x1-x0);
+
+/* ── ③A 제주 vs 브랜드 YoY 묶음 막대 ── */
+(function(){
+ const yoy = D.series.annual.decay.yoy;
+ const years = ['2022','2023','2024','2025'];
+ const W=560,H=330, top=48, bot=44, L=16, R=16;
+ const min=-45,max=8;
+ const y = v => top + (max-v)/(max-min)*(H-top-bot);
+ const y0 = y(0);
+ const gw = (W-L-R)/years.length, bw = 40;
+ let s = '';
+ years.forEach((yr,i)=>{
+  const cx = L+gw*i+gw/2;
+  const pairs=[['제주',yoy['제주'][yr],C.forest],['브랜드',yoy['브랜드'][yr],C.stoneDeep]];
+  pairs.forEach((p,j)=>{
+   const bx = cx-bw-5+j*(bw+10);
+   const vy = y(p[1]);
+   const hgt = Math.abs(vy-y0);
+   s += `<rect x="${bx}" y="${Math.min(vy,y0)}" width="${bw}" height="${hgt}" rx="4" fill="${p[2]}" data-tip="${p[0]} · ${yr} YoY ${p[1]}%"/>
+    <text x="${bx+bw/2}" y="${p[1]<0?vy+20:vy-8}" text-anchor="middle" ${FONT}
+     font-size="14.5" font-weight="700" fill="${C.basalt}">${p[1]}</text>`;
+  });
+  s += `<text x="${cx}" y="${H-14}" text-anchor="middle" ${FONT} font-size="14" fill="${C.past}">${yr}</text>`;
+  if(yr==='2025'){
+   s += `<rect x="${cx-bw-13}" y="${y0-6}" width="${(bw+10)*2+6}" height="${y(-33)-y0+16}" rx="8"
+     fill="none" stroke="${C.roseDeep}" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="${cx}" y="${top-14}" text-anchor="middle" ${FONT} font-size="14" font-weight="700" fill="${C.roseDeep}">역전 — 제주가 더 빨리 빠짐</text>`;
+  }
+ });
+ put('chDecay', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="제주와 브랜드의 연도별 검색 YoY 비교. 2025년 제주가 브랜드보다 빨리 하락하며 역전">
+  <line x1="${L}" y1="${y0}" x2="${W-R}" y2="${y0}" stroke="${C.basalt}" stroke-width="1.5"/>
+  <g><rect x="${L}" y="14" width="12" height="12" rx="3" fill="${C.forest}"/>
+   <text x="${L+18}" y="25" ${FONT} font-size="13" fill="${C.basalt}">제주 (이니스프리 제주 단독)</text>
+   <rect x="${L+220}" y="14" width="12" height="12" rx="3" fill="${C.stoneDeep}"/>
+   <text x="${L+238}" y="25" ${FONT} font-size="13" fill="${C.basalt}">브랜드 (이니스프리)</text></g>${s}</svg>`);
+})();
+
+/* ── ③B 제품군 연평균 막대 ── */
+(function(){
+ const abs = D.series.annual.decay.abs['제품군(레티놀)'];
+ const pk = D.series.annual.decay.product_peak;
+ const years = Object.keys(abs);
+ const W=560,H=330, top=56, bot=44, L=16, R=16;
+ const max=2.9;
+ const y = v => top + (max-v)/max*(H-top-bot);
+ const gw = (W-L-R)/years.length, bw=58;
+ let s='';
+ years.forEach((yr,i)=>{
+  const v=abs[yr], cx=L+gw*i+gw/2, vy=y(v);
+  const isPk = yr===pk.year, isLast = yr===pk.last_year;
+  s += `<rect x="${cx-bw/2}" y="${vy}" width="${bw}" height="${y(0)-vy}" rx="5"
+    fill="${isPk?C.basalt:isLast?C.roseDeep:C.stone}" ${(!isPk&&!isLast)?`stroke="${C.stoneDeep}" stroke-width="1"`:''}
+    data-tip="제품군(레티놀·앰플) · ${yr} 연평균 ${v.toFixed(3)}${isPk?' — 정점':''}${isLast?' — 정점 대비 −37.4%':''}"/>
+   <text x="${cx}" y="${vy-10}" text-anchor="middle" ${FONT} font-size="15" font-weight="700" fill="${C.basalt}">${v.toFixed(3)}</text>
+   <text x="${cx}" y="${H-14}" text-anchor="middle" ${FONT} font-size="14" fill="${C.past}">${yr}</text>`;
+  if(isPk) s += `<text x="${cx}" y="${vy-30}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}">정점</text>`;
+ });
+ const x1 = L+gw*years.indexOf(pk.year)+gw/2, x2 = L+gw*years.indexOf(pk.last_year)+gw/2;
+ s += `<path d="M${x1+34} ${y(pk.value)-4} C ${(x1+x2)/2} ${y(pk.value)-40}, ${(x1+x2)/2} ${y(pk.last)-46}, ${x2-6} ${y(pk.last)-26}"
+   fill="none" stroke="${C.roseDeep}" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrP)"/>
+  <text x="${(x1+x2)/2+10}" y="${y(pk.value)-40}" text-anchor="middle" ${FONT} font-size="15" font-weight="700" fill="${C.roseDeep}">정점 대비 ${pk.drop}%</text>`;
+ put('chPeak', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="제품군 검색 연평균. 2023년 정점 이후 37.4% 하락">
+  <defs><marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+   <path d="M0 0 L10 5 L0 10 z" fill="${C.roseDeep}"/></marker></defs>
+  <line x1="${L}" y1="${y(0)}" x2="${W-R}" y2="${y(0)}" stroke="${C.basalt}" stroke-width="1.5"/>${s}</svg>`);
+})();
+
+/* ── ④A 점유율 추이 ── */
+(function(){
+ const a = D.series.annual;
+ const years=['2021','2022','2023','2024','2025'];
+ const W=560,H=340, top=40, bot=56, L=52, R=112;
+ const min=40,max=76;
+ const y = v => top+(max-v)/(max-min)*(H-top-bot);
+ const x = i => L+i*(W-L-R)/ (years.length);   // 2026 자리 포함해 +1 슬롯
+ let s='';
+ [50,60,70].forEach(g=> s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R+40}" y2="${y(g)}" stroke="${C.hair}"/>
+  <text x="${L-8}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="12" fill="${C.past}">${g}%</text>`);
+ const mk = (key,color,wd,dash,label,v26) => {
+  let out='';
+  const pts = years.map((yr,i)=>[x(i), y(a[key][yr])]);
+  let p = pts.map((q,i)=>(i?'L':'M')+q[0]+' '+q[1]).join('');
+  out += `<path d="${p}" fill="none" stroke="${color}" stroke-width="${wd}" ${dash?`stroke-dasharray="${dash}"`:'class="draw" pathLength="1"'}/>`;
+  pts.forEach((q,i)=> out+=`<circle cx="${q[0]}" cy="${q[1]}" r="${wd>2?5:4}" fill="${color}" data-tip="${label} · ${years[i]}년 ${a[key][years[i]]}%"/>`);
+  if(v26!=null){
+   const q=[x(years.length), y(v26)];
+   out += `<line x1="${pts[4][0]}" y1="${pts[4][1]}" x2="${q[0]}" y2="${q[1]}" stroke="${color}" stroke-width="${wd}" stroke-dasharray="3 5"/>
+    <circle cx="${q[0]}" cy="${q[1]}" r="${wd>2?5:4}" fill="${C.off}" stroke="${color}" stroke-width="2" data-tip="${label} · 2026 1~7월 ${v26}%"/>`;
+  }
+  const endv = v26!=null?v26:a[key][years[4]];
+  const endx = v26!=null?x(years.length):x(4);
+  out += `<text x="${endx+10}" y="${y(endv)+4}" ${FONT} font-size="13.5" font-weight="700" fill="${color}">${label} ${endv}%</text>`;
+  return out;
+ };
+ s += `<g id="gPair">` + mk('share_pair', C.stoneDeep, 2, '7 5', '2사(참고)', D.kpi.share.pair) + `</g>`;
+ // 판정선 아래 영역 채움 — 기업형 마감
+ const dPts = [...years.map((yr,i)=>[x(i), y(a.share_direct[yr])]), [x(years.length), y(D.kpi.share.direct)]];
+ s += `<path d="M${dPts.map(p=>p.join(' ')).join(' L')} L${dPts[dPts.length-1][0]} ${H-bot} L${dPts[0][0]} ${H-bot} Z" fill="url(#gShare)"/>`;
+ s += mk('share_direct', C.forest, 3.5, null, '직접 3사', D.kpi.share.direct);
+ years.forEach((yr,i)=> s+=`<text x="${x(i)}" y="${H-30}" text-anchor="middle" ${FONT} font-size="13.5" fill="${C.past}">${yr}</text>`);
+ s += `<text x="${x(years.length)}" y="${H-30}" text-anchor="middle" ${FONT} font-size="13.5" font-weight="700" fill="${C.basalt}">2026</text>
+  <text x="${x(years.length)}" y="${H-12}" text-anchor="middle" ${FONT} font-size="11" fill="${C.past}">1~7월</text>`;
+ put('chShare', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="경쟁 검색 점유율 추이. 직접 3사 기준 2021년 64.1%에서 2026년 1~7월 51.2%로 하락">
+  <defs><linearGradient id="gShare" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="${C.forest}" stop-opacity=".13"/>
+   <stop offset="1" stop-color="${C.forest}" stop-opacity="0"/>
+  </linearGradient></defs>${s}</svg>`);
+})();
+
+/* ── ④B 경쟁 브랜드 검색량 — 3사 고유색 ── */
+(function(){
+ const comp = D.series.annual.competitors;
+ const years=['2021','2022','2023','2024','2025'];
+ const W=560,H=340, top=34, bot=42, L=44, R=128;
+ const max=56;
+ const y = v => top+(max-v)/max*(H-top-bot);
+ const x = i => L+i*(W-L-R)/(years.length-1);
+ let s='';
+ [0,20,40].forEach(g=> s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R+30}" y2="${y(g)}" stroke="${C.hair}"/>
+  <text x="${L-8}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="12" fill="${C.past}">${g}</text>`);
+ const brands=[['이니스프리',C.forest,3.5,'−73.0% (5년)'],['미샤',C.roseDeep,2.5,'−58.0%'],['3CE',C.basalt,2.5,'−55.5%']];
+ const ends=[];
+ brands.forEach(([name,color,wd,chg])=>{
+  const pts=years.map((yr,i)=>[x(i),y(comp[name][yr])]);
+  s += `<path d="${pts.map((q,i)=>(i?'L':'M')+q[0]+' '+q[1]).join('')}" fill="none" stroke="${color}" stroke-width="${wd}"/>`;
+  pts.forEach((q,i)=> s+=`<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="${color}" data-tip="${name} · ${years[i]}년 연평균 ${comp[name][years[i]].toFixed(1)}"/>`);
+  ends.push({name,color,chg,x:pts[4][0],y:pts[4][1],v:comp[name]['2025']});
+ });
+ ends.sort((a,b)=>a.y-b.y);            // 끝 라벨 겹침 방지 — 위에서부터 최소 36px 간격
+ let prevY=-99;
+ ends.forEach(e=>{
+  const ly=Math.max(e.y, prevY+36); prevY=ly;
+  s += `<text x="${e.x+10}" y="${ly+2}" ${FONT} font-size="14" font-weight="700" fill="${e.color}">${e.name}</text>
+   <text x="${e.x+10}" y="${ly+18}" ${FONT} font-size="11.5" fill="${C.past}">${e.v.toFixed(1)} · ${e.chg}</text>`;
+ });
+ years.forEach((yr,i)=> s+=`<text x="${x(i)}" y="${H-14}" text-anchor="middle" ${FONT} font-size="13.5" fill="${C.past}">${yr}</text>`);
+ put('chComp', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="경쟁 브랜드 연평균 검색량 추이. 이니스프리, 미샤, 3CE 세 브랜드만 고유색으로 표시">${s}</svg>`);
+})();
+
+/* ── ⑤ 롱테일 가로 막대 ── */
+function hbars(id, items, hi, aria){
+ const W=560, rh=52, top=8, H=top+items.length*rh+4;
+ const max=Math.max(...items.map(i=>i.value))*1.12;
+ let s='';
+ items.forEach((it,i)=>{
+  const yy=top+i*rh, bw=Math.max(4, it.value/max*(W-190));
+  const isHi = it.name===hi;
+  s += `<text x="0" y="${yy+21}" ${FONT} font-size="13.5" font-weight="${isHi?700:500}" fill="${C.basalt}">${esc(it.name)}</text>
+   <rect x="176" y="${yy+8}" width="${bw}" height="20" rx="10" fill="${isHi?C.forest:C.stone}" ${isHi?'':`stroke="${C.stoneDeep}" stroke-width="1"`}
+    data-tip="${esc(it.name)} · ${it.value.toFixed(1)}${it.keywords?' — 구성: '+esc(it.keywords):''}"/>
+   <text x="${182+bw}" y="${yy+23}" ${FONT} font-size="14" font-weight="700" fill="${isHi?C.forest:C.basalt}">${it.value.toFixed(1)}</text>
+   <text x="176" y="${yy+42}" ${FONT} font-size="10.5" fill="${C.past}">${esc(it.keywords)}</text>`;
+ });
+ put(id, `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${aria}">${s}</svg>`);
+}
+hbars('chLtA', D.series.annual.longtail.calls.A.items, '노세범', '이니스프리 고유 자산 키워드 검색 지수. 노세범 70.1이 최대');
+hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 결합어 검색 지수. 선크림 59.8, 화산송이 클렌징 5.4');
+
+/* ── ⑥A 월간 브랜드 vs 제품군 ── */
+(function(){
+ const m = D.series.monthly;
+ const cut = m.months.length-1;
+ const months = m.months.slice(0,cut), brand=m.brand.slice(0,cut), prod=m.product.slice(0,cut);
+ const W=1120,H=380, top=44, bot=52, L=48, R=52;
+ const bMax=Math.max(...brand)*1.06, pMax=Math.max(...prod)*1.06;
+ const x=i=> L+i*(W-L-R)/(months.length-1);
+ const yb=v=> top+(bMax-v)/bMax*(H-top-bot);
+ const yp=v=> top+(pMax-v)/pMax*(H-top-bot);
+ let s='';
+ // 이벤트 세로선
+ D.events.filter(e=>e.kind==='major').forEach(e=>{
+  const i=months.indexOf(e.date); if(i<0) return;
+  s += `<line x1="${x(i)}" y1="${top-6}" x2="${x(i)}" y2="${H-bot}" stroke="${C.roseDeep}" stroke-width="1.5" stroke-dasharray="5 5"/>
+   <text x="${x(i)+7}" y="${top+8}" ${FONT} font-size="12.5" font-weight="700" fill="${C.roseDeep}">${esc(e.label)}</text>`;
+ });
+ const path=(vals,yf)=> vals.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+yf(v).toFixed(1)).join('');
+ s += `<path d="${path(brand,yb)}" fill="none" stroke="${C.forest}" stroke-width="2.8"/>
+  <path d="${path(prod,yp)}" fill="none" stroke="${C.roseDeep}" stroke-width="2.2"/>`;
+ months.forEach((mo,i)=>{ if(mo.endsWith('-01'))
+  s+=`<text x="${x(i)}" y="${H-18}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}">${mo.slice(0,4)}</text>
+   <line x1="${x(i)}" y1="${H-bot}" x2="${x(i)}" y2="${H-bot+6}" stroke="${C.hair}"/>`; });
+ s += `<line x1="${L}" y1="20" x2="${L+26}" y2="20" stroke="${C.forest}" stroke-width="3"/>
+  <text x="${L+32}" y="24" ${FONT} font-size="13" font-weight="700" fill="${C.forest}">브랜드 (이니스프리) — 왼쪽 축</text>
+  <line x1="${L+250}" y1="20" x2="${L+276}" y2="20" stroke="${C.roseDeep}" stroke-width="3"/>
+  <text x="${L+282}" y="24" ${FONT} font-size="13" font-weight="700" fill="${C.roseDeep}">제품군 (레티놀·앰플) — 오른쪽 축 (약 1/10 스케일)</text>`;
+ put('chTrend', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="월간 브랜드 검색과 제품군 검색 추이. 2023년 2월 리브랜딩 후 브랜드는 하락, 제품군은 상승">${s}</svg>`);
+
+ // 호버 탐색 — 세로 가이드선 + 해당 월의 두 계열 값
+ const svgEl = document.querySelector('#chTrend svg');
+ const SVGNS = 'http://www.w3.org/2000/svg';
+ const guide = document.createElementNS(SVGNS, 'line');
+ guide.setAttribute('stroke', C.basalt); guide.setAttribute('stroke-width', '1');
+ guide.setAttribute('stroke-dasharray', '3 4');
+ guide.setAttribute('y1', top-6); guide.setAttribute('y2', H-bot);
+ guide.style.visibility = 'hidden';
+ svgEl.appendChild(guide);
+ svgEl.addEventListener('pointermove', ev => {
+  const r = svgEl.getBoundingClientRect();
+  const vx = (ev.clientX - r.left) / r.width * W;
+  const i = Math.round((vx - L) / ((W-L-R) / (months.length-1)));
+  if (i < 0 || i >= months.length) { guide.style.visibility='hidden'; TIP.hide(); return; }
+  const xx = x(i);
+  guide.setAttribute('x1', xx); guide.setAttribute('x2', xx);
+  guide.style.visibility = 'visible';
+  TIP.show(ev, `<b>${months[i]}</b><br>브랜드 ${brand[i].toFixed(2)} · 제품군 ${prod[i].toFixed(2)}`);
+ });
+ svgEl.addEventListener('pointerleave', () => { guide.style.visibility='hidden'; TIP.hide(); });
+})();
+
+/* ── ⑥B 매장 수 vs 브랜드 검색 — 산점도 ── */
+(function(){
+ const st=D.fixed.stores, bd=D.series.annual.brand_daily;
+ const pts=['2021','2022','2023','2024'].map(yr=>({yr,s:st[yr],b:bd[yr]}));
+ const W=560,H=380, top=36,bot=66,L=64,R=30;
+ const xMin=150,xMax=450, yMin=2,yMax=9.5;
+ const x=v=>L+(xMax-v)/(xMax-xMin)*(W-L-R);   // 축 반전 — 시간(2021→2024)이 왼쪽→오른쪽
+ const y=v=>top+(yMax-v)/(yMax-yMin)*(H-top-bot);
+ let s='';
+ [400,300,200].forEach(g=>s+=`<line x1="${x(g)}" y1="${top}" x2="${x(g)}" y2="${H-bot}" stroke="${C.hair}"/>
+  <text x="${x(g)}" y="${H-bot+20}" text-anchor="middle" ${FONT} font-size="12" fill="${C.past}">${g}개</text>`);
+ [3,5,7,9].forEach(g=>s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R}" y2="${y(g)}" stroke="${C.hair}"/>
+  <text x="${L-8}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="12" fill="${C.past}">${g}</text>`);
+ const xs=pts.map(p=>p.s), ys2=pts.map(p=>p.b), n=pts.length;
+ const mx=xs.reduce((q,v)=>q+v,0)/n, my=ys2.reduce((q,v)=>q+v,0)/n;
+ const beta=xs.reduce((q,v,i)=>q+(v-mx)*(ys2[i]-my),0)/xs.reduce((q,v)=>q+(v-mx)**2,0);
+ const alpha=my-beta*mx;
+ s+=`<line x1="${x(165)}" y1="${y(alpha+beta*165)}" x2="${x(435)}" y2="${y(alpha+beta*435)}" stroke="${C.forest}" stroke-width="1.8" stroke-dasharray="7 5" opacity=".65"/>`;
+ pts.forEach(p=>{
+  s+=`<circle cx="${x(p.s)}" cy="${y(p.b)}" r="8" fill="${C.forest}" data-tip="${p.yr}년 · 매장 ${p.s}개 · 브랜드 검색 ${p.b}"/>
+   <text x="${x(p.s)}" y="${y(p.b)-15}" text-anchor="middle" ${FONT} font-size="12.5" font-weight="700" fill="${C.basalt}">${p.yr}</text>`;
+ });
+ s+=`<text x="${(L+W-R)/2}" y="${H-16}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}">매장 수 (공정위)</text>
+  <text x="20" y="${(top+H-bot)/2}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}" transform="rotate(-90 20 ${(top+H-bot)/2})">브랜드 검색지수</text>`;
+ put('chStore', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="매장 수와 브랜드 검색지수 산점도. 네 점이 회귀선 위에 정렬. 상관계수 0.98">${s}</svg>`);
+})();
+
+/* ── ⑥C 광고선전비 vs 브랜드 검색 — 산점도 ── */
+(function(){
+ const ad=D.fixed.ad_spend, bd=D.series.annual.brand_daily;
+ const pts=['2021','2022','2023','2024','2025'].map(yr=>({yr,a:ad[yr],b:bd[yr]}));
+ const W=560,H=380, top=36,bot=66,L=64,R=30;
+ const xMin=225,xMax=370, yMin=1.5,yMax=9.5;
+ const x=v=>L+(v-xMin)/(xMax-xMin)*(W-L-R);
+ const y=v=>top+(yMax-v)/(yMax-yMin)*(H-top-bot);
+ let s='';
+ [240,280,320,360].forEach(g=>s+=`<line x1="${x(g)}" y1="${top}" x2="${x(g)}" y2="${H-bot}" stroke="${C.hair}"/>
+  <text x="${x(g)}" y="${H-bot+20}" text-anchor="middle" ${FONT} font-size="12" fill="${C.past}">${g}억</text>`);
+ [3,5,7,9].forEach(g=>s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R}" y2="${y(g)}" stroke="${C.hair}"/>
+  <text x="${L-8}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="12" fill="${C.past}">${g}</text>`);
+ pts.forEach(p=>{
+  const is23=p.yr==='2023';
+  s+=`<circle cx="${x(p.a)}" cy="${y(p.b)}" r="${is23?9:8}" fill="${is23?C.roseDeep:C.basalt}" data-tip="${p.yr}년 · 광고선전비 ${p.a}억 · 브랜드 검색 ${p.b}${is23?' — +41.6% 증액의 해':''}"/>
+   <text x="${x(p.a)}" y="${y(p.b)-15}" text-anchor="middle" ${FONT} font-size="12.5" font-weight="700" fill="${is23?C.roseDeep:C.basalt}">${p.yr}</text>`;
+ });
+ s+=`<text x="${x(344.9)}" y="${y(5.251)+32}" text-anchor="middle" ${FONT} font-size="12" font-weight="700" fill="${C.roseDeep}">+41.6% 증액</text>
+  <text x="${(L+W-R)/2}" y="${H-16}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}">광고선전비 (억원 · DART)</text>
+  <text x="20" y="${(top+H-bot)/2}" text-anchor="middle" ${FONT} font-size="12.5" fill="${C.past}" transform="rotate(-90 20 ${(top+H-bot)/2})">브랜드 검색지수</text>`;
+ put('chAd', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="광고선전비와 브랜드 검색지수 산점도. 점들이 무질서해 상관이 없음을 보여준다. 2023년 점만 강조">${s}</svg>`);
+})();
+
+/* ── ⑥D 브랜드 검색 히트맵 (연×월) ── */
+(function(){
+ const m=D.series.monthly, cut=m.months.length-1;   // 진행 중인 월 제외
+ const data={}; let max=0;
+ for(let i=0;i<cut;i++){
+  const ym=m.months[i], yr=ym.slice(0,4), mo=+ym.slice(5), v=m.brand[i];
+  (data[yr]=data[yr]||{})[mo]=v; if(v>max) max=v;
+ }
+ const years=Object.keys(data).sort();
+ const W=1120, L=64, R=16, top=34, rh=42, H=top+years.length*rh+8;
+ const cw=(W-L-R)/12;
+ let s='';
+ for(let mo=1;mo<=12;mo++)
+  s+=`<text x="${L+(mo-.5)*cw}" y="${top-12}" text-anchor="middle" ${FONT} font-size="11.5" fill="${C.past}">${mo}월</text>`;
+ years.forEach((yr,r)=>{
+  s+=`<text x="${L-10}" y="${top+r*rh+rh/2+4}" text-anchor="end" ${FONT} font-size="12.5" font-weight="700" fill="${C.basalt}">${yr}</text>`;
+  for(let mo=1;mo<=12;mo++){
+   const v=(data[yr]||{})[mo], cx=L+(mo-1)*cw, cy=top+r*rh;
+   if(v==null){
+    s+=`<rect x="${cx+2}" y="${cy+2}" width="${cw-4}" height="${rh-4}" rx="6" fill="none" stroke="${C.hair}" stroke-dasharray="4 4"/>`;
+    continue;
+   }
+   const op=(0.07+0.93*(v/max)).toFixed(3);
+   s+=`<rect x="${cx+2}" y="${cy+2}" width="${cw-4}" height="${rh-4}" rx="6" fill="rgba(63,90,69,${op})" data-tip="${yr}-${String(mo).padStart(2,'0')} · 지수 ${v.toFixed(2)}"/>`;
+  }
+ });
+ put('chHeat', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="연도별 월별 브랜드 검색 히트맵. 2021년에서 2026년으로 갈수록 색이 옅어진다. 각 칸에 마우스를 올리면 값 표시">${s}</svg>`);
+})();
+
+/* ── 부록 A1 연도별 원표 ── */
+(function(){
+ const a = D.series.annual, st = D.fixed.stores, ad = D.fixed.ad_spend;
+ const years=['2021','2022','2023','2024','2025'];
+ const row = (label, f, unit='') => `<tr><td>${label}</td>${years.map(y=>{
+  const v=f(y); return `<td>${v==null?'—':v}${v==null?'':unit}</td>`;}).join('')}</tr>`;
+ put('tblAnnual', `<table>
+  <thead><tr><th>지표</th>${years.map(y=>`<th>${y}</th>`).join('')}</tr></thead><tbody>
+  ${row('브랜드 검색지수 (일간 정밀)', y=>a.brand_daily[y])}
+  ${row('브랜드 YoY', y=>a.brand_daily_yoy[y], '%')}
+  ${row('&lsquo;제주&rsquo; 연상 비중 (단독)', y=>a.jeju_ratio[y], '%')}
+  ${row('제품군 비중', y=>a.product_ratio[y], '%')}
+  ${row('점유율 — 직접 3사', y=>a.share_direct[y], '%')}
+  ${row('점유율 — 2사 (참고)', y=>a.share_pair[y], '%')}
+  ${row('매장 수 (공정위)', y=>st[y]??null, '개')}
+  ${row('광고선전비 (DART)', y=>ad[y], '억')}
+ </tbody></table>`);
+})();
+
+/* ── 부록 A2 브랜드평판 — 축을 현재(2026-08)까지 확장 ── */
+(function(){
+ const W=560,H=300, top=40, bot=64, L=56, R=20;
+ // 월 인덱스: 2021-01 = 0 … 2026-08 = 67
+ const idx = ym => (parseInt(ym.slice(0,4))-2021)*12 + parseInt(ym.slice(5))-1;
+ const N = idx('2026-08');
+ const x = i => L+i/N*(W-L-R);
+ const y = r => top+(r-1)/(4-1)*(H-top-bot);
+ // 원자료에 문서화된 구간만 그림: 2021~2022 2위 · 2023-02 3위(점) · 2023 하반기 2위 · 2024H2~2025 3위
+ // 사이 결측 구간은 선을 긋지 않는다
+ const segs=[['2021-01','2022-12',2],['2023-07','2023-12',2],['2024-07','2025-12',3]];
+ let s='';
+ [1,2,3,4].forEach(r=> s+=`<line x1="${L}" y1="${y(r)}" x2="${W-R}" y2="${y(r)}" stroke="${C.hair}"/>
+  <text x="${L-8}" y="${y(r)+4}" text-anchor="end" ${FONT} font-size="12.5" fill="${C.past}">${r}위</text>`);
+ s += `<text x="${L+4}" y="${y(1)-7}" ${FONT} font-size="11" fill="${C.past}">1위는 항상 올리브영</text>`;
+ segs.forEach(sg=>{
+  const [a,b,r]=sg;
+  s += `<path d="M${x(idx(a))} ${y(r)} L${x(idx(b))} ${y(r)}" fill="none" stroke="${C.forest}" stroke-width="3" stroke-linecap="round"/>`;
+ });
+ s += `<circle cx="${x(idx('2023-02'))}" cy="${y(3)}" r="6" fill="${C.roseDeep}"/>
+  <text x="${x(idx('2023-02'))}" y="${y(3)+26}" text-anchor="middle" ${FONT} font-size="12.5" font-weight="700" fill="${C.roseDeep}">2023-02 첫 3위 이탈</text>`;
+ // 2026 미수집 존
+ const zx = x(idx('2026-01'));
+ s += `<rect x="${zx}" y="${top}" width="${W-R-zx}" height="${H-top-bot}" fill="${C.stone}" opacity=".55"/>
+  <text x="${(zx+W-R)/2}" y="${(top+H-bot)/2}" text-anchor="middle" ${FONT} font-size="12" font-weight="700" fill="${C.past}">2026 미수집</text>
+  <text x="${(zx+W-R)/2}" y="${(top+H-bot)/2+17}" text-anchor="middle" ${FONT} font-size="10.5" fill="${C.past}">갱신 필요</text>`;
+ ['2021','2022','2023','2024','2025','2026'].forEach(yr=>{
+  s += `<text x="${x(idx(yr+'-01'))}" y="${H-40}" ${FONT} font-size="12.5" fill="${C.past}">${yr}</text>`;});
+ put('chRep', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="브랜드평판 순위 추이. 2021년부터 2위와 3위를 오가며 2023년 2월 처음 3위로 이탈. 2026년 구간은 미수집">${s}</svg>`);
+})();
+
+
+
+/* ── 부록 A5 이벤트 · A6 diff ── */
+put('eventRows', D.events.map(e=>`<tr><td>${esc(e.date)} · ${esc(e.label)}</td><td class="l">${esc(e.desc)}</td></tr>`).join(''));
+
+
+/* ── 사이드바 — 현재 보는 섹션 표시 ── */
+(function(){
+ const links=[...document.querySelectorAll('.snav a')];
+ const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+ const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){
+   links.forEach(a=>a.classList.remove('on'));
+   const a=map.get(e.target.id); if(a) a.classList.add('on');
+  }});
+ },{rootMargin:'-15% 0px -70% 0px'});
+ ['story','kpi','asset','compete','opportunity','diagnosis','guard','appendix']
+  .forEach(id=>{const el=document.getElementById(id); if(el) obs.observe(el);});
+})();
+
+/* ── KPI 카드 클릭 → 근거 섹션 · 점유율 참고선 토글 ── */
+(function(){
+ const strip = document.getElementById('kpiCards');
+ const go = k => { if (k && k.dataset.go) document.getElementById(k.dataset.go).scrollIntoView({behavior:'smooth'}); };
+ strip.addEventListener('click', e => go(e.target.closest('.kp[data-go]')));
+ strip.addEventListener('keydown', e => { if (e.key === 'Enter') go(e.target.closest('.kp[data-go]')); });
+ const tp = document.getElementById('togglePair');
+ tp.addEventListener('click', () => {
+  const g = document.getElementById('gPair');
+  const on = g.style.display !== 'none';
+  g.style.display = on ? 'none' : '';
+  tp.setAttribute('aria-pressed', String(!on));
+  tp.classList.toggle('off', on);
+ });
+})();
+
+/* ── 스크롤 모션 — 섹션 제목 페이드 + 차트 라인 드로잉만 (절제) ── */
+(function(){
+ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+ const heads = document.querySelectorAll('.schead');
+ heads.forEach(el => el.classList.add('pre'));
+ const drawCards = [...new Set([...document.querySelectorAll('path.draw')].map(p => p.closest('.card')))].filter(Boolean);
+ const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+ }, {rootMargin: '0px 0px -8% 0px'});
+ heads.forEach(el => io.observe(el));
+ drawCards.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
