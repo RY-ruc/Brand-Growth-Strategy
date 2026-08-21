@@ -511,7 +511,8 @@ footer b{color:var(--offwhite)}
   <div class="grid2" style="margin-top:var(--gap)">
    <div class="card">
     <h3>라운드랩은 무에서 이름 하나를 만들었다 — 이니스프리 이름은 전부 정점을 지났다</h3>
-    <div class="src">원료어 수명주기 스몰 멀티플 · 기준점 환산 · 연평균 · <b>칸마다 자기 척도 — 크기가 아니라 궤적을 비교하는 형식</b> ·
+    <div class="src">원료어 수명주기 스몰 멀티플 · 기준점 환산 · 연평균 · <b>다섯 칸은 같은 척도(0~1.3) — 높이를 그대로 비교할 수 있다.</b>
+     그린티·화산송이·블랙티가 바닥에 붙어 있는 것이 실제 크기다 · (참고) 브랜드 칸만 자기 척도 ·
      무에서 생성된 다른 제품어: 크림스킨(라네즈) 0.005→0.26 · 녹두(비플레인) 0.001→0.24 · 스쿠알란(에스네이처) 0.00→0.19</div>
     <div class="chart" id="chPwLife"></div>
     <div class="cap"><b>노세범이 죽은 게 아니라 브랜드가 더 빨리 무너졌다</b> — 노세범 절대치는 정점 대비 −81%지만
@@ -2655,9 +2656,12 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
  const pw=172, ph=64, tw=26, bh=34, gapx=20, gapy=16, cols=3;
  const cellH=tw+ph+bh, W=560, H=2*cellH+gapy+4;
  let s='';
+ // 제품어 다섯 칸은 같은 척도(0~1.31)로 그린다 — 칸별 자기 척도는 작은 것을 부풀린다(팀 지적 2026-08-21).
+ // (참고) 브랜드 칸만 자기 척도(40배 차이라 공유 불가).
+ const COMMON=1.31;
  P.forEach((p,idx)=>{
   const cx=(idx%cols)*(pw+gapx), cy=Math.floor(idx/cols)*(cellH+gapy);
-  const max=Math.max(...p.v)*1.08 || 1;
+  const max=p.ctx ? Math.max(...p.v)*1.08 : COMMON;
   const x=i=> cx+i*pw/(p.v.length-1);
   const y=v=> cy+tw+(1-v/max)*ph;
   const line=p.v.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join('');
@@ -2688,8 +2692,15 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
   let s=`<text x="${x0+118}" y="${top-26}" text-anchor="middle" ${FONT} font-size="13" font-weight="700" fill="${C.basalt}">${title}</text>`;
   rows.forEach((r,i)=>{
    const yy=top+i*76, bw=Math.max(3, r.v/max*176);
-   s+=`<text x="${x0}" y="${yy+14}" ${FONT} font-size="12.5" fill="${C.basalt}">${r.n}</text>
-    <rect x="${x0}" y="${yy+22}" width="${bw}" height="22" rx="8" fill="${r.c}" data-tip="${r.n} · ${r.v}${unit}"/>
+   s+=`<text x="${x0}" y="${yy+14}" ${FONT} font-size="12.5" fill="${C.basalt}">${r.n}</text>`;
+   // 참고치(독도 포함)는 흐린 막대로 뒤에 겹친다
+   if(r.ghost){
+    const gw=Math.max(3, r.ghost/max*176);
+    s+=`<rect x="${x0}" y="${yy+22}" width="${gw}" height="22" rx="8" fill="${r.c}" opacity=".22"
+      data-tip="독도 포함 시 ${r.ghost}${unit} (9/23) — 참고"/>
+     <text x="${x0+gw+6}" y="${yy+38}" ${FONT} font-size="10.5" fill="${C.past}">독도 포함 ${r.ghost}${unit}</text>`;
+   }
+   s+=`<rect x="${x0}" y="${yy+22}" width="${bw}" height="22" rx="8" fill="${r.c}" data-tip="${r.n} · ${r.v}${unit}"/>
     <text x="${x0+bw+8}" y="${yy+38}" ${FONT} font-size="14" font-weight="700"
      fill="${r.c===C.sand?C.basalt:r.c}">${r.v}${unit}</text>`;
   });
@@ -2699,7 +2710,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
    [{n:'라운드랩',v:23,c:C.sand},{n:'이니스프리',v:20,c:C.sand}],26);
  s += `<line x1="${W/2}" y1="${top-40}" x2="${W/2}" y2="${H-30}" stroke="${C.hair}"/>`;
  s += panel(W/2+22,'제품 이름에 원료 — 독도 제외','%',
-   [{n:'라운드랩 (5/23)',v:21.7,c:C.forest},{n:'이니스프리 (0/30)',v:0,c:C.roseDeep}],26);
+   [{n:'라운드랩 (5/23)',v:21.7,ghost:39.1,c:C.forest},{n:'이니스프리 (0/30)',v:0,c:C.roseDeep}],44);
  s += `<text x="8" y="${H-8}" ${FONT} font-size="11.5" fill="${C.past}">왼쪽은 비슷하고 오른쪽이 갈린다 — 문제는 분량이 아니라 위치다</text>`;
  put('chPwSite', `<svg viewBox="0 0 ${W} ${H}" role="img"
   aria-label="서사 단어 수는 라운드랩 23회 이니스프리 20회로 비슷하지만 제품명 원료 포함률은 독도를 제외해도 21.7퍼센트 대 0퍼센트로 갈린다">${s}</svg>`);
