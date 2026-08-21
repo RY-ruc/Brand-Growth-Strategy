@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>이니스프리 브랜드 인지도 대시보드 — 리디자인 시안</title>
 <meta name="description" content="리브랜딩 무드보드 컨셉을 적용한 대시보드 리디자인 시안 · 마케팅 중요도순 재구성">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23253531'/%3E%3Ccircle cx='50' cy='50' r='26' fill='%23E78093'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23253531'/%3E%3Ctext x='50' y='76' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='74' fill='%23FAFAF7'%3Ei%3C/text%3E%3C/svg%3E">
 <style>
 @font-face{font-family:"Gowun Batang";font-weight:400;font-display:swap;
  src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Gowun_Batang/GowunBatang-Regular.ttf") format("truetype");}
@@ -17,6 +17,8 @@
  src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Medium.ttf") format("truetype");}
 @font-face{font-family:"Noto Sans KR";font-weight:700;font-display:swap;
  src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Bold.ttf") format("truetype");}
+@font-face{font-family:"Noto Sans KR";font-weight:900;font-display:swap;
+ src:url("../../00_무드보드/레이어작업/무드보드 소스/폰트/Gowun_Batang,Noto_Sans_KR/Noto_Sans_KR/static/NotoSansKR-Black.ttf") format("truetype");}
 
 :root{
  /* 무드보드 1차최종 팔레트 — 원본 값 그대로 */
@@ -33,6 +35,9 @@
  --pad:56px; --gap:26px; --radius:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+aside::-webkit-scrollbar{width:6px}
+aside::-webkit-scrollbar-thumb{background:rgba(232,230,214,.25);border-radius:3px}
+aside::-webkit-scrollbar-track{background:transparent}
 html{scroll-behavior:smooth}
 body{background:var(--offwhite);color:var(--ink);font-family:var(--sans);
  font-size:15px;line-height:1.65;word-break:keep-all;-webkit-font-smoothing:antialiased}
@@ -46,6 +51,7 @@ aside{width:238px;flex:0 0 238px;background:var(--basalt);color:var(--offwhite);
  box-shadow:2px 0 8px rgba(21,31,28,.22), 14px 0 40px rgba(21,31,28,.26);
  z-index:5;
  position:sticky;top:0;height:100vh;overflow-y:auto;
+ scrollbar-width:thin;scrollbar-color:rgba(232,230,214,.28) transparent;
  padding:28px 20px 24px;display:flex;flex-direction:column;gap:20px}
 aside .logo img{height:22px;display:block}
 aside .logo .tag{font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--rose);margin-top:10px}
@@ -71,20 +77,20 @@ aside .blk:first-of-type{margin-top:auto}
 main{flex:1;min-width:0}
 
 /* ── 히어로 ────────────────────────────── */
-.hero{background:var(--basalt);color:var(--offwhite);padding:56px 0 72px}
-.hero-logo{height:64px;display:block;margin-bottom:34px}
+.hero{background:var(--basalt);color:var(--offwhite);padding:44px 0 54px}
+.hero-logo{height:42px;display:block;margin-bottom:26px}
 .hero .eyebrow{display:block;color:var(--rose);
  font-size:11px;font-weight:700;letter-spacing:.22em;margin-bottom:20px}
-.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.6vw,40px);
- line-height:1.42;letter-spacing:-.01em;text-wrap:balance;max-width:21em}
+.hero h1{font-family:var(--sans);font-weight:900;font-size:clamp(23px,2.5vw,34px);
+ line-height:1.4;letter-spacing:-.05em;text-wrap:balance;max-width:23em}
 .hero h1 em{font-style:normal;color:#F2A6B5}
-.hero .sub{margin-top:18px;font-size:15px;color:rgba(250,250,247,.78);max-width:46em}
+.hero .sub{margin-top:14px;font-size:14px;color:rgba(250,250,247,.78);max-width:46em}
 .hero .sub b{color:var(--offwhite);font-weight:700}
-.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
 .chip{background:rgba(250,250,247,.08);border:1px solid rgba(250,250,247,.22);
- border-radius:10px;padding:10px 16px;min-width:150px}
+ border-radius:10px;padding:8px 14px;min-width:138px}
 .chip .k{font-size:11px;letter-spacing:.08em;color:rgba(250,250,247,.66)}
-.chip .v{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:1px}
+.chip .v{font-size:18.5px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:1px}
 .chip .v small{font-size:12px;font-weight:400;color:rgba(250,250,247,.66);margin-left:4px}
 .chip.warn .v{color:var(--rose)}
 .hero .stamp{margin-top:22px;font-size:12px;color:rgba(250,250,247,.55)}
@@ -301,13 +307,13 @@ footer b{color:var(--offwhite)}
   <div class="tag">AWARENESS MONITOR<br>리디자인 시안</div></div>
  <nav class="snav" aria-label="섹션 바로가기">
   <span class="grp">본편</span>
-  <a href="#story">01 · 결론 서사와 해결</a>
-  <a href="#kpi">02 · KPI 모니터링</a>
-  <a href="#asset">03 · 헤리티지 자산 감가</a>
-  <a href="#diagnosis">04 · 진단 재현</a>
-  <a href="#compete">05 · 경쟁 포지션</a>
-  <a href="#opportunity">06 · 이길 수 있는 자리</a>
-  <a href="#guard">07 · 발표 가드</a>
+  <a href="#kpi">01 · KPI 모니터링</a>
+  <a href="#asset">02 · 헤리티지 자산 감가</a>
+  <a href="#diagnosis">03 · 진단 재현</a>
+  <a href="#compete">04 · 경쟁 포지션</a>
+  <a href="#opportunity">05 · 이길 수 있는 자리</a>
+  <a href="#guard">06 · 발표 가드</a>
+  <a href="#story">07 · 결론 서사와 해결</a>
   <span class="grp">부록</span>
   <a href="#appendix">A1~A9 · 참조 자료</a>
  </nav>
@@ -339,61 +345,11 @@ footer b{color:var(--offwhite)}
  </div>
 </header>
 
-<!-- ① 스토리 A→E -->
-<section id="story">
- <div class="wrap">
-  <div class="schead">
-   <span class="no">01 · 결론 서사</span>
-   <h2>다섯 문장이면 끝나는 이야기 — A에서 E까지</h2>
-   <p class="desc">핵심 발견 다섯 개 — 발표 서사의 순서 그대로.</p>
-  </div>
-  <div class="story">
-   <div class="st"><div class="lt">A</div><h3>회사는 이미 제주로 돌아왔다</h3>
-    <p>공식몰 브랜드 스토리에 제주 <b>12회</b> · THE NEW ISLE <b>0회</b> (2026-08 실사)</p></div>
-   <div class="st"><div class="lt">B</div><h3>그런데 그 말로 부르지 않는다</h3>
-    <p>llms.txt 타겟 질의어 <b>34개 중 제주 0개</b></p></div>
-   <div class="st"><div class="lt">C</div><h3>자산은 녹고 있다</h3>
-    <p>제주 절대 검색 5년 <b>−58.6%</b> · 2025년 브랜드보다 빨리 빠지기 시작(우위 역전)</p></div>
-   <div class="st"><div class="lt">D</div><h3>옮겨간 기능성도 꺾였다</h3>
-    <p>제품군 검색 2023 정점 이후 <b>−37.4%</b> · 2026년에도 <b>−20.1%</b></p></div>
-   <div class="st"><div class="lt">E</div><h3>이길 방법은 회사가 증명했다</h3>
-    <p>노세범 <b>66.78</b> &gt; 기름종이 <b>63.77</b> — 브랜드어가 자기가 밀어낸 카테고리어를 이겼다</p></div>
-  </div>
-
-  <div class="card" style="margin-top:26px">
-   <h3>다섯 문제에는 다섯 해결이 붙어 있다</h3>
-   <div class="src">문제 = 제안서 Part 1 · 해결 = Part 4 크리에이티브 + Part 5 로드맵</div>
-   <div class="ps5">
-    <div class="psrow"><div class="lt">A</div>
-     <div class="psq"><b>헤리티지 서사 단절</b><span>브랜드 검색 −23.9% · 소비자 인식(제주 연상)은 남아 있다</span></div>
-     <div class="psarrow">→</div>
-     <div class="psa"><b>무드보드 4-1</b><span>헤리티지 계승 톤으로 발신 재개</span></div></div>
-    <div class="psrow"><div class="lt">B</div>
-     <div class="psq"><b>광고 미전환 · 1년 중단</b><span>광고비·브랜드 r=−0.03 (제품과는 +0.69)</span></div>
-     <div class="psarrow">→</div>
-     <div class="psa"><b>예산 원칙 Part 5</b><span>재배치 아닌 증액 + 최소 3년 확약</span></div></div>
-    <div class="psrow"><div class="lt">C</div>
-     <div class="psq"><b>오프라인 접점 소멸</b><span>매장 400→190개 · r=0.98</span></div>
-     <div class="psarrow">→</div>
-     <div class="psa"><b>체험 거점 4-2</b><span>실증 사례 &lsquo;공병공간&rsquo; 확장</span></div></div>
-    <div class="psrow"><div class="lt">D</div>
-     <div class="psq"><b>제품이 브랜드로 안 쌓임</b><span>제품 검색 +118.5% vs 브랜드 −23.9%</span></div>
-     <div class="psarrow">→</div>
-     <div class="psa"><b>상세페이지 4-4</b><span>원료·헤리티지·루틴으로 제품→브랜드 동선</span></div></div>
-    <div class="psrow"><div class="lt">E</div>
-     <div class="psq"><b>AI 답변에 안 나옴</b><span>형식 4/4 완비 · 타겟 질의어 34개 중 헤리티지 0</span></div>
-     <div class="psarrow">→</div>
-     <div class="psa"><b>랜딩페이지 4-3</b><span>FAQ·구조화 데이터 + AI가 인용할 서사 문서</span></div></div>
-   </div>
-  </div>
- </div>
-</section>
-
 <!-- ② 경보 + KPI -->
 <section id="kpi">
  <div class="wrap">
   <div class="schead">
-   <span class="no">02 · KPI 모니터링</span>
+   <span class="no">01 · KPI 모니터링</span>
    <h2>핵심 성과 지표 다섯 개 — 팀 확정 우선순위 순서</h2>
    <p class="desc">각 카드 하단은 90 / 180 / 360일 게이트의 판정 기준.
     캠페인 개입 전이라 진행률은 아직 계산되지 않는다.</p>
@@ -429,7 +385,7 @@ footer b{color:var(--offwhite)}
 <section id="asset">
  <div class="wrap">
   <div class="schead">
-   <span class="no">03 · 헤리티지 자산 감가</span>
+   <span class="no">02 · 헤리티지 자산 감가</span>
    <h2>&ldquo;제주는 이미 1등이니 놔둬도 된다&rdquo;가 성립하는가</h2>
    <p class="desc">안 부르는 동안 자산이 유지되는가 — 비중이 아니라 절대 검색량으로 본다.</p>
   </div>
@@ -456,7 +412,7 @@ footer b{color:var(--offwhite)}
 <section id="diagnosis">
  <div class="wrap">
   <div class="schead">
-   <span class="no">04 · 진단 재현</span>
+   <span class="no">03 · 진단 재현</span>
    <h2>2023년, 돈이 만든 것은 브랜드가 아니라 제품 한 줄이었다</h2>
    <p class="desc">광고 +41.6% 증액의 해, 브랜드 검색 −23.9% · 제품군 +118.5% —
     서로 다른 세 출처가 같은 지점을 가리킨다.</p>
@@ -509,7 +465,7 @@ footer b{color:var(--offwhite)}
 <section id="compete">
  <div class="wrap">
   <div class="schead">
-   <span class="no">05 · 경쟁 포지션</span>
+   <span class="no">04 · 경쟁 포지션</span>
    <h2>직접경쟁 3사 안에서 이니스프리의 자리</h2>
    <p class="desc">판정 분모는 직접경쟁 3사(이니스프리 + 미샤 + 3CE) — 2026-08-19 팀 확정.
     토니모리(2026-02 붕괴)·에뛰드는 차트에서 제외했다.</p>
@@ -538,7 +494,7 @@ footer b{color:var(--offwhite)}
 <section id="opportunity">
  <div class="wrap">
   <div class="schead">
-   <span class="no">06 · 이길 수 있는 자리</span>
+   <span class="no">05 · 이길 수 있는 자리</span>
    <h2>고유명사는 남이 쓸 수 없다</h2>
    <p class="desc">진입은 일반명사에서만 일어난다(실측). 그런데 이니스프리는 브랜드어가 카테고리어를
     넘어서는 것까지 이미 한 번 증명했다 — 노세범 66.78 &gt; 기름종이 63.77(같은 조회).
@@ -605,7 +561,7 @@ footer b{color:var(--offwhite)}
 <section id="guard">
  <div class="wrap">
   <div class="schead">
-   <span class="no">07 · 발표 가드</span>
+   <span class="no">06 · 발표 가드</span>
    <h2>그 자리에서 무너지는 표현과, 대신 쓸 문장</h2>
    <p class="desc">2026-08-20 실사로 확인된 것만 담았다. 근거: 공식몰 AI대응 실사 · 고민어 검증 · 인과 검증.</p>
   </div>
@@ -648,6 +604,56 @@ footer b{color:var(--offwhite)}
     </ol>
     <div class="no-say"><span class="ban">금지</span>&ldquo;회사가 부르면 사람이 온다&rdquo;는 반증됐다 — 레티놀 상승은 시장 성장의 결과, 몫은 하락.
      &ldquo;제주를 그린티에 실으면 작동한다&rdquo;는 <b>가설</b>이라고 답할 것.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ① 스토리 A→E -->
+<section id="story">
+ <div class="wrap">
+  <div class="schead">
+   <span class="no">07 · 결론 서사</span>
+   <h2>다섯 문장이면 끝나는 이야기 — A에서 E까지</h2>
+   <p class="desc">핵심 발견 다섯 개 — 발표 서사의 순서 그대로.</p>
+  </div>
+  <div class="story">
+   <div class="st"><div class="lt">A</div><h3>회사는 이미 제주로 돌아왔다</h3>
+    <p>공식몰 브랜드 스토리에 제주 <b>12회</b> · THE NEW ISLE <b>0회</b> (2026-08 실사)</p></div>
+   <div class="st"><div class="lt">B</div><h3>그런데 그 말로 부르지 않는다</h3>
+    <p>llms.txt 타겟 질의어 <b>34개 중 제주 0개</b></p></div>
+   <div class="st"><div class="lt">C</div><h3>자산은 녹고 있다</h3>
+    <p>제주 절대 검색 5년 <b>−58.6%</b> · 2025년 브랜드보다 빨리 빠지기 시작(우위 역전)</p></div>
+   <div class="st"><div class="lt">D</div><h3>옮겨간 기능성도 꺾였다</h3>
+    <p>제품군 검색 2023 정점 이후 <b>−37.4%</b> · 2026년에도 <b>−20.1%</b></p></div>
+   <div class="st"><div class="lt">E</div><h3>이길 방법은 회사가 증명했다</h3>
+    <p>노세범 <b>66.78</b> &gt; 기름종이 <b>63.77</b> — 브랜드어가 자기가 밀어낸 카테고리어를 이겼다</p></div>
+  </div>
+
+  <div class="card" style="margin-top:26px">
+   <h3>다섯 문제에는 다섯 해결이 붙어 있다</h3>
+   <div class="src">문제 = 제안서 Part 1 · 해결 = Part 4 크리에이티브 + Part 5 로드맵</div>
+   <div class="ps5">
+    <div class="psrow"><div class="lt">A</div>
+     <div class="psq"><b>헤리티지 서사 단절</b><span>브랜드 검색 −23.9% · 소비자 인식(제주 연상)은 남아 있다</span></div>
+     <div class="psarrow">→</div>
+     <div class="psa"><b>무드보드 4-1</b><span>헤리티지 계승 톤으로 발신 재개</span></div></div>
+    <div class="psrow"><div class="lt">B</div>
+     <div class="psq"><b>광고 미전환 · 1년 중단</b><span>광고비·브랜드 r=−0.03 (제품과는 +0.69)</span></div>
+     <div class="psarrow">→</div>
+     <div class="psa"><b>예산 원칙 Part 5</b><span>재배치 아닌 증액 + 최소 3년 확약</span></div></div>
+    <div class="psrow"><div class="lt">C</div>
+     <div class="psq"><b>오프라인 접점 소멸</b><span>매장 400→190개 · r=0.98</span></div>
+     <div class="psarrow">→</div>
+     <div class="psa"><b>체험 거점 4-2</b><span>실증 사례 &lsquo;공병공간&rsquo; 확장</span></div></div>
+    <div class="psrow"><div class="lt">D</div>
+     <div class="psq"><b>제품이 브랜드로 안 쌓임</b><span>제품 검색 +118.5% vs 브랜드 −23.9%</span></div>
+     <div class="psarrow">→</div>
+     <div class="psa"><b>상세페이지 4-4</b><span>원료·헤리티지·루틴으로 제품→브랜드 동선</span></div></div>
+    <div class="psrow"><div class="lt">E</div>
+     <div class="psq"><b>AI 답변에 안 나옴</b><span>형식 4/4 완비 · 타겟 질의어 34개 중 헤리티지 0</span></div>
+     <div class="psarrow">→</div>
+     <div class="psa"><b>랜딩페이지 4-3</b><span>FAQ·구조화 데이터 + AI가 인용할 서사 문서</span></div></div>
    </div>
   </div>
  </div>
