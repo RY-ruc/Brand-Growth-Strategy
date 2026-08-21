@@ -1,0 +1,195 @@
+{
+ "이니스프리": {
+  "root": "https://www.innisfree.com",
+  "llms": true,
+  "llms_len": 7595,
+  "schemas": [
+   "Organization"
+  ],
+  "blocked": [],
+  "home_len": 2561,
+  "story_url": "https://www.innisfree.com/kr/ko/dp/about",
+  "story_len": 2947,
+  "hits": {
+   "제주": 14,
+   "녹차": 1,
+   "설립": 1,
+   "헤리티지": 1,
+   "유래": 3
+  }
+ },
+ "토리든": {
+  "root": "https://torriden.com",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [
+   "GPTBot",
+   "ClaudeBot"
+  ],
+  "home_len": 6526,
+  "story_url": "https://torriden.com/service/company.php",
+  "story_len": 1821,
+  "hits": {
+   "브랜드 스토리": 1
+  }
+ },
+ "더샘": {
+  "root": "https://thesaemcosmetic.com",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 3884,
+  "story_url": null,
+  "story_len": 0,
+  "hits": {
+   "제주": 2,
+   "청정": 2,
+   "브랜드 스토리": 2
+  }
+ },
+ "라네즈": {
+  "root": "https://www.laneige.com",
+  "llms": true,
+  "llms_len": 7937,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 2657,
+  "story_url": "https://www.laneige.com/brand/brand-character/index.html",
+  "story_len": 4894,
+  "hits": {
+   "브랜드 스토리": 4,
+   "탄생": 3
+  }
+ },
+ "라운드랩": {
+  "root": "https://roundlab.co.kr",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 9863,
+  "story_url": "https://roundlab.co.kr/shopinfo/company.html",
+  "story_len": 9216,
+  "hits": {
+   "동백": 6,
+   "독도": 8,
+   "자작나무": 7,
+   "제주": 1,
+   "울릉도": 1
+  }
+ },
+ "에뛰드": {
+  "root": "https://www.etude.com",
+  "llms": true,
+  "llms_len": 5750,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 348402,
+  "story_url": null,
+  "story_len": 0,
+  "hits": {}
+ },
+ "토니모리": {
+  "root": "https://tonymoly.com",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [
+   "Organization",
+   "WebSite"
+  ],
+  "blocked": [],
+  "home_len": 1079,
+  "story_url": "https://tonymoly.com/brand/brand_store_info.do",
+  "story_len": 12226,
+  "hits": {
+   "제주": 4,
+   "동백": 3
+  }
+ },
+ "웰라쥬": {
+  "root": "https://wellage.co.kr",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 4027,
+  "story_url": "https://wellage.co.kr/category/about.html",
+  "story_len": 1505,
+  "hits": {}
+ },
+ "닥터지": {
+  "root": "https://www.dr-g.com",
+  "llms": true,
+  "llms_len": 4331,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 2182,
+  "story_url": "https://www.dr-g.com/pages/about-story",
+  "story_len": 3886,
+  "hits": {}
+ },
+ "메디힐": {
+  "root": "https://www.mediheal.co.kr",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 1132,
+  "story_url": "https://www.mediheal.co.kr/company/info",
+  "story_len": 2752,
+  "hits": {
+   "철학": 1
+  }
+ },
+ "에스네이처": {
+  "root": "https://snature.co.kr",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 9296,
+  "story_url": "https://snature.co.kr/myshop/mileage/historyList.html",
+  "story_len": 8197,
+  "hits": {}
+ },
+ "에스트라": {
+  "root": "https://www.aestura.com",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 7275,
+  "story_url": null,
+  "story_len": 0,
+  "hits": {}
+ },
+ "비플레인": {
+  "root": "https://beplain.co.kr",
+  "llms": false,
+  "llms_len": 0,
+  "schemas": [],
+  "blocked": [],
+  "home_len": 4505,
+  "story_url": "https://beplain.co.kr/shop/shopbrand.html?xcode=015&type=X",
+  "story_len": 1844,
+  "hits": {}
+ },
+ "스킨푸드": {
+  "root": "https://www.theskinfood.com",
+  "llms": true,
+  "llms_len": 0,
+  "schemas": [
+   "ItemList"
+  ],
+  "blocked": [],
+  "home_len": 9998,
+  "story_url": "https://www.theskinfood.com/shop/shopbrand.html?type=N&xcode=060&mcode=001",
+  "story_len": 3922,
+  "hits": {
+   "브랜드 스토리": 4,
+   "탄생": 3
+  }
+ }
+}
