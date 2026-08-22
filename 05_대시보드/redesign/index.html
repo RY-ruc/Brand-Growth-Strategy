@@ -526,18 +526,14 @@ footer b{color:var(--offwhite)}
   <div class="grid2" style="margin-top:var(--gap)">
    <div class="card">
     <h3>라운드랩은 무에서 이름 하나를 만들었다 — 이니스프리 이름은 전부 정점을 지났다</h3>
-    <div class="src">원료어 수명주기 · 기준점 환산 · 연평균 · 공통 척도 0~1.31 한 판 ·
-     <b>색 = 소유 브랜드 시그니처 (그린 = 이니스프리 · 블루 = 라운드랩) · 캡슐·선에 마우스를 올리면 상세 기록</b> ·
-     무에서 생성된 다른 제품어: 크림스킨(라네즈) 0.005→0.26 · 녹두(비플레인) 0.001→0.24 · 스쿠알란(에스네이처) 0.00→0.19</div>
+    <div class="src">원료어 수명주기 2016–2026 · 기준점 환산 연평균 · 공통 척도 · 그린 = 이니스프리 · 블루 = 라운드랩 ·
+     <b>선·캡슐·점에 마우스를 올리면 상세</b></div>
     <div class="chart" id="chPwLife"></div>
-    <div class="cap"><b>노세범이 죽은 게 아니라 브랜드가 더 빨리 무너졌다</b> — 노세범 절대치는 정점 대비 −81%지만
-     브랜드 대비 몫은 0.03 → 0.08로 오히려 3배 늘었다(1을 넘은 적은 한 번도 없다).
-     제품어는 브랜드 궤도를 타고 내려간 것이고, 궤도를 거슬러 오른 것은 자작나무뿐이다 —
-     그마저 라운드랩 브랜드가 정체(0.87→0.50)한 동안 올리브영 유통·광고(유통 소구 96%)에 실려 큰 것이다.</div>
-    <div class="cap warn"><b>🚫 “화산송이가 정점 대비 −86% 감가”라고 쓰지 말 것.</b>
-     2016년 0.43은 브랜드(40.02)의 1.1% — 정점이라 부를 크기가 아니었고 “애초에 작았다”가 정확하다.
-     지금은 그린티(0.09) &gt; 화산송이(0.06)이므로 화산송이를 앞세우지 말 것.
-     이니스프리도 시도는 했다 — 블랙티 0.006→0.017에서 멈췄다. <b>10년간 새 이름을 키우지 못했다.</b></div>
+    <div id="chPwChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+    <div class="cap"><b>노세범이 죽은 게 아니라 브랜드가 더 빨리 무너졌다</b> — 절대치 −81%, 브랜드 대비 몫은 3배(0.03→0.08).
+     궤도를 거슬러 오른 것은 자작나무뿐이다.</div>
+    <div class="cap warn"><b>🚫 “화산송이 −86% 감가” 서술 금지</b> — ’16년 0.43도 브랜드의 1.1%, 애초에 작았다.
+     지금은 그린티(0.09) &gt; 화산송이(0.06).</div>
    </div>
    <div class="card">
     <h3>서사는 있다 — 아무도 안 보는 자리에 있다</h3>
@@ -2729,7 +2725,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
    chip:'출시 후 소멸',
    tip:'블랙티 · 이니스프리 · ’20 출시 시도 → ’22 정점(0.16) → 4년 만에 소멸 수준 — 최근 10년 이니스프리의 유일한 신규 제품어 시도'},
  ];
- const W=560,H=430,top=40,bot=52,L=34,R=76,MAX=1.31;
+ const W=560,H=360,top=36,bot=44,L=34,R=112,MAX=1.31;
  const x=i=>L+i*(W-L-R)/10, y=v=>top+(1-v/MAX)*(H-top-bot);
  const path=v=>v.map((n,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(n).toFixed(1)).join('');
  let s='';
@@ -2741,37 +2737,32 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
   s+=`<path d="${path(sr.v)}" fill="none" stroke="${sr.col}" stroke-width="${sr.w}"
     ${sr.d?`stroke-dasharray="${sr.d}"`:''} opacity="${sr.op}" stroke-linecap="round" data-tip="${sr.tip}"/>`;
   if(sr.hero) s+=`<text x="${x(10)+6}" y="${y(sr.v[10])+4}" ${FONT} font-size="11" font-weight="700"
-    fill="${BLUE}">${sr.v[10].toFixed(2)}</text>`;
+    fill="${BLUE}">자작나무 ${sr.v[10].toFixed(2)}</text>`;
   else if(sr.n==='노세범') s+=`<text x="${x(10)+6}" y="${y(sr.v[10])+4}" ${FONT} font-size="11" font-weight="700"
-    fill="${C.forest}">${sr.v[10].toFixed(2)}</text>`;
+    fill="${C.forest}">노세범 ${sr.v[10].toFixed(2)}</text>`;
  });
- // 주석 — 사건을 차트 위에 직접 적는다. 로즈는 경고 한 곳에만
- s+=`<circle cx="${x(1)}" cy="${y(1.21)}" r="4" fill="${C.roseDeep}"/>
-  <text x="${x(1)+8}" y="${y(1.21)-6}" ${FONT} font-size="11" font-weight="700" fill="${C.roseDeep}">’17 — 이니스프리의 마지막 정점</text>
-  <line x1="${x(3)}" y1="${y(0.03)-5}" x2="${x(3)}" y2="${y(0.03)-40}" stroke="${BLUE}" stroke-width="1.1"/>
-  <text x="${x(3)}" y="${y(0.03)-52}" text-anchor="middle" ${FONT} font-size="11" font-weight="700" fill="${BLUE}">’19 자작나무(라운드랩) 출시 — 0에서 시작</text>
-  <circle cx="${x(7)}" cy="${y(0.66)}" r="4.2" fill="${BLUE}"/>
-  <text x="${x(7)}" y="${y(0.66)-18}" text-anchor="middle" ${FONT} font-size="11" font-weight="700" fill="${BLUE}">’23 정점 0.66 — 이니스프리 전 계열 추월</text>`;
+ // 주석은 문장 하나만 — 글을 차트에 우겨넣지 않는다. 나머지 사건은 점 + 호버로
+ s+=`<circle cx="${x(1)}" cy="${y(1.21)}" r="3.5" fill="${C.roseDeep}"
+   data-tip="’17 노세범 1.21 — 이니스프리의 마지막 정점. 이후 9년간 회복 없음"/>
+  <circle cx="${x(3)}" cy="${y(0.03)}" r="3.5" fill="${BLUE}"
+   data-tip="’19 자작나무(라운드랩) 출시 — 0에서 시작"/>
+  <circle cx="${x(9)}" cy="${y(0.54)}" r="4.2" fill="${BLUE}"/>
+  <text x="${x(9)}" y="${y(0.54)-14}" text-anchor="middle" ${FONT} font-size="11.5" font-weight="700"
+   fill="${BLUE}">’25 — 이니스프리 전 계열 추월</text>`;
  [2016,2019,2023,2026].forEach(yy=>{
   s+=`<text x="${x(yy-2016)}" y="${H-16}" text-anchor="middle" ${FONT} font-size="11.5" fill="${C.past}">${yy}</text>`;});
- // 상태 캡슐 스코어보드 (성적표를 녹임) — 캡슐 행에 마우스를 올리면 상세 기록
- const bx=252, bw=304, rh2=25, by=64;
- S.forEach((sr,i)=>{
-  const yy=by+i*rh2;
-  const chipFill = sr.ok ? 'rgba(78,124,168,.14)' : 'rgba(181,74,94,.10)';
-  const chipCol  = sr.ok ? BLUE : C.roseDeep;
-  s+=`<circle cx="${bx+6}" cy="${yy+8}" r="4" fill="${sr.col}" opacity="${Math.max(sr.op,.5)}"/>
-   <text x="${bx+16}" y="${yy+12}" ${FONT} font-size="11" font-weight="700"
-    fill="${sr.hero?BLUE:C.forest}">${sr.n}${sr.hero?' · 라운드랩':''}</text>
-   <rect x="${bx+142}" y="${yy}" width="76" height="17" rx="8.5" fill="${chipFill}"/>
-   <text x="${bx+180}" y="${yy+12}" text-anchor="middle" ${FONT} font-size="9.5" font-weight="700"
-    fill="${chipCol}">${sr.chip}</text>
-   <text x="${bx+bw-34}" y="${yy+12}" text-anchor="end" ${FONT} font-size="11" font-weight="700"
-    fill="${sr.hero?BLUE:C.basalt}">${sr.v[10].toFixed(2)}</text>
-   <rect x="${bx}" y="${yy-3}" width="${bw-30}" height="${rh2-2}" fill="#fff" opacity="0" data-tip="${sr.tip}"/>`;
- });
  put('chPwLife', `<svg viewBox="0 0 ${W} ${H}" role="img"
-  aria-label="원료어 2016~2026 라인 차트. 라운드랩 자작나무(블루)만 0에서 올라 2026년 1위, 이니스프리 원료어(그린)는 전부 정점을 지나 하락. 오른쪽 위 캡슐이 각 이름의 상태">${s}</svg>`);
+  aria-label="원료어 2016~2026 라인 차트. 라운드랩 자작나무(블루)만 0에서 올라 2025년 이니스프리 전 계열을 추월, 이니스프리 원료어(그린)는 전부 정점을 지나 하락">${s}</svg>`);
+ // 상태 캡슐은 차트 밖 한 줄 — 긴 기록은 전부 호버로
+ put('chPwChips', S.map(sr=>{
+  const bg = sr.ok ? 'rgba(78,124,168,.12)' : 'rgba(181,74,94,.08)';
+  const st = sr.ok ? BLUE : C.roseDeep;
+  return `<span data-tip="${sr.tip}" style="display:inline-flex;align-items:center;gap:6px;`+
+   `padding:4px 12px;border-radius:20px;background:${bg};font-size:11.5px;cursor:default">`+
+   `<span style="width:8px;height:8px;border-radius:50%;background:${sr.col}"></span>`+
+   `<b>${sr.n}${sr.hero?' · 라운드랩':''}</b>`+
+   `<span style="color:${st};font-weight:700">${sr.chip}</span></span>`;
+ }).join(''));
 })();
 
 /* ── ④계열 서사의 위치 — 분량은 비슷, 자리가 다르다 (소단위 병렬 · 이중축 아님) ── */
