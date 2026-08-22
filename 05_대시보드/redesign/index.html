@@ -2621,7 +2621,9 @@ const sx = (v,min,max,x0,x1) => x0 + (v-min)/(max-min)*(x1-x0);
  let s='';
  [0,20,40].forEach(g=> s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R+30}" y2="${y(g)}" stroke="${C.hair}"/>
   <text x="${L-8}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="12" fill="${C.past}">${g}</text>`);
- const brands=[['이니스프리',C.forest,3.5,'−73.0% (5년)'],['미샤',C.roseDeep,2.5,'−58.0%'],['3CE',C.basalt,2.5,'−55.5%']];
+ // 브랜드별 고유색 — 이니스프리 그린 / 미샤 레드(로고 레드 · 경고용 딥로즈와 구분) /
+ // 3CE 블랙(로고 블랙 — 시그니처 핑크는 경고 포인트색 보호를 위해 쓰지 않는다)
+ const brands=[['이니스프리',C.forest,3.5,'−73.0% (5년)'],['미샤','#B03A2E',2.5,'−58.0%'],['3CE','#262626',2.5,'−55.5%']];
  const ends=[];
  brands.forEach(([name,color,wd,chg])=>{
   const pts=years.map((yr,i)=>[x(i),y(comp[name][yr])]);
