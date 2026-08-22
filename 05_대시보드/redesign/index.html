@@ -2710,19 +2710,19 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
    v:[0.00,0.00,0.00,0.03,0.05,0.10,0.28,0.66,0.39,0.54,0.50],
    chip:'성장 후 유지', ok:true,
    tip:'자작나무 · 라운드랩 · 2019년 출시 — 4년 만에 정점(’23 0.66), 지금도 정점의 77%를 유지. 라운드랩 브랜드가 정체하는 동안 브랜드 궤도를 거슬러 오른 유일한 제품어'},
-  {n:'노세범', col:C.forest, w:1.7, d:'', op:.8,
+  {n:'노세범', col:C.forest, w:3.0, d:'', op:1,
    v:[1.01,1.21,0.70,0.51,0.41,0.56,0.70,0.67,0.44,0.28,0.23],
    chip:'9년째 하락',
    tip:'노세범 · 이니스프리 · 마지막 전성기 ’17(1.21) 이후 9년간 회복 없음. 단, 브랜드 대비 몫은 0.03→0.08로 3배 — 노세범이 죽은 게 아니라 브랜드가 더 빨리 무너졌다'},
-  {n:'그린티', col:C.forest, w:1.5, d:'2 3', op:.6,
+  {n:'그린티', col:C.forest, w:1.2, d:'', op:.28,
    v:[0.20,0.19,0.21,0.16,0.13,0.12,0.15,0.25,0.13,0.10,0.09],
    chip:'정점의 ⅓',
    tip:'그린티 · 이니스프리 · ’23 반짝(0.25) 뒤 다시 하락 — 그래도 살아있는 이니스프리 원료어 중 최대 (2026 그린티 0.09 > 화산송이 0.06)'},
-  {n:'화산송이', col:C.forest, w:1.5, d:'5 4', op:.5,
+  {n:'화산송이', col:C.forest, w:1.2, d:'', op:.22,
    v:[0.43,0.28,0.24,0.20,0.21,0.18,0.16,0.13,0.12,0.10,0.06],
    chip:'사실상 소멸',
    tip:'화산송이 · 이니스프리 · ’16부터 10년 연속 하락, 정점의 1/7만 남음. 단 ’16 0.43도 브랜드의 1.1%로 애초에 작았다 — “정점 감가”로 서술 금지'},
-  {n:'블랙티', col:C.forest, w:1.3, d:'1 3', op:.4,
+  {n:'블랙티', col:C.forest, w:1.2, d:'', op:.18,
    v:[0.01,0.00,0.00,0.00,0.04,0.10,0.16,0.12,0.06,0.04,0.02],
    chip:'출시 후 소멸',
    tip:'블랙티 · 이니스프리 · ’20 출시 시도 → ’22 정점(0.16) → 4년 만에 소멸 수준 — 최근 10년 이니스프리의 유일한 신규 제품어 시도'},
@@ -2734,14 +2734,14 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
  [0,0.5,1.0].forEach(g=>s+=`<line x1="${L}" y1="${y(g)}" x2="${W-R}" y2="${y(g)}" stroke="${C.hair}"/>
   <text x="${L-6}" y="${y(g)+4}" text-anchor="end" ${FONT} font-size="10.5" fill="${C.past}">${g}</text>`);
  // 선 — 이니스프리(그린)를 먼저 깔고 주인공(라운드랩 블루)을 맨 위에
- const endOff={'노세범':0,'그린티':-5,'화산송이':6,'블랙티':16};
+ // 주역 두 선(자작나무·노세범)만 굵게 + 끝 라벨. 나머지 값은 캡슐 스코어보드가 맡는다
  [...S].reverse().forEach(sr=>{
   s+=`<path d="${path(sr.v)}" fill="none" stroke="${sr.col}" stroke-width="${sr.w}"
     ${sr.d?`stroke-dasharray="${sr.d}"`:''} opacity="${sr.op}" stroke-linecap="round" data-tip="${sr.tip}"/>`;
-  if(sr.hero) s+=`<text x="${x(10)+5}" y="${y(sr.v[10])+4}" ${FONT} font-size="10.5" font-weight="700"
+  if(sr.hero) s+=`<text x="${x(10)+6}" y="${y(sr.v[10])+4}" ${FONT} font-size="11" font-weight="700"
     fill="${BLUE}">${sr.v[10].toFixed(2)}</text>`;
-  else s+=`<text x="${x(10)+5}" y="${y(sr.v[10])+3.5+(endOff[sr.n]||0)}" ${FONT} font-size="9.5"
-    fill="${C.past}">${sr.n} ${sr.v[10].toFixed(2)}</text>`;
+  else if(sr.n==='노세범') s+=`<text x="${x(10)+6}" y="${y(sr.v[10])+4}" ${FONT} font-size="11" font-weight="700"
+    fill="${C.forest}">${sr.v[10].toFixed(2)}</text>`;
  });
  // 주석 — 사건을 차트 위에 직접 적는다. 로즈는 경고 한 곳에만
  s+=`<circle cx="${x(1)}" cy="${y(1.21)}" r="4" fill="${C.roseDeep}"/>
@@ -2749,7 +2749,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
   <line x1="${x(3)}" y1="${y(0.03)-5}" x2="${x(3)}" y2="${y(0.03)-40}" stroke="${BLUE}" stroke-width="1.1"/>
   <text x="${x(3)}" y="${y(0.03)-52}" text-anchor="middle" ${FONT} font-size="11" font-weight="700" fill="${BLUE}">’19 자작나무(라운드랩) 출시 — 0에서 시작</text>
   <circle cx="${x(7)}" cy="${y(0.66)}" r="4.2" fill="${BLUE}"/>
-  <text x="${x(7)}" y="${y(0.66)-16}" text-anchor="middle" ${FONT} font-size="11" font-weight="700" fill="${BLUE}">’23 정점 0.66 — 이니스프리 전 계열 추월</text>`;
+  <text x="${x(7)}" y="${y(0.66)-18}" text-anchor="middle" ${FONT} font-size="11" font-weight="700" fill="${BLUE}">’23 정점 0.66 — 이니스프리 전 계열 추월</text>`;
  [2016,2019,2023,2026].forEach(yy=>{
   s+=`<text x="${x(yy-2016)}" y="${H-16}" text-anchor="middle" ${FONT} font-size="11.5" fill="${C.past}">${yy}</text>`;});
  // 상태 캡슐 스코어보드 (성적표를 녹임) — 캡슐 행에 마우스를 올리면 상세 기록
@@ -2758,7 +2758,7 @@ hbars('chLtB', D.series.annual.longtail.calls.B.items, null, '일반명사와 �
   const yy=by+i*rh2;
   const chipFill = sr.ok ? 'rgba(78,124,168,.14)' : 'rgba(181,74,94,.10)';
   const chipCol  = sr.ok ? BLUE : C.roseDeep;
-  s+=`<circle cx="${bx+6}" cy="${yy+8}" r="4" fill="${sr.col}" opacity="${sr.op}"/>
+  s+=`<circle cx="${bx+6}" cy="${yy+8}" r="4" fill="${sr.col}" opacity="${Math.max(sr.op,.5)}"/>
    <text x="${bx+16}" y="${yy+12}" ${FONT} font-size="11" font-weight="700"
     fill="${sr.hero?BLUE:C.forest}">${sr.n}${sr.hero?' · 라운드랩':''}</text>
    <rect x="${bx+142}" y="${yy}" width="76" height="17" rx="8.5" fill="${chipFill}"/>
