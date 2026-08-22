@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1920 1080">
+  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10, .st11 {
+        font-weight: 700;
+      }
+
+      .st0, .st1, .st3, .st4, .st5, .st6, .st7, .st8, .st10, .st11 {
+        font-family: NotoSansKR-Bold, 'Noto Sans KR';
+      }
+
+      .st0, .st2, .st3, .st4, .st5, .st12, .st9 {
+        fill: #3f5a45;
+      }
+
+      .st0, .st4 {
+        font-size: 40px;
+        letter-spacing: -.02em;
+      }
+
+      .st1, .st2, .st13, .st14, .st4, .st5, .st8, .st15, .st10, .st11 {
+        isolation: isolate;
+      }
+
+      .st1, .st16, .st7, .st17 {
+        fill: #e8e6d7;
+      }
+
+      .st1, .st7, .st8 {
+        letter-spacing: .16em;
+      }
+
+      .st1, .st7, .st8, .st18 {
+        font-size: 22px;
+      }
+
+      .st2, .st9 {
+        font-family: GowunBatang-Bold, 'Gowun Batang';
+        font-size: 54px;
+        letter-spacing: -.01em;
+      }
+
+      .st13, .st14, .st6, .st19, .st20, .st10, .st11 {
+        fill: #787268;
+      }
+
+      .st13, .st20 {
+        font-family: NotoSansKR-Regular, 'Noto Sans KR';
+        font-size: 30px;
+      }
+
+      .st3, .st14, .st5, .st19 {
+        font-size: 24px;
+      }
+
+      .st3, .st5 {
+        letter-spacing: .18em;
+      }
+
+      .st14, .st19 {
+        letter-spacing: .14em;
+      }
+
+      .st14, .st19, .st21, .st15, .st18 {
+        font-family: NotoSansKR-Medium, 'Noto Sans KR';
+        font-weight: 500;
+      }
+
+      .st6, .st10 {
+        letter-spacing: .14em;
+      }
+
+      .st6, .st10, .st11 {
+        font-size: 23px;
+      }
+
+      .st16 {
+        opacity: .54;
+      }
+
+      .st21, .st8, .st15 {
+        fill: #777168;
+      }
+
+      .st21, .st15 {
+        font-size: 28px;
+        letter-spacing: -.02em;
+      }
+
+      .st22 {
+        fill: #fff;
+        stroke: #ddd9d1;
+      }
+
+      .st23 {
+        fill: #fafaf7;
+      }
+
+      .st24 {
+        fill: none;
+        stroke: #e8e6d6;
+      }
+
+      .st18 {
+        letter-spacing: .16em;
+      }
+
+      .st11 {
+        letter-spacing: .14em;
+      }
+    </style>
+  </defs>
+  <rect class="st23" width="1920" height="1080"/>
+  <circle class="st12" cx="108.5" cy="96" r="4.5"/>
+  <g>
+    <text class="st5" transform="translate(127 100.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st5" transform="translate(127 100.8)"><tspan x="0" y="0">PART 1 · 데이터에서 도출한 진단</tspan></text>
+    <text class="st3" transform="translate(554.8 100.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st14" transform="translate(1441.1 101.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st14" transform="translate(1441.1 101.8)"><tspan x="0" y="0">진단 종합과 전략 브리지 — 10</tspan></text>
+    <text class="st19" transform="translate(1798.3379 101.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st17" x="500.66" y="225.73" width="358.06" height="26.55"/>
+  <rect class="st16" x="104" y="880" width="1712" height="116" rx="14" ry="14"/>
+  <line class="st24" x1="104" y1="146" x2="1816" y2="146"/>
+  <g>
+    <text class="st2" transform="translate(104 236.5)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st2" transform="translate(104 236.5)"><tspan x="0" y="0">다섯 가지 문제는 ‘전달·접점·지속’의 실패로 수렴한다</tspan></text>
+    <text class="st9" transform="translate(1280.1085 236.5)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st13" transform="translate(104 310)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st13" transform="translate(104 310)"><tspan x="0" y="0">데이터를 하나의 전략적 판단으로 압축</tspan></text>
+    <text class="st20" transform="translate(572.48 310)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st22" x="104" y="515.9" width="321.6" height="174.8" rx="14" ry="14"/>
+  <g>
+    <text class="st10" transform="translate(138 569.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(138 569.4)"><tspan x="0" y="0">문제 A</tspan></text>
+    <text class="st6" transform="translate(213.16 569.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st4" transform="translate(138 639.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(138 639.4)"><tspan x="0" y="0">전달</tspan></text>
+    <text class="st0" transform="translate(220.8 639.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st22" x="451.6" y="515.9" width="321.6" height="174.8" rx="14" ry="14"/>
+  <g>
+    <text class="st10" transform="translate(485.6 569.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(485.6 569.4)"><tspan x="0" y="0">문제 B</tspan></text>
+    <text class="st6" transform="translate(561.68 569.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st4" transform="translate(485.6 639.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(485.6 639.4)"><tspan x="0" y="0">자원 연결</tspan></text>
+    <text class="st0" transform="translate(660.72 639.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st22" x="799.2" y="515.9" width="321.6" height="174.8" rx="14" ry="14"/>
+  <g>
+    <text class="st10" transform="translate(833.2 569.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(833.2 569.4)"><tspan x="0" y="0">문제 C</tspan></text>
+    <text class="st6" transform="translate(908.71 569.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st4" transform="translate(833.2 639.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(833.2 639.4)"><tspan x="0" y="0">접점</tspan></text>
+    <text class="st0" transform="translate(916 639.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st22" x="1146.8" y="515.9" width="321.6" height="174.8" rx="14" ry="14"/>
+  <g>
+    <text class="st10" transform="translate(1180.8 569.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(1180.8 569.4)"><tspan x="0" y="0">문제 D</tspan></text>
+    <text class="st6" transform="translate(1257.6425 569.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st4" transform="translate(1180.8 639.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(1180.8 639.4)"><tspan x="0" y="0">브랜드 축적</tspan></text>
+    <text class="st0" transform="translate(1397.3212 639.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st22" x="1494.4" y="515.9" width="321.6" height="174.8" rx="14" ry="14"/>
+  <g>
+    <text class="st10" transform="translate(1528.4 569.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(1528.4 569.4)"><tspan x="0" y="0">문제 E</tspan></text>
+    <text class="st6" transform="translate(1602.9655 569.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st4" transform="translate(1528.4 639.4)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(1528.4 639.4)"><tspan x="0" y="0">발견 경로</tspan></text>
+    <text class="st0" transform="translate(1703.5212 639.4)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st1" transform="translate(140.36 950.97)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st8" transform="translate(140.36 950.97)"><tspan x="0" y="0">인사이트</tspan></text>
+    <text class="st7" transform="translate(187.88 950.97)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st15" transform="translate(281.88 950.47)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st15" transform="translate(281.88 950.47)"><tspan x="0" y="0">방향 자체가 완전히 틀린 것이 아니라, 바꾼 뒤 소비자에게 닿고 쌓이고 반복되는 구조가 없었다.</tspan></text>
+    <text class="st21" transform="translate(1331.906 950.475)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <text class="st18" transform="translate(1743.6865 1033.7235)"><tspan x="0" y="0">부록 - </tspan></text>
+</svg>

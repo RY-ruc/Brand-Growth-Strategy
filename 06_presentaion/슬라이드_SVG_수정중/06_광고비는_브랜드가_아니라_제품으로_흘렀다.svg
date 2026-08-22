@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1920 1080">
+  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3 {
+        font-family: NotoSansKR-Regular, 'Noto Sans KR';
+      }
+
+      .st0, .st3 {
+        fill: #253531;
+        font-size: 26px;
+      }
+
+      .st4 {
+        fill: #e8e6d6;
+      }
+
+      .st5, .st6, .st1, .st7, .st8, .st9, .st3, .st10, .st11, .st12, .st13, .st14, .st15, .st16, .st17 {
+        isolation: isolate;
+      }
+
+      .st5, .st6, .st18, .st8, .st19, .st20, .st21, .st10, .st12, .st22, .st23, .st13, .st24, .st14, .st15, .st16, .st17 {
+        font-weight: 700;
+      }
+
+      .st5, .st18, .st8, .st19, .st20, .st21, .st10, .st12, .st22, .st23, .st13, .st14, .st15, .st16, .st17 {
+        font-family: NotoSansKR-Bold, 'Noto Sans KR';
+      }
+
+      .st5, .st25, .st21 {
+        fill: #e8e6d7;
+      }
+
+      .st5, .st21, .st10 {
+        letter-spacing: .16em;
+      }
+
+      .st5, .st21, .st10, .st26 {
+        font-size: 22px;
+      }
+
+      .st6, .st18, .st8, .st27, .st23, .st13, .st24 {
+        fill: #3f5a45;
+      }
+
+      .st6, .st24 {
+        font-family: GowunBatang-Bold, 'Gowun Batang';
+        font-size: 54px;
+        letter-spacing: -.01em;
+      }
+
+      .st1, .st7, .st19, .st28, .st2, .st9, .st29, .st16, .st17 {
+        fill: #787268;
+      }
+
+      .st1, .st2 {
+        font-size: 30px;
+      }
+
+      .st18, .st7, .st8, .st28, .st9, .st29 {
+        font-size: 24px;
+      }
+
+      .st18, .st8 {
+        letter-spacing: .18em;
+      }
+
+      .st7, .st28 {
+        letter-spacing: .14em;
+      }
+
+      .st7, .st28, .st30, .st9, .st11, .st26, .st29 {
+        font-family: NotoSansKR-Medium, 'Noto Sans KR';
+        font-weight: 500;
+      }
+
+      .st19, .st16 {
+        letter-spacing: .14em;
+      }
+
+      .st19, .st16, .st17 {
+        font-size: 23px;
+      }
+
+      .st25 {
+        opacity: .54;
+      }
+
+      .st31 {
+        stroke: #777168;
+      }
+
+      .st31, .st32, .st33 {
+        fill: none;
+      }
+
+      .st31, .st33 {
+        stroke-dasharray: 8 9;
+        stroke-width: 2px;
+      }
+
+      .st34 {
+        fill: #8a8272;
+      }
+
+      .st30, .st20, .st10, .st11, .st35, .st14, .st15 {
+        fill: #777168;
+      }
+
+      .st30, .st20, .st11, .st14, .st15 {
+        font-size: 28px;
+      }
+
+      .st30, .st11, .st15 {
+        letter-spacing: -.02em;
+      }
+
+      .st20, .st14 {
+        letter-spacing: -.02em;
+      }
+
+      .st12, .st22 {
+        fill: #e78093;
+      }
+
+      .st12, .st22, .st23, .st13 {
+        font-size: 88px;
+        letter-spacing: -.02em;
+      }
+
+      .st36 {
+        fill: #fff;
+        stroke: #ddd9d1;
+      }
+
+      .st37 {
+        fill: #fafaf7;
+      }
+
+      .st32 {
+        stroke: #e8e6d6;
+      }
+
+      .st26 {
+        letter-spacing: .16em;
+      }
+
+      .st33 {
+        stroke: #3f5a45;
+      }
+
+      .st17 {
+        letter-spacing: .14em;
+      }
+    </style>
+  </defs>
+  <rect class="st37" width="1920" height="1080"/>
+  <circle class="st27" cx="108.5" cy="96" r="4.5"/>
+  <g>
+    <text class="st8" transform="translate(127 103.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st8" transform="translate(127 103.8)"><tspan x="0" y="0">PART 1 · 데이터에서 도출한 진단</tspan></text>
+    <text class="st18" transform="translate(554.8 103.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(1561.1 101.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st7" transform="translate(1561.1 101.8)"><tspan x="0" y="0">자원 연결 실패 — 06</tspan></text>
+    <text class="st28" transform="translate(1807.8184 101.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <line class="st32" x1="104" y1="146" x2="1816" y2="146"/>
+  <g>
+    <text class="st6" transform="translate(104 236.5)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st6" transform="translate(104 236.5)"><tspan x="0" y="0">광고비는 브랜드가 아니라 제품으로 흘렀다</tspan></text>
+    <text class="st24" transform="translate(1049.5315 236.5)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st1" transform="translate(104 308)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st1" transform="translate(104 308)"><tspan x="0" y="0">투입과 인지도 성과의 연결 방식이 잘못되었다는 해석</tspan></text>
+    <text class="st2" transform="translate(751.52 308)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st36" x="104" y="350.5" width="834" height="419.5" rx="14" ry="14"/>
+  <g>
+    <text class="st16" transform="translate(140 402)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st17" transform="translate(140 402)"><tspan x="0" y="0">광고선전비 × 브랜드 검색</tspan></text>
+    <text class="st19" transform="translate(435.34 402)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st12" transform="translate(140 494.2)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st12" transform="translate(140 494.2)"><tspan x="0" y="0">r = −0.03</tspan></text>
+    <text class="st22" transform="translate(490.76 494.2)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st14" transform="translate(140 560)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st15" transform="translate(140 560)"><tspan x="0" y="0">무상관 — 지출이 인지도에 닿지 않았다</tspan></text>
+    <text class="st20" transform="translate(571.84 560)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <line class="st32" x1="140" y1="600" x2="140" y2="704"/>
+  <line class="st32" x1="140" y1="704" x2="902" y2="704"/>
+  <circle class="st35" cx="231.4" cy="631.2" r="9"/>
+  <circle class="st35" cx="322.9" cy="677" r="9"/>
+  <circle class="st35" cx="414.3" cy="641.6" r="9"/>
+  <circle class="st35" cx="505.8" cy="686.3" r="9"/>
+  <circle class="st35" cx="597.2" cy="654.1" r="9"/>
+  <circle class="st35" cx="688.6" cy="628.1" r="9"/>
+  <circle class="st35" cx="780.1" cy="671.8" r="9"/>
+  <circle class="st35" cx="848.7" cy="647.8" r="9"/>
+  <line class="st31" x1="178.1" y1="657.2" x2="863.9" y2="659.3"/>
+  <g>
+    <text class="st9" transform="translate(140 740.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st9" transform="translate(140 740.8)"><tspan x="0" y="0">광고선전비 →</tspan></text>
+    <text class="st29" transform="translate(279.8 740.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st9" transform="translate(774.8 740.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st9" transform="translate(774.8 740.8)"><tspan x="0" y="0">브랜드 검색</tspan></text>
+    <text class="st29" transform="translate(890.6 740.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st36" x="982" y="350.5" width="834" height="419.5" rx="14" ry="14"/>
+  <g>
+    <text class="st16" transform="translate(1018 402)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st17" transform="translate(1018 402)"><tspan x="0" y="0">광고선전비 × 제품 검색</tspan></text>
+    <text class="st19" transform="translate(1288.9619 402)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st13" transform="translate(1018 494.2)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st13" transform="translate(1018 494.2)"><tspan x="0" y="0">r = +0.69</tspan></text>
+    <text class="st23" transform="translate(1368.764 494.2)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st14" transform="translate(1018 560)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st15" transform="translate(1018 560)"><tspan x="0" y="0">동행 — 지출은 제품 관심으로 흘렀다</tspan></text>
+    <text class="st20" transform="translate(1424.6416 560)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <line class="st32" x1="1018" y1="600" x2="1018" y2="704"/>
+  <line class="st32" x1="1018" y1="704" x2="1780" y2="704"/>
+  <circle class="st34" cx="1109.4" cy="683.2" r="9"/>
+  <circle class="st34" cx="1200.9" cy="666.6" r="9"/>
+  <circle class="st34" cx="1292.3" cy="672.8" r="9"/>
+  <circle class="st34" cx="1383.8" cy="652" r="9"/>
+  <circle class="st34" cx="1475.2" cy="645.8" r="9"/>
+  <circle class="st34" cx="1566.6" cy="654.1" r="9"/>
+  <circle class="st34" cx="1658.1" cy="631.2" r="9"/>
+  <circle class="st34" cx="1726.7" cy="622.9" r="9"/>
+  <line class="st33" x1="1056.1" y1="687.4" x2="1741.9" y2="620.8"/>
+  <g>
+    <text class="st9" transform="translate(1018 740.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st9" transform="translate(1018 740.8)"><tspan x="0" y="0">광고선전비 →</tspan></text>
+    <text class="st29" transform="translate(1157.7996 740.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st9" transform="translate(1676.8 740.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st9" transform="translate(1676.8 740.8)"><tspan x="0" y="0">제품 검색</tspan></text>
+    <text class="st29" transform="translate(1770.5197 740.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st4" x="104" y="792" width="1712" height="62"/>
+  <g>
+    <text class="st3" transform="translate(132 828.2)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st3" transform="translate(132 828.2)"><tspan x="0" y="0">2023년 증가 후 2024년 −20.6% 축소</tspan></text>
+    <text class="st0" transform="translate(532.89 828.2)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st25" x="104" y="880" width="1712" height="116" rx="14" ry="14"/>
+  <g>
+    <text class="st5" transform="translate(140.36 950.97)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st10" transform="translate(140.36 950.97)"><tspan x="0" y="0">인사이트</tspan></text>
+    <text class="st21" transform="translate(187.88 950.97)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <text class="st26" transform="translate(1743.6865 1033.7235)"><tspan x="0" y="0">부록 - </tspan></text>
+  <g>
+    <text class="st11" transform="translate(281.88 950.47)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st11" transform="translate(281.88 950.47)"><tspan x="0" y="0">광고비를 더 쓰느냐가 아니라, 인지도에 연결되는 예산 구조와 지속 기간이 없었다.</tspan></text>
+    <text class="st30" transform="translate(1188.519 950.475)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+</svg>

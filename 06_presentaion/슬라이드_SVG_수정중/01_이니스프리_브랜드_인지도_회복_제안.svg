@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080">
+  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #3f5a45;
+      }
+
+      .st1 {
+        fill: none;
+        stroke: #e8e6d7;
+        stroke-miterlimit: 10;
+      }
+
+      .st2 {
+        fill: #253531;
+      }
+
+      .st3, .st4, .st5, .st6, .st7 {
+        isolation: isolate;
+      }
+
+      .st8, .st4 {
+        font-family: NotoSansKR-Bold, 'Noto Sans KR';
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: .28em;
+      }
+
+      .st8, .st4, .st6, .st7, .st9 {
+        fill: #e8e6d7;
+      }
+
+      .st10, .st5 {
+        fill: #fafaf7;
+        font-size: 82px;
+        letter-spacing: -.01em;
+      }
+
+      .st10, .st5, .st6, .st7, .st9 {
+        font-family: GowunBatang-Regular, 'Gowun Batang';
+      }
+
+      .st6 {
+        letter-spacing: .1em;
+      }
+
+      .st6, .st7, .st9 {
+        font-size: 26px;
+      }
+
+      .st7, .st9 {
+        letter-spacing: .1em;
+      }
+    </style>
+  </defs>
+  <rect class="st2" width="1920" height="1080"/>
+  <rect class="st0" width="1920" height="1080"/>
+  <image class="st3" width="266" height="84" transform="translate(104 300) scale(1.5)" xlink:href="data:image/png;base64,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"/>
+  <g>
+    <text class="st4" transform="translate(104 266.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(104 266.8)"><tspan x="0" y="0">BRAND GROWTH STRATEGY</tspan></text>
+    <text class="st8" transform="translate(565.52 266.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st5" transform="translate(104 559.7)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st5" transform="translate(104 559.7)"><tspan x="0" y="0">이니스프리 브랜드 인지도 회복 제안</tspan></text>
+    <text class="st10" transform="translate(1284.3805 559.7)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <line class="st1" x1="104" y1="866" x2="1816" y2="866"/>
+  <g>
+    <text class="st7" transform="translate(104 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st6" transform="translate(104 920.8)"><tspan x="0" y="0">팀명</tspan></text>
+    <text class="st9" transform="translate(157.04 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(182.13 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st6" transform="translate(182.13 920.8)"><tspan x="0" y="0">떡볶이팀</tspan></text>
+    <text class="st9" transform="translate(235.17 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(504.86 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st7" transform="translate(504.86 920.8)"><tspan x="0" y="0">-</tspan></text>
+    <text class="st9" transform="translate(557.9 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(404 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st7" transform="translate(404 920.8)"><tspan x="0" y="0">발표자</tspan></text>
+    <text class="st9" transform="translate(483.56 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(704 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st7" transform="translate(704 920.8)"><tspan x="0" y="0">날짜</tspan></text>
+    <text class="st9" transform="translate(757.04 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st7" transform="translate(782.99 920.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st6" transform="translate(782.99 920.8)"><tspan x="0" y="0">26.09.01.TUE</tspan></text>
+    <text class="st9" transform="translate(836.03 920.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1920 1080">
+  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10 {
+        isolation: isolate;
+      }
+
+      .st0, .st1, .st11, .st4, .st12, .st13, .st14, .st5, .st6, .st7, .st15, .st9, .st10 {
+        font-weight: 700;
+      }
+
+      .st0, .st11, .st4, .st12, .st13, .st14, .st5, .st6, .st7, .st9, .st10 {
+        font-family: NotoSansKR-Bold, 'Noto Sans KR';
+      }
+
+      .st0, .st16, .st14, .st17 {
+        fill: #e8e6d7;
+      }
+
+      .st0, .st14, .st7 {
+        letter-spacing: .16em;
+      }
+
+      .st0, .st14, .st7, .st18 {
+        font-size: 22px;
+      }
+
+      .st1, .st11, .st4, .st19, .st13, .st5, .st6, .st15 {
+        fill: #3f5a45;
+      }
+
+      .st1, .st15 {
+        font-family: GowunBatang-Bold, 'Gowun Batang';
+        font-size: 54px;
+        letter-spacing: -.01em;
+      }
+
+      .st2, .st3, .st12, .st20, .st21, .st9, .st10 {
+        fill: #787268;
+      }
+
+      .st2, .st21 {
+        font-family: NotoSansKR-Regular, 'Noto Sans KR';
+        font-size: 30px;
+      }
+
+      .st11, .st3, .st4, .st20 {
+        font-size: 24px;
+      }
+
+      .st11, .st4 {
+        letter-spacing: .18em;
+      }
+
+      .st3, .st20 {
+        letter-spacing: .14em;
+      }
+
+      .st3, .st20, .st22, .st8, .st18 {
+        font-family: NotoSansKR-Medium, 'Noto Sans KR';
+        font-weight: 500;
+      }
+
+      .st12, .st9 {
+        letter-spacing: .14em;
+      }
+
+      .st12, .st9, .st10 {
+        font-size: 23px;
+      }
+
+      .st16 {
+        opacity: .54;
+      }
+
+      .st13, .st5, .st6 {
+        font-size: 60px;
+      }
+
+      .st13, .st6 {
+        letter-spacing: -.02em;
+      }
+
+      .st22, .st7, .st8 {
+        fill: #777168;
+      }
+
+      .st22, .st8 {
+        font-size: 28px;
+        letter-spacing: -.02em;
+      }
+
+      .st5 {
+        letter-spacing: -.02em;
+      }
+
+      .st23 {
+        fill: #fff;
+        stroke: #ddd9d1;
+      }
+
+      .st24 {
+        fill: #fafaf7;
+      }
+
+      .st25 {
+        fill: none;
+        stroke: #e8e6d6;
+      }
+
+      .st18 {
+        letter-spacing: .16em;
+      }
+
+      .st10 {
+        letter-spacing: .14em;
+      }
+    </style>
+  </defs>
+  <text class="st18" transform="translate(1743.6865 1033.7235)"><tspan x="0" y="0">부록 - </tspan></text>
+  <rect class="st24" width="1920" height="1080"/>
+  <rect class="st17" x="1041.25" y="223.05" width="302.58" height="26.55"/>
+  <circle class="st19" cx="108.5" cy="96" r="4.5"/>
+  <g>
+    <text class="st4" transform="translate(127 100.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st4" transform="translate(127 100.8)"><tspan x="0" y="0">PART 1 · 데이터에서 도출한 진단</tspan></text>
+    <text class="st11" transform="translate(554.8 100.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st3" transform="translate(1533.8 101.8)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st3" transform="translate(1533.8 101.8)"><tspan x="0" y="0">디지털 발견 경로 — 09</tspan></text>
+    <text class="st20" transform="translate(1805.9584 101.8)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <line class="st25" x1="104" y1="146" x2="1816" y2="146"/>
+  <g>
+    <text class="st1" transform="translate(104 236.5)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st1" transform="translate(104 236.5)"><tspan x="0" y="0">AEO 형식은 갖췄지만, 소비자에게 말하는 메시지가 없다</tspan></text>
+    <text class="st15" transform="translate(1343.8302 236.5)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st2" transform="translate(104 310)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st2" transform="translate(104 310)"><tspan x="0" y="0">기술 부재가 아니라 메시지 배치 부재가 문제라는 해석</tspan></text>
+    <text class="st21" transform="translate(758.24 310)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st23" x="104" y="494" width="838" height="218.5" rx="14" ry="14"/>
+  <g>
+    <text class="st9" transform="translate(138 547.5)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st9" transform="translate(138 547.5)"><tspan x="0" y="0">AEO 형식</tspan></text>
+    <text class="st12" transform="translate(251.46 547.5)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st6" transform="translate(138 647)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st5" transform="translate(138 647)"><tspan x="0" y="0">4/4 완비</tspan></text>
+    <text class="st13" transform="translate(433.17 647)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st23" x="978" y="494" width="838" height="218.5" rx="14" ry="14"/>
+  <g>
+    <text class="st9" transform="translate(1012 547.5)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st10" transform="translate(1012 547.5)"><tspan x="0" y="0">타깃 질의어 34개 중 헤리티지 단어</tspan></text>
+    <text class="st12" transform="translate(1404.7231 547.5)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st6" transform="translate(1012 647)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st5" transform="translate(1012 647)"><tspan x="0" y="0">0개</tspan></text>
+    <text class="st13" transform="translate(1135.4795 647)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <rect class="st16" x="104" y="880" width="1712" height="116" rx="14" ry="14"/>
+  <g>
+    <text class="st0" transform="translate(140.36 950.97)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st7" transform="translate(140.36 950.97)"><tspan x="0" y="0">인사이트</tspan></text>
+    <text class="st14" transform="translate(187.88 950.97)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+  <g>
+    <text class="st8" transform="translate(281.88 950.47)"><tspan x="0" y="0"> </tspan></text>
+    <text class="st8" transform="translate(281.88 950.47)"><tspan x="0" y="0">기술은 준비되어 있지만, AI와 소비자가 발견할 수 있는 자리에는 핵심 이야기가 없다.</tspan></text>
+    <text class="st22" transform="translate(1220.3822 950.475)"><tspan x="0" y="0"> </tspan></text>
+  </g>
+</svg>

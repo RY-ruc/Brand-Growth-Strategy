@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+<title>22. 실행은 세 단계로 시작한다</title>
+<desc>발표 시간: 55초  |  페이지 역할: 실행 로드맵
+1순위: 실행 가능성과 우선순위
+2순위: 0~30일 채널 감사 · 플랫폼 제휴 / 30~90일 캠페인 · 랜딩 · 상세 · 콘텐츠 / 90일 이후 공병공간 확장
+3순위: 단계별 선행 조건과 의사결정 포인트
+강조: 처음부터 모두 바꾸지 않고, 빠르게 검증할 것과 조직 승인이 필요한 것을 분리한다.</desc>
+<rect x="0" y="0" width="1920" height="1080" fill="#FAFAF7"/>
+<circle cx="108.5" cy="96.0" r="4.5" fill="#B54A5E"/>
+<text x="127.0" y="100.8" style="font-family:'Noto Sans KR';font-size:24px;font-weight:700;fill:#3F5A45;letter-spacing:4.32px;" xml:space="preserve">
+<tspan x="127.0" dy="0.0">PART 4 · 실행·운영·측정</tspan>
+</text>
+<text x="1599.0" y="101.8" style="font-family:'Noto Sans KR';font-size:24px;font-weight:500;fill:#787268;letter-spacing:3.36px;" xml:space="preserve">
+<tspan x="1599.0" dy="0.0">실행 로드맵 — 22</tspan>
+</text>
+<line x1="104.0" y1="146.0" x2="1816.0" y2="146.0" stroke="#E8E6D6" stroke-width="1"/>
+<text x="104.0" y="236.5" style="font-family:'Gowun Batang';font-size:54px;font-weight:700;fill:#253531;letter-spacing:-0.54px;" xml:space="preserve">
+<tspan x="104.0" dy="0.0">실행은 세 단계로 시작한다</tspan>
+</text>
+<text x="104.0" y="310.0" style="font-family:'Noto Sans KR';font-size:30px;font-weight:300;fill:#787268;" xml:space="preserve">
+<tspan x="104.0" dy="0.0">실행 가능성과 우선순위</tspan>
+</text>
+<rect x="104.0" y="360.5" width="546.7" height="335.5" rx="14" ry="14" fill="#FFFFFF" stroke="#DDD9D1" stroke-width="1"/>
+<text x="138.0" y="413.5" style="font-family:'Noto Sans KR';font-size:30px;font-weight:700;fill:#253531;letter-spacing:-0.90px;" xml:space="preserve">
+<tspan x="138.0" dy="0.0">0~30일</tspan>
+</text>
+<text x="138.0" y="477.0" style="font-family:'Noto Sans KR';font-size:30px;font-weight:400;fill:#253531;" xml:space="preserve">
+<tspan x="138.0" dy="0.0">채널 감사 · 플랫폼 제휴</tspan>
+</text>
+<rect x="138.0" y="654.0" width="478.7" height="8.0" fill="#E8E6D6"/>
+<rect x="138.0" y="654.0" width="162.7" height="8.0" fill="#8A8272"/>
+<rect x="686.7" y="360.5" width="546.7" height="335.5" rx="14" ry="14" fill="#FFFFFF" stroke="#DDD9D1" stroke-width="1"/>
+<text x="720.7" y="413.5" style="font-family:'Noto Sans KR';font-size:30px;font-weight:700;fill:#253531;letter-spacing:-0.90px;" xml:space="preserve">
+<tspan x="720.7" dy="0.0">30~90일</tspan>
+</text>
+<text x="720.7" y="477.0" style="font-family:'Noto Sans KR';font-size:30px;font-weight:400;fill:#253531;" xml:space="preserve">
+<tspan x="720.7" dy="0.0">캠페인 · 랜딩 · 상세 · 콘텐츠</tspan>
+</text>
+<rect x="720.7" y="654.0" width="478.7" height="8.0" fill="#E8E6D6"/>
+<rect x="720.7" y="654.0" width="296.8" height="8.0" fill="#8A8272"/>
+<rect x="1269.3" y="360.5" width="546.7" height="335.5" rx="14" ry="14" fill="#253531"/>
+<text x="1303.3" y="413.5" style="font-family:'Noto Sans KR';font-size:30px;font-weight:700;fill:#FAFAF7;letter-spacing:-0.90px;" xml:space="preserve">
+<tspan x="1303.3" dy="0.0">90일 이후</tspan>
+</text>
+<text x="1303.3" y="477.0" style="font-family:'Noto Sans KR';font-size:30px;font-weight:400;fill:#FAFAF7;" xml:space="preserve">
+<tspan x="1303.3" dy="0.0">공병공간 확장</tspan>
+</text>
+<rect x="1303.3" y="654.0" width="478.7" height="8.0" fill="#4A5B55"/>
+<rect x="1303.3" y="654.0" width="105.3" height="8.0" fill="#E78093"/>
+<line x1="104.0" y1="718.0" x2="1816.0" y2="718.0" stroke="#E8E6D6" stroke-width="1"/>
+<text x="104.0" y="755.4" style="font-family:'Noto Sans KR';font-size:22px;font-weight:700;fill:#787268;letter-spacing:3.52px;" xml:space="preserve">
+<tspan x="104.0" dy="0.0">판단 게이트</tspan>
+</text>
+<line x1="112.0" y1="792.0" x2="1808.0" y2="792.0" stroke="#E8E6D6" stroke-width="2"/>
+<circle cx="112.0" cy="792.0" r="8" fill="#3F5A45"/>
+<text x="104.0" y="834.2" style="font-family:'Noto Sans KR';font-size:26px;font-weight:700;fill:#253531;letter-spacing:-0.52px;" xml:space="preserve">
+<tspan x="104.0" dy="0.0">90일 · 1차 판정</tspan>
+</text>
+<circle cx="960.0" cy="792.0" r="8" fill="#3F5A45"/>
+<text x="856.8" y="834.2" style="font-family:'Noto Sans KR';font-size:26px;font-weight:700;fill:#253531;letter-spacing:-0.52px;" xml:space="preserve">
+<tspan x="856.8" dy="0.0">180일 · 확대 여부</tspan>
+</text>
+<circle cx="1808.0" cy="792.0" r="8" fill="#B54A5E"/>
+<text x="1643.4" y="834.2" style="font-family:'Noto Sans KR';font-size:26px;font-weight:700;fill:#B54A5E;letter-spacing:-0.52px;" xml:space="preserve">
+<tspan x="1643.4" dy="0.0">360일 · 재확약</tspan>
+</text>
+<rect x="104.0" y="880.0" width="1712.0" height="116.0" rx="14" ry="14" fill="#253531"/>
+<text x="136.0" y="921.4" style="font-family:'Noto Sans KR';font-size:22px;font-weight:700;fill:#E78093;letter-spacing:3.52px;" xml:space="preserve">
+<tspan x="136.0" dy="0.0">강조</tspan>
+</text>
+<text x="213.5" y="943.6" style="font-family:'Noto Sans KR';font-size:28px;font-weight:700;fill:#FAFAF7;letter-spacing:-0.56px;" xml:space="preserve">
+<tspan x="213.5" dy="0.0">처음부터 모두 바꾸지 않고, 빠르게 검증할 것과 조직 승인이 필요한 것을 분리한다.</tspan>
+</text>
+</svg>
